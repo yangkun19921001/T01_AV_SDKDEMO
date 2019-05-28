@@ -1,12 +1,12 @@
 # T01 Android 端音视频 SDK API 文档
 
-[公司官网](<http://www.t01.com.cn/>)
+[公司官网](http://www.t01.com.cn/)
 
-![](<http://12145169.s21i.faiusr.com/2/ABUIABACGAAgm4u-wgUoyK3c_Qcw8w441QQ.jpg>)
+![img](http://12145169.s21i.faiusr.com/2/ABUIABACGAAgm4u-wgUoyK3c_Qcw8w441QQ.jpg)
 
-![](<http://12145169.s21i.faiusr.com/2/ABUIABACGAAgusm_wgUonufkhQIwgA842AQ.jpg>)
+![img](http://12145169.s21i.faiusr.com/2/ABUIABACGAAgusm_wgUonufkhQIwgA842AQ.jpg)
 
-![](<http://12145169.s21i.faiusr.com/2/ABUIABACGAAg3Yi-wgUo2rT6zQQw-g44ywQ.jpg>)
+![img](http://12145169.s21i.faiusr.com/2/ABUIABACGAAg3Yi-wgUo2rT6zQQw-g44ywQ.jpg)
 
 ## 注意
 
@@ -26,36 +26,36 @@
 
    ```java
    android{   
-       ...
+      ...
    allprojects {
-           repositories {
-               flatDir {
-                   //dirs '../t01_module/libs'; //多模块开发参考这种集成方式。
-                    dirs 'libs';
-               }
-           }
-       }
+          repositories {
+              flatDir {
+                  //dirs '../t01_module/libs'; //多模块开发参考这种集成方式。
+                   dirs 'libs';
+              }
+          }
+      }
    }
    
    dependencies{
-       ...
-       compile(name:'LY_AudioVideoHelp_SDK_debug', ext:'aar') //名字以 aar 名字为准
+      ...
+      compile(name:'LY_AudioVideoHelp_SDK_debug', ext:'aar') //名字以 aar 名字为准
    }
    ```
 
-3.  继承 PttApplication
+3. 继承 PttApplication
 
 4. 添加 XML 配置
 
    ```java
-    <service android:name="com.bnc.activity.service.MessengerService" />
-    <service android:name="com.bnc.activity.view.NativeService" />
-    <receiver android:name="com.bnc.activity.receiver.SipEventReceiver">
-               <intent-filter>
-                   <action android:name="com.bnc.app.action.INCOMING" />
-                   <action android:name="com.bnc.app.action.SMS" />
-               </intent-filter>
-    </receiver>
+   <service android:name="com.bnc.activity.service.MessengerService" />
+   <service android:name="com.bnc.activity.view.NativeService" />
+   <receiver android:name="com.bnc.activity.receiver.SipEventReceiver">
+              <intent-filter>
+                  <action android:name="com.bnc.app.action.INCOMING" />
+                  <action android:name="com.bnc.app.action.SMS" />
+              </intent-filter>
+   </receiver>
    ```
 
 5. 初始化 SDK
@@ -63,8 +63,6 @@
    ```
    T01Helper.getInstance().initAppContext(mContext);
    ```
-
-   
 
 ## RegisterEngine
 
@@ -81,8 +79,6 @@
   void login(String userId, String pwd, String server_ip, String server_port, final LoginCallBack loginCallBack)
   ```
 
-  
-
 ## PttEngine
 
 - 获取当前对讲组
@@ -91,15 +87,11 @@
   void getCurrentPttGroup(final PttListCallBack pttListListener)
   ```
 
-  
-
 - 开始对讲
 
   ```Java
   void startPttGroup();
   ```
-
-  
 
 - 停止对讲
 
@@ -107,15 +99,11 @@
   void stopPttGroup();
   ```
 
-  
-
 - 获取所有对讲组
 
   ```java
   void getAllPttGroupLists(final PttListCallBack pttListListener);
   ```
-
-  
 
 - 切换对讲组
 
@@ -123,15 +111,11 @@
   String setCurrentPttGroup(int groupId);
   ```
 
-  
-
 - 获取上一次切换的对讲组
 
   ```java
   int getHistoryChangePttGroup();
   ```
-
-  
 
 - 创建临时对讲组
 
@@ -139,15 +123,11 @@
   void createTempPttGroup(String tempGroupName, final ArrayList<Integer> selectList, final ICreateTempListener iCreateTempListener);
   ```
 
-  
-
 - 删除临时对讲组
 
   ```Java
   void delTmpGroup(int groupId, TempGroupManager.IPttDeleteUpDataListener iPttDeleteUpDataListener);
   ```
-
-  
 
 - 获取所有属于我的组
 
@@ -155,15 +135,11 @@
   List<GroupEntity> getAllGroup();
   ```
 
-  
-
 - 获取对讲通讯录
 
   ```Java
   void getContactsLists(final IContactsListener callViewBackContact);
   ```
-
-  
 
 - 单呼
 
@@ -176,8 +152,6 @@
   ```Java
   autoChangePtt(boolean isAuto);
   ```
-
-  
 
 ## CallEngine
 
@@ -297,35 +271,35 @@
 
   ```Java
   @Override
-      protected void onStart() {
-          super.onStart();
-          T01Helper.getInstance().getCallEngine().onCallStart();
-      }
+    protected void onStart() {
+        super.onStart();
+        T01Helper.getInstance().getCallEngine().onCallStart();
+    }
   
-      @Override
-      protected void onResume() {
-          super.onResume();
-          T01Helper.getInstance().getCallEngine().onResume();
-      }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        T01Helper.getInstance().getCallEngine().onResume();
+    }
   
-      @Override
-      protected void onPause() {
-          T01Helper.getInstance().getCallEngine().onCallPause();
-          super.onPause();
-      }
+    @Override
+    protected void onPause() {
+        T01Helper.getInstance().getCallEngine().onCallPause();
+        super.onPause();
+    }
   
-      @Override
-      protected void onStop() {
-          T01Helper.getInstance().getCallEngine().onCallStop();
-          getWindow().clearFlags(
-                  WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-          super.onStop();
-      }
+    @Override
+    protected void onStop() {
+        T01Helper.getInstance().getCallEngine().onCallStop();
+        getWindow().clearFlags(
+                WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        super.onStop();
+    }
   ```
 
 - 快速开始通话
 
-  1. 自定义继承 BaseCallLayout ，实现相关函数，并填写对应的布局（详细可以参考 SDKDEMO） 
+1. 自定义继承 BaseCallLayout ，实现相关函数，并填写对应的布局（详细可以参考 SDKDEMO）
 
 ## MettingEngine
 
@@ -350,7 +324,7 @@
   //me_0   0 :txt,1:视频,3:图片,4:录音,10:文件
   //type 1:单聊 ，2 群聊
   MsgMessageEntity sendMessage(int me_0, String sendContent, String sendPoliceId
-              , String sendPoliceName, int recverID, String recverName, String file, int type, String sendVoicelong);
+            , String sendPoliceName, int recverID, String recverName, String file, int type, String sendVoicelong);
   ```
 
 - 获取发送消息的监听
@@ -381,7 +355,7 @@
 
   ```java
   void sendUpdateAttachPathRequest(MsgMessageEntity entity,
-                                              boolean isDownLoad);
+                                            boolean isDownLoad);
   ```
 
 - 获取 IM 聊天会话列表
@@ -396,14 +370,12 @@
   void showMegToNotity(final IShowNotityCallBack iShowNotity);
   ```
 
-  
-
 ## ContactsEngine
 
 - 获取所有的组织
 
   ```J
-   void getALLUnitList(UnitManager.IOtherListener iUnitListener)；
+  void getALLUnitList(UnitManager.IOtherListener iUnitListener)；
   ```
 
 - 获取 GPS 数据
@@ -431,8 +403,6 @@
   ```Java
   void sendLocation(int m_userLoginId,double longitude, double latitude,double derect,double speed,int location_type);
   ```
-
-  
 
 ## SetEngine
 
@@ -534,10 +504,3 @@
   int getMediaOutGain();
   ```
 
-  
-
-
-
-
-
-##
