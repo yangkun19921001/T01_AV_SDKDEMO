@@ -1,5 +1,13 @@
 # T01 Android 端音视频 SDK API 文档
 
+[公司官网](<http://www.t01.com.cn/>)
+
+![](<http://12145169.s21i.faiusr.com/2/ABUIABACGAAgm4u-wgUoyK3c_Qcw8w441QQ.jpg>)
+
+![](<http://12145169.s21i.faiusr.com/2/ABUIABACGAAgusm_wgUonufkhQIwgA842AQ.jpg>)
+
+![](<http://12145169.s21i.faiusr.com/2/ABUIABACGAAg3Yi-wgUo2rT6zQQw-g44ywQ.jpg>)
+
 ## 注意
 
 华为手机 APP 长连接 异常问题
@@ -532,4 +540,4 @@
 
 
 
-## 
+##
