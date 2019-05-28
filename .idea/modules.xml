@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/SDKDEMO.iml" filepath="$PROJECT_DIR$/SDKDEMO.iml" />
+      <module fileurl="file://D:\Android\SVNPROJECT\LY_RHTX\app\app.iml" filepath="D:\Android\SVNPROJECT\LY_RHTX\app\app.iml" />
+      <module fileurl="file://D:\Android\SVNPROJECT\LY_RHTX\yk_libs\calllibrary\calllibrary.iml" filepath="D:\Android\SVNPROJECT\LY_RHTX\yk_libs\calllibrary\calllibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lytest/lytest.iml" filepath="$PROJECT_DIR$/lytest/lytest.iml" />
+      <module fileurl="file://D:\Downloads\LY_Integration_Standard\call_library\mylibrary.iml" filepath="D:\Downloads\LY_Integration_Standard\call_library\mylibrary.iml" />
+    </modules>
+  </component>
+</project>

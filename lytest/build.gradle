@@ -1,0 +1,80 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
+
+
+    defaultConfig {
+        applicationId "com.lingyi.autiovideo.test"
+        minSdkVersion 18
+        targetSdkVersion 22
+        versionCode 1007
+        versionName "1.0.0.7"
+        multiDexEnabled true
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    repositories {
+        flatDir {
+            dirs 'libs'   // aar目录
+        }
+    }
+
+    signingConfigs {
+        release {
+            storeFile file("test.jks")
+            storePassword "123123"
+            keyAlias "key0"
+            keyPassword "123123"
+        }
+    }
+
+    buildTypes {
+        release {
+            buildConfigField "boolean", "LOG_DEBUG", "false"
+            buildConfigField "boolean", "USE_CANARY", "false"
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            buildConfigField "boolean", "LOG_DEBUG", "true"
+            buildConfigField "boolean", "USE_CANARY", "true"
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:26.1.0'
+    compile 'com.android.support:design:26.1.0'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support:support-vector-drawable:26.1.0'
+    compile 'com.blankj:utilcode:1.9.6'
+    compile 'com.blankj:alog:1.3.0'
+    compile 'com.jakewharton:butterknife:8.8.1'
+    compile 'com.jakewharton:butterknife-compiler:8.8.1'
+
+    annotationProcessor(rootProject.ext.dependencies["butterknife-compiler"]) {
+        exclude module: 'support-annotations'
+    }
+    testImplementation rootProject.ext.dependencies["junit"]
+//    testCompile 'junit:junit:4.12'
+    androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.1', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile(name: 'T01_AudioVideoHelp_SDK-1.0.0.7', ext: 'aar')
+    //适配器
+    compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
+    //    compile files('libs/LY_AudioVideoHelp_SDK_v1.0.0.1.jar')
+    compile files('libs/index.jar')
+
+    implementation rootProject.ext.dependencies["multidex"]
+}

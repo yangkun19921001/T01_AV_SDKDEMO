@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/black0" >
+
+    <LinearLayout
+        android:id="@+id/trying_linearLayout_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:id="@+id/tryingRemoteName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="小王"
+            android:textColor="@color/white"
+            android:textSize="25sp" />
+
+        <TextView
+            android:id="@+id/tryingRemoteNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="(000000)"
+            android:textColor="@color/white"
+            android:textSize="25sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tryingPhoneAttribution"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/trying_linearLayout_top"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="14dp"
+        android:text="来电"
+        android:textColor="@color/white"
+        android:textSize="25sp" />
+
+    <ImageView
+        android:background="@drawable/re_audio_center_bg_focus"
+        android:id="@+id/tryingContachPhone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:scaleType="centerInside"
+         />
+
+    <LinearLayout
+
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal" >
+
+
+        <Button
+            android:id="@+id/tryAnswer"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:background="@drawable/re_green_shape_bg"
+            android:text="接听"
+            android:textColor="@color/white"
+            android:textSize="@dimen/f5" />
+
+        <Button
+            android:id="@+id/tryHangup"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="15dp"
+            android:background="@drawable/re_red_shape_bg"
+            android:text="挂断"
+            android:textColor="@color/white"
+            android:textSize="@dimen/f5" />
+    </LinearLayout>
+
+</RelativeLayout>

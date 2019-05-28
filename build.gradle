@@ -1,0 +1,36 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+apply from: "config.gradle" //这里表示引用config.gradle文件
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.0.0'
+
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+        //lambda
+        classpath 'me.tatarka:gradle-retrolambda:3.6.0'
+
+        classpath 'com.novoda:bintray-release:0.5.0'
+        //日历控件需要的
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+        maven { url "https://jitpack.io" }//这里要使用rxcahche指定的仓库
+        maven {
+            url 'https://dl.google.com/dl/android/maven2/'
+            // Alternative URL is 'https://dl.google.com/dl/android/maven2/'
+        }
+        maven { url "https://maven.google.com" }
+    }
+}
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
