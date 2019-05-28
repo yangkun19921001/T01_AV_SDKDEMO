@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+
+    <FrameLayout
+        android:id="@+id/ff_video_land"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/black">
+
+        <FrameLayout
+            android:id="@+id/video_call_remote_video"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"></FrameLayout>
+    </FrameLayout>
+
+    <!-- 本地视频 android:background="@drawable/grad_whiterounded" -->
+
+    <FrameLayout
+        android:id="@+id/video_call_local_video"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></FrameLayout>
+
+
+    <com.lingyi.autiovideo.test.widget.popup.VideoFunchtion
+        android:id="@+id/rl_video_function"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"></com.lingyi.autiovideo.test.widget.popup.VideoFunchtion>
+
+
+</FrameLayout>

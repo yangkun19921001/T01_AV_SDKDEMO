@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!--配置业务服务器-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/x50"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/x24"
+            android:text="群组名字: "
+            android:textColor="@color/black0"
+            android:textSize="@dimen/f5" />
+
+        <EditText
+            android:id="@+id/et_group_name"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="@dimen/x24"
+            android:hint="请输入名称"
+            android:textColor="@color/black0"
+            android:textSize="@dimen/f3" />
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.lingyi.autiovideo.test.widget.popup.MyCallLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:id="@+id/myl"
+    android:layout_height="match_parent">
+
+</com.lingyi.autiovideo.test.widget.popup.MyCallLayout>

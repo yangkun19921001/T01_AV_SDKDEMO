@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@color/black0" >
+
+    <RelativeLayout
+        android:id="@+id/audio_call_top"
+        android:layout_width="fill_parent"
+        android:layout_height="@dimen/x150"
+        android:layout_marginTop="@dimen/x20"
+        android:gravity="center_vertical"
+        android:orientation="vertical" >
+        <!-- 手机号 -->
+        <TextView
+            android:id="@+id/audio_call_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="@dimen/x10"
+            android:text="12345678"
+            android:textColor="@color/white"
+            android:textSize="@dimen/f8" />
+        <!-- 状态 -->
+
+        <TextView
+            android:id="@+id/audio_call_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@id/audio_call_number"
+            android:layout_marginRight="10dp"
+            android:text="语音通话中"
+            android:textColor="@color/gray5"
+            android:textSize="@dimen/f8" />
+        <!-- 通话时长 -->
+
+        <TextView
+            android:id="@+id/audio_call_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/audio_call_info"
+            android:layout_marginRight="@dimen/x10"
+            android:layout_marginTop="@dimen/x10"
+            android:text="00:00"
+            android:visibility="invisible"
+            android:textColor="@color/gray5"
+            android:textSize="@dimen/f5" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/audio_call_speak_bt"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/re_audio_center_bg"
+        android:visibility="invisible" />
+    <!-- 参加会议人数 -->
+
+    <TextView
+        android:id="@+id/audio_call_person_sum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/audio_bottom_panel"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/x50"
+        android:text="参加会议人数"
+        android:textColor="@color/gray5"
+        android:textSize="@dimen/f8"
+        android:visibility="invisible" />
+    <!-- 底部操作部分 -->
+
+    <LinearLayout
+        android:id="@+id/audio_bottom_panel"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/audio_call_hangup"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="@dimen/x40"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <!-- 静音 -->
+
+        <Button
+            android:id="@+id/audio_call_mute_btn"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:background="@drawable/re_audio_mute_off_bg" />
+
+        <!-- 免提 -->
+
+        <Button
+            android:id="@+id/audio_call_handsfree_btn"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="@dimen/x10"
+            android:background="@drawable/re_audio_speaker_bg" />
+
+        <!-- 保持 -->
+
+        <Button
+            android:id="@+id/audio_call_hold_btn"
+            android:layout_width="80dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="@dimen/x30"
+            android:visibility="gone"
+            android:background="@drawable/re_audio_hold_on_bg" />
+        <!-- 挂断 -->
+    </LinearLayout>
+    <Button
+        android:id="@+id/audio_call_hangup"
+        android:layout_width="600dp"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="@dimen/x40"
+        android:layout_marginRight="@dimen/x40"
+        android:textColor="@color/white"
+        android:textSize="@dimen/f5"
+        android:text="挂断"
+        android:background="@drawable/re_red_shape_bg"/>
+
+</RelativeLayout>
