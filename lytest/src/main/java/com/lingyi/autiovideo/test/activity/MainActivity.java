@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
+import com.bnc.activity.PttApplication;
 import com.bnc.activity.T01Helper;
 import com.bnc.activity.engine.CallEngine;
 import com.bnc.activity.receiver.SipEventReceiver;
@@ -63,6 +64,14 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         initPhoneCallListener();
+
+        //默认分辨率 720
+        if (PttApplication.getInstance().getDefVideoSize() == -1) {
+            PttApplication.getInstance().setVideoSize(2);
+            T01Helper.getInstance().getSetEngine().setVideoCallInCallQuality(PttApplication.getInstance().getDefVideoSize());
+        }else {
+            T01Helper.getInstance().getSetEngine().setVideoCallInCallQuality(PttApplication.getInstance().getDefVideoSize());
+        }
     }
 
     private void initFragment(Bundle savedInstanceState) {
