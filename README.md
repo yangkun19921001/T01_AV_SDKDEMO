@@ -8,6 +8,13 @@
 
 ![img](http://12145169.s21i.faiusr.com/2/ABUIABACGAAg3Yi-wgUo2rT6zQQw-g44ywQ.jpg)
 
+## 版本 log
+
+| 版本  | 功能                         | 负责人     |
+| ----- | ---------------------------- | ---------- |
+|       |                              |            |
+| 1.0.8 | 增加 YUV > MediaCodec 硬编码 | 刘扬，阳坤 |
+
 ## 注意
 
 华为手机 APP 长连接 异常问题
