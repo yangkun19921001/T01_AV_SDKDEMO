@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.ScreenUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bnc.activity.T01Helper;
 import com.bnc.activity.utils.ViewType;
@@ -117,6 +118,13 @@ public class MyCallLayout extends CallLayout implements View.OnClickListener {
      * @param view
      */
     private void handleVideo(View view) {
+
+        //解决 硬编花屏问题
+        if (T01Helper.getInstance().getSetEngine().getCurVideoQuality().equals("高清") ||
+                T01Helper.getInstance().getSetEngine().getCurVideoQuality().equals("超清")) {
+            ScreenUtils.setLandscape(mContext.get());
+        }
+
         view.findViewById(R.id.video_call_mute_btn).setOnClickListener(MyCallLayout.this);
         view.findViewById(R.id.video_call_handsfree_btn).setOnClickListener(MyCallLayout.this);
         view.findViewById(R.id.video_call_local_btn).setOnClickListener(MyCallLayout.this);
