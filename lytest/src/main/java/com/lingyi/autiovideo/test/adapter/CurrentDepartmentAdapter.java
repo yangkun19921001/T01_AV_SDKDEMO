@@ -148,22 +148,33 @@ public class CurrentDepartmentAdapter extends BaseQuickAdapter<UserEntity, BaseV
      * 根据ListView的当前位置获取分类的首字母的Char ascii值
      */
     public int getSectionForPosition(int position) {
-        if (getData().get(position).getUserId() == Constants.curUserId)
-            return -1;
-        return getData().get(position).getLetterName().charAt(0);
+       try {
+           if (getData().get(position).getUserId() == Constants.curUserId)
+               return -1;
+           return getData().get(position).getLetterName().charAt(0);
+       }catch (Exception e){
+           Log.e(TAG,e.getMessage());
+       }
+
+       return 0;
     }
 
     /**
      * 根据分类的首字母的Char ascii值获取其第一次出现该首字母的位置 第一个位置不比较，为自己账号
      */
     public int getPositionForSection(int section) {
-        for (int i = 1; i < getData().size(); i++) {
-            String sortStr = getData().get(i).getLetterName();
-            char firstChar = sortStr.toUpperCase().charAt(0);
-            if (firstChar == section) {
-                return i;
+        try {
+            for (int i = 1; i < getData().size(); i++) {
+                String sortStr = getData().get(i).getLetterName();
+                char firstChar = sortStr.toUpperCase().charAt(0);
+                if (firstChar == section) {
+                    return i;
+                }
             }
+        }catch (Exception e){
+            Log.e(TAG,e.getMessage());
         }
+
 
         return -1;
     }

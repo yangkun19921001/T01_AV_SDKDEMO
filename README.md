@@ -10,10 +10,11 @@
 
 ## 版本 log
 
-| 版本  | 功能                         | 负责人     |
-| ----- | ---------------------------- | ---------- |
-|       |                              |            |
-| 1.0.8 | 增加 YUV > MediaCodec 硬编码 | 刘扬，阳坤 |
+| 版本  | 功能                                    | 负责人     |
+| ----- | --------------------------------------- | ---------- |
+|       |                                         |            |
+| 1.0.8 | 增加 YUV > MediaCodec 硬编码            | 刘扬，阳坤 |
+| 1.0.9 | 1.更新默认分辨率内部代码 2.内部代码优化 | 刘扬，阳坤 |
 
 ## 注意
 
@@ -76,7 +77,7 @@
 - 是否注册
 
   ```java
-  //loginState = 1 为登录
+  //loginState = 1 为登录 
   getIsRegister(final IIsLoginListener iIsLoginListener);
   ```
 
@@ -85,6 +86,14 @@
   ```java
   void login(String userId, String pwd, String server_ip, String server_port, final LoginCallBack loginCallBack)
   ```
+  
+- 退出
+
+  ```java
+  exitLyHelperSDK(final ILoginOutListener loginOutListener);
+  ```
+
+  
 
 ## PttEngine
 
@@ -178,7 +187,22 @@
 
   ```Java
   /*** type 1 来电，2 呼叫*/
-  void setCallReceiverListener(final CallEventCallBack callEventListener)；
+  void setCallReceiverListener(final ICallEventCallBack callEventListener)；
+  ```
+
+- CALL_TYPE
+
+  ```java
+   		VIDEO_CALL_IN, //视频来电
+      VIDEO_CALL_OUT,//视频呼出
+      AUDIO_CALL_IN,//语音来电
+      AUDIO_CALL_OUT,//语音呼出
+      AUDIO_MEETING,//语音会议
+      VIDEO_MEETING,//视频会议
+      VIDEO_MONITOR,//视频监控-暂时用不到
+      TERMINATED,//通话结束
+      VIDEO_CALL_IN_CALL,//视频通话中...
+      AUDIO_CALL_IN_CALL;//语音通话中...
   ```
 
 - 挂断电话
@@ -382,25 +406,25 @@
 - 获取所有的组织
 
   ```J
-  void getALLUnitList(UnitManager.IOtherListener iUnitListener)；
+  void getALLUnitList(IUnitListener iUnitListener);
   ```
 
 - 获取 GPS 数据
 
   ```Java
-  void getGPSInfoList(UnitManager.IOtherListener igpsInfoCallBack);
+  void getGPSInfoList(IGPSListener igpsInfoCallBack);
   ```
 
 - 获取所有用户
 
   ```Java
-  void getUserList(UnitManager.IOtherListener iUserInfoCallBack);
+  void getUserList(IUserListener iUserInfoCallBack);
   ```
 
 - 获取所有外部用户
 
   ```Java
-  void getWBUserList(UnitManager.IGPSListener iWbInfoCallBack);
+  void getWBUserList(IWBUserListener iWbInfoCallBack);
   ```
 
 ## LocationEngine

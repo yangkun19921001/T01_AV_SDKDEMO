@@ -21,7 +21,5 @@ public class TestApp extends PttApplication {
         T01Helper.getInstance().initAppContext(getApplicationContext());
         Utils.init(this);
 
-
-
     }
 }
