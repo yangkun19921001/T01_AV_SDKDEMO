@@ -7,13 +7,15 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
 import com.bnc.activity.PttApplication;
 import com.bnc.activity.T01Helper;
+import com.bnc.activity.engine.CALL_TYPE;
 import com.bnc.activity.engine.CallEngine;
-import com.bnc.activity.receiver.SipEventReceiver;
+import com.bnc.activity.view.manager.UnitManager;
 import com.lingyi.autiovideo.test.R;
 import com.lingyi.autiovideo.test.fragment.IntercomFragment;
 import com.lingyi.autiovideo.test.utils.FragmentUtils;
@@ -22,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    
+    private String TAG = "MainActivity";
 
     private FrameLayout mTextMessage;
 
@@ -63,15 +67,175 @@ public class MainActivity extends AppCompatActivity {
         initFragment(savedInstanceState);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        initPhoneCallListener();
+//        initPhoneCallListener();
+
+        initPhoneCallListenerTest();
 
         //默认分辨率 720
         if (PttApplication.getInstance().getDefVideoSize() == -1) {
             PttApplication.getInstance().setVideoSize(2);
             T01Helper.getInstance().getSetEngine().setVideoCallInCallQuality(PttApplication.getInstance().getDefVideoSize());
-        }else {
+        } else {
             T01Helper.getInstance().getSetEngine().setVideoCallInCallQuality(PttApplication.getInstance().getDefVideoSize());
         }
+
+
+        /*获取所有组织*/
+        getAllUnitList();
+
+        /*获取联系人*/
+        getUserContactsList();
+
+        /*获取外部设备*/
+        getWBUserList();
+
+        /*获取GPS定位*/
+        getGPSInfoList();
+    }
+
+    private void getGPSInfoList() {
+        T01Helper.getInstance().getContactsEngine().getGPSInfoList(new UnitManager.IGPSListener() {
+            @Override
+            public void onGetSuccee(String meg) {
+                Log.i(TAG,"当前GPS--onGetSuccee"+meg);
+            }
+
+            @Override
+            public void onGetError(String meg) {
+                Log.i(TAG,"当前GPS--onGetSuccee"+meg);
+
+            }
+        });
+    }
+
+    private void getWBUserList() {
+        T01Helper.getInstance().getContactsEngine().getWBUserList(new UnitManager.IWBUserListener() {
+            @Override
+            public void onGetSuccee(String meg) {
+                Log.i(TAG,"当前WB联系人--onGetSuccee"+meg);
+            }
+
+            @Override
+            public void onGetError(String meg) {
+                Log.i(TAG,"当前WB联系人--onGetSuccee"+meg);
+
+            }
+        });
+    }
+
+    private void getUserContactsList() {
+        T01Helper.getInstance().getContactsEngine().getUserList(new UnitManager.IUserListener() {
+            @Override
+            public void onGetSuccee(String meg) {
+                Log.i(TAG,"当前联系人--onGetSuccee"+meg);
+            }
+
+            @Override
+            public void onGetError(String meg) {
+                Log.i(TAG,"当前联系人--onGetSuccee"+meg);
+
+            }
+        });
+    }
+
+    private void getAllUnitList() {
+        T01Helper.getInstance().getContactsEngine().getALLUnitList(null,new UnitManager.IUnitListener() {
+            @Override
+            public void onGetSuccee(String meg) {
+                Log.i(TAG,"当前所有组织--onGetSuccee"+meg);
+            }
+
+            @Override
+            public void onGetError(String meg) {
+                Log.i(TAG,"当前所有组织--onGetError"+meg);
+
+            }
+        });
+    }
+
+    private void initPhoneCallListenerTest() {
+        T01Helper.getInstance().getCallEngine().addCallReceiverListener(new CallEngine.ICallEventCallBack() {
+            @Override
+            public void onCallMeetingComing(CALL_TYPE call_type, String meetingMember) {
+                Log.i(TAG, "onCallMeetingComing" + ": meetingMember" + meetingMember);
+                switch (call_type) {
+                    case VIDEO_MEETING:
+                        Log.i(TAG, "视频会议" + ": meetingMember" + meetingMember);
+                        break;
+                    case AUDIO_MEETING:
+                        Log.i(TAG, "语音会议" + ": meetingMember" + meetingMember);
+                        break;
+                }
+
+            }
+
+            @Override
+            public void onCallOutComing(CALL_TYPE call_type, String number) {
+                Log.i(TAG, "onCallOutComing" + ": name" + number+ "线程--》" + Thread.currentThread().getName());
+                switch (call_type) {
+                    case VIDEO_CALL_OUT:
+                        Log.i(TAG, "视频呼出" + ": name" + number);
+                        break;
+                    case AUDIO_CALL_OUT:
+                        Log.i(TAG, "语音呼出" + ": name" + number);
+                        break;
+                }
+
+            }
+
+            @Override
+            public void onCallInComing(CALL_TYPE call_type, String number) {
+                Log.i(TAG, "onCallInComing" + ": name" + number+ "线程--》" + Thread.currentThread().getName());
+                switch (call_type) {
+                    case AUDIO_CALL_IN:
+                        Log.i(TAG, "语音来电" + ": name" + number);
+//                        T01Helper.getInstance().getCallEngine().acceptCall();
+                        startActivity(new Intent(MainActivity.this,CallInOrOutActivity.class));
+                        break;
+                    case VIDEO_CALL_IN:
+                        Log.i(TAG, "视频来电" + ": name" + number);
+//                        T01Helper.getInstance().getCallEngine().acceptCall();
+                        startActivity(new Intent(MainActivity.this,CallInOrOutActivity.class));
+                        break;
+                }
+
+            }
+
+
+            @Override
+            public void onVideoMonitor(CALL_TYPE call_type, String number) {
+                switch (call_type) {
+                    case VIDEO_MONITOR:
+                        Log.i(TAG, "视频监控" + ": name" + number);
+                        break;
+
+                }
+            }
+
+            @Override
+            public void onCallError(String error) {
+                Log.i(TAG, "呼叫失败" + ": error" + error);
+            }
+
+            @Override
+            public void onTerminated(CALL_TYPE call_type) {
+                Log.i(TAG, "通话结束");
+            }
+
+            @Override
+            public void onCallInCall(CALL_TYPE call_type, String number) {
+                switch (call_type) {
+                    case AUDIO_CALL_IN_CALL:
+                        Log.i(TAG,"语音通话中"+number);
+                        break;
+                    case VIDEO_CALL_IN_CALL:
+                        Log.i(TAG,"视频通话中"+number);
+                        startActivity(new Intent(MainActivity.this,VideoCallActivity.class));
+                        break;
+                }
+
+            }
+        });
     }
 
     private void initFragment(Bundle savedInstanceState) {
@@ -90,88 +254,89 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void initPhoneCallListener() {
-        T01Helper.getInstance().getCallEngine().setCallReceiverListener(new CallEngine.CallEventCallBack() {
-            public void onCallMeetingComing(int i, String call_name, String s1) {
-                Intent intent = null;
-                switch (i) {
-                    case 3:
-                        //语音会议
-                        intent = new Intent(MainActivity.this, TestCallActivity.class);
-                        intent.putExtra("callName", "语音会议：");
-//			intent.setClass(context, CallActivity.class);
-                        intent.putExtra(SipEventReceiver.SESSION_ID_PARAM,
-                                s1);
-                        break;
-                    case 4:
-                        intent = new Intent(MainActivity.this, TestCallActivity.class);
-                        intent.putExtra("callName", "视频会议：");
-//			intent.setClass(context, CallActivity.class);
-                        intent.putExtra(SipEventReceiver.SESSION_ID_PARAM,
-                                s1);
-
-                        break;
-                    default:
-                        break;
-                }
-                MainActivity.this.startActivity(intent);
-//                EventBus.getDefault().post("", EventBusTags.UPDATA_MEG);
-            }
-
-            @Override
-            public void onCallOutComing(int i, String call_name, String s1) {
-                Intent intent = null;
-                switch (i) {
-                    case 1:
-                        intent = new Intent(MainActivity.this, TestCallActivity.class);
-                        intent.putExtra("callName", call_name);
-                        intent.putExtra(SipEventReceiver.SESSION_ID_PARAM,
-                                s1);
-                        break;
-                    case 2: //视频呼叫
-                        intent = new Intent(MainActivity.this, TestCallActivity.class);
-                        intent.putExtra("callName", call_name);
-                        intent.putExtra(SipEventReceiver.SESSION_ID_PARAM,
-                                s1);
-                        break;
-                    default:
-                        break;
-                }
-                MainActivity.this.startActivity(intent);
-            }
-
-            @Override
-            public void onCallInComing(int i, String sessionId) {
-                Intent call = null;
-                switch (i) {
-                    case 1: //语音来电
-                        call = new Intent(MainActivity.this, TestCallActivity.class);
-                        call.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        call.putExtra(SipEventReceiver.SESSION_ID_PARAM,
-                                sessionId);
-                        MainActivity.this.startActivity(call);
-                        break;
-                    case 2: //代表视频来电
-                        call = new Intent(MainActivity.this, TestCallActivity.class);
-                        call.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        call.putExtra(SipEventReceiver.SESSION_ID_PARAM,
-                                sessionId);
-                        break;
-                    default:
-                        break;
-                }
-                MainActivity.this.startActivity(call);
-            }
-
-            @Override
-            public void onVideoMonitor(int type, String name, String sessionId) {
-         /*       Intent intent = new Intent(MainActivity.this, CallActivity.class);
-                intent.putExtra("callName", name);
-                intent.putExtra(SipEventReceiver.SESSION_ID_PARAM,
-                        sessionId);
-                intent.putExtra(LYConstants.VOIP_STATE_VIDEOMONITOR, 0x3);
-                MainActivity.this.startActivity(intent);*/
-            }
-        });
+//        T01Helper.getInstance().getCallEngine().setCallReceiverListener(new CallEngine.CallEventCallBack() {
+//
+//            public void onCallMeetingComing(int i, String call_name, String s1) {
+//                Intent intent = null;
+//                switch (i) {
+//                    case 3:
+//                        //语音会议
+//                        intent = new Intent(MainActivity.this, TestCallActivity.class);
+//                        intent.putExtra("callName", "语音会议：");
+////			intent.setClass(context, CallActivity.class);
+//                        intent.putExtra(SipEventReceiver.SESSION_ID_PARAM,
+//                                s1);
+//                        break;
+//                    case 4:
+//                        intent = new Intent(MainActivity.this, TestCallActivity.class);
+//                        intent.putExtra("callName", "视频会议：");
+////			intent.setClass(context, CallActivity.class);
+//                        intent.putExtra(SipEventReceiver.SESSION_ID_PARAM,
+//                                s1);
+//
+//                        break;
+//                    default:
+//                        break;
+//                }
+//                MainActivity.this.startActivity(intent);
+////                EventBus.getDefault().post("", EventBusTags.UPDATA_MEG);
+//            }
+//
+//            @Override
+//            public void onCallOutComing(int i, String call_name, String s1) {
+//                Intent intent = null;
+//                switch (i) {
+//                    case 1:
+//                        intent = new Intent(MainActivity.this, TestCallActivity.class);
+//                        intent.putExtra("callName", call_name);
+//                        intent.putExtra(SipEventReceiver.SESSION_ID_PARAM,
+//                                s1);
+//                        break;
+//                    case 2: //视频呼叫
+//                        intent = new Intent(MainActivity.this, TestCallActivity.class);
+//                        intent.putExtra("callName", call_name);
+//                        intent.putExtra(SipEventReceiver.SESSION_ID_PARAM,
+//                                s1);
+//                        break;
+//                    default:
+//                        break;
+//                }
+//                MainActivity.this.startActivity(intent);
+//            }
+//
+//            @Override
+//            public void onCallInComing(int i, String sessionId) {
+//                Intent call = null;
+//                switch (i) {
+//                    case 1: //语音来电
+//                        call = new Intent(MainActivity.this, TestCallActivity.class);
+//                        call.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                        call.putExtra(SipEventReceiver.SESSION_ID_PARAM,
+//                                sessionId);
+//                        MainActivity.this.startActivity(call);
+//                        break;
+//                    case 2: //代表视频来电
+//                        call = new Intent(MainActivity.this, TestCallActivity.class);
+//                        call.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                        call.putExtra(SipEventReceiver.SESSION_ID_PARAM,
+//                                sessionId);
+//                        break;
+//                    default:
+//                        break;
+//                }
+//                MainActivity.this.startActivity(call);
+//            }
+//
+//            @Override
+//            public void onVideoMonitor(int type, String name, String sessionId) {
+//         /*       Intent intent = new Intent(MainActivity.this, CallActivity.class);
+//                intent.putExtra("callName", name);
+//                intent.putExtra(SipEventReceiver.SESSION_ID_PARAM,
+//                        sessionId);
+//                intent.putExtra(LYConstants.VOIP_STATE_VIDEOMONITOR, 0x3);
+//                MainActivity.this.startActivity(intent);*/
+//            }
+//        });
 
 
     }

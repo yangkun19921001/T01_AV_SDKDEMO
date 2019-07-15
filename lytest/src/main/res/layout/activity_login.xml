@@ -13,6 +13,7 @@
         android:orientation="vertical">
 
         <EditText
+            android:text="70001004"
             android:id="@+id/et_user"
             android:layout_width="match_parent"
             android:layout_height="@dimen/x80"

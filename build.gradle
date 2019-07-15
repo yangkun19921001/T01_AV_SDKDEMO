@@ -3,7 +3,9 @@ apply from: "config.gradle" //这里表示引用config.gradle文件
 buildscript {
     repositories {
         jcenter()
+        google()
         mavenCentral()
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.0'
@@ -22,12 +24,14 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        google()
         maven { url "https://jitpack.io" }//这里要使用rxcahche指定的仓库
         maven {
             url 'https://dl.google.com/dl/android/maven2/'
             // Alternative URL is 'https://dl.google.com/dl/android/maven2/'
         }
         maven { url "https://maven.google.com" }
+        google()
     }
 }
 
