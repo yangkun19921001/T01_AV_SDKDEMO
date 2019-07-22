@@ -15,6 +15,9 @@ import com.bnc.activity.PttApplication;
 import com.bnc.activity.T01Helper;
 import com.bnc.activity.engine.CALL_TYPE;
 import com.bnc.activity.engine.CallEngine;
+import com.bnc.activity.engine.RegisterEngine;
+import com.bnc.activity.entity.UserEntity;
+import com.bnc.activity.utils.PropertyUtil;
 import com.bnc.activity.view.manager.UnitManager;
 import com.lingyi.autiovideo.test.R;
 import com.lingyi.autiovideo.test.fragment.IntercomFragment;
@@ -91,6 +94,36 @@ public class MainActivity extends AppCompatActivity {
 
         /*获取GPS定位*/
         getGPSInfoList();
+        /**是否在线*/
+        isRegister();
+        //请求在线人数
+        requestOnlineUser();
+
+    }
+
+    private void requestOnlineUser() {
+        T01Helper.getInstance().getContactsEngine().getOnlineUserCallBack(5000, new UnitManager.IOnLineUserListener() {
+            @Override
+            public void onGetSuccee(List<UserEntity> list) {
+                Log.i(TAG,"轮训获取在线用户列表" + list);
+
+            }
+
+            @Override
+            public void onGetSuccee(String json) {
+
+            }
+
+            @Override
+            public void onGetError(String s) {
+
+            }
+        });
+    }
+
+    private void isRegister() {
+        boolean registerEngine = T01Helper.getInstance().getRegisterEngine().isRegister();
+        Log.e(TAG,"当前用户是否在线" + registerEngine);
     }
 
     private void getGPSInfoList() {
@@ -138,8 +171,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    public String getCurrentUnitId(){
+        return  PropertyUtil.getInstance(PttApplication.getInstance().getApplicationContext()).getString("UNIT_ID", null);
+    }
+
     private void getAllUnitList() {
-        T01Helper.getInstance().getContactsEngine().getALLUnitList(null,new UnitManager.IUnitListener() {
+
+        T01Helper.getInstance().getContactsEngine().getALLUnitList(getCurrentUnitId(),new UnitManager.IUnitListener() {
             @Override
             public void onGetSuccee(String meg) {
                 Log.i(TAG,"当前所有组织--onGetSuccee"+meg);
