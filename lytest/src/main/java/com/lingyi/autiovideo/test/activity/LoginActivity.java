@@ -25,7 +25,7 @@ import butterknife.Unbinder;
  * Created by yangk on 2018/1/4.
  */
 
-public class LoginActivity extends AppCompatActivity  {
+public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.et_user)
     EditText etUser;
     @BindView(R.id.pwd)
@@ -56,12 +56,8 @@ public class LoginActivity extends AppCompatActivity  {
      *
      */
 
-    /**
-     * 初始化消息转发器
-     * <p>
-     * loginState == 1,在线；2，离线
-     */
-    private int loginState; //是否能登陆
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,36 +71,25 @@ public class LoginActivity extends AppCompatActivity  {
 
 
     private void initListener() {
-
-        T01Helper.getInstance().getRegisterEngine().getIsRegister(new IIsLoginListener() {
-            @Override
-            public void onLoginState(int i) {
-                if (i == 1){
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                    finish();
-                }
-                loginState = i;
-                pro.setVisibility(View.GONE);
-            }
-        });
+        pro.setVisibility(View.GONE);
+        if (T01Helper.getInstance().getRegisterEngine().isRegister()) {
+            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+            finish();
+        }
     }
 
     @OnClick(R.id.login)
     public void onViewClicked() {
-        if (loginState == 2) {
             if (TextUtils.isEmpty(etUser.getText().toString().trim()) ||
                     TextUtils.isEmpty(pwd.getText().toString().trim()) ||
                     TextUtils.isEmpty(port.getText().toString().trim()) ||
                     TextUtils.isEmpty(ip.getText().toString().trim())
-                    ) {
+            ) {
                 ToastUtils.showLong("检查用户名或密码是否填写？");
             } else {
-                onLogin(etUser.getText().toString().trim(), pwd.getText().toString().trim(),ip.getText().toString().trim(),port.getText().toString().trim());
+                onLogin(etUser.getText().toString().trim(), pwd.getText().toString().trim(), ip.getText().toString().trim(), port.getText().toString().trim());
             }
-        } else {
-            startActivity(new Intent(this, MainActivity.class));
-            finish();
-        }
+
     }
 
     @Override
@@ -114,9 +99,7 @@ public class LoginActivity extends AppCompatActivity  {
     }
 
 
-
-
-    public void onLogin(String userId, String pwd, String server_ip, String server_port){
+    public void onLogin(String userId, String pwd, String server_ip, String server_port) {
         T01Helper.getInstance().getRegisterEngine().login(userId, pwd, server_ip, server_port, new LoginCallBack() {
             @Override
             public void onLoginSucceed() {

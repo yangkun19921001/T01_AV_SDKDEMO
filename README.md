@@ -10,11 +10,13 @@
 
 ## 版本 log
 
-| 版本  | 功能                                    | 负责人     |
-| ----- | --------------------------------------- | ---------- |
-|       |                                         |            |
-| 1.0.8 | 增加 YUV > MediaCodec 硬编码            | 刘扬，阳坤 |
-| 1.0.9 | 1.更新默认分辨率内部代码 2.内部代码优化 | 刘扬，阳坤 |
+| 版本    | 功能                                                         | 负责人     |
+| ------- | ------------------------------------------------------------ | ---------- |
+|         |                                                              |            |
+| 1.0.8   | 增加 YUV > MediaCodec 硬编码                                 | 刘扬，阳坤 |
+| 1.0.9   | 1.更新默认分辨率内部代码 2.内部代码优化                      | 刘扬，阳坤 |
+| 1.0.1.0 | 1. 增加同步查询是否在线接口；2. 获取组织接口支持传入 unitID 查询;3.增加查询当前组织ID接口 | 刘扬，阳坤 |
+| 1.0.1.0 | 1. ContactsEngine 增加按时间轮训请求在线用户;2. 优化对讲组人数在上万的情况下获取数据慢的性能问题； | 刘扬，阳坤 |
 
 ## 注意
 
@@ -68,13 +70,29 @@
 
 5. 初始化 SDK
 
-   ```
+   ```java
    T01Helper.getInstance().initAppContext(mContext);
    ```
+   
+6. 退出 SDK
+
+   ```java
+   exitLyHelperSDK(final ILoginOutListener loginOutListener);
+   ```
+
+   
 
 ## RegisterEngine
 
-- 是否注册
+- 是否注册 (同步查询，推荐使用)
+
+  ```java
+  boolean isRegister()
+  ```
+
+  
+
+- 是否注册(异步查询，建议使用同步查询接口)
 
   ```java
   //loginState = 1 为登录 
@@ -87,12 +105,7 @@
   void login(String userId, String pwd, String server_ip, String server_port, final LoginCallBack loginCallBack)
   ```
   
-- 退出
-
-  ```java
-  exitLyHelperSDK(final ILoginOutListener loginOutListener);
-  ```
-
+  
   
 
 ## PttEngine
@@ -403,10 +416,17 @@
 
 ## ContactsEngine
 
+- 查询当前组织ID
+
+  ```java
+  String getCurrentUnitId()
+  ```
+
 - 获取所有的组织
 
-  ```J
-  void getALLUnitList(IUnitListener iUnitListener);
+  ```Java
+  /**不传（null or ""） 默认获取所有的组织*/
+  void getALLUnitList(String unitID,IUnitListener iUnitListener);
   ```
 
 - 获取 GPS 数据
@@ -426,6 +446,16 @@
   ```Java
   void getWBUserList(IWBUserListener iWbInfoCallBack);
   ```
+  
+- 获取在线用户
+
+  参数一：repeatTime 轮训请求以毫秒为单位, 不需要轮训请求传入 0 就行
+
+  ```java
+  void getOnlineUserCallBack(int repeatTime, IOnLineUserListener iPttDataListener)
+  ```
+
+  
 
 ## LocationEngine
 
