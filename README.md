@@ -2,6 +2,8 @@
 
 [公司官网](http://www.t01.com.cn/)
 
+[GitHub SDKDEMO 实时更新动态](https://github.com/yangkun19921001/T01_AV_SDKDEMO)
+
 ![img](http://12145169.s21i.faiusr.com/2/ABUIABACGAAgm4u-wgUoyK3c_Qcw8w441QQ.jpg)
 
 ![img](http://12145169.s21i.faiusr.com/2/ABUIABACGAAgusm_wgUonufkhQIwgA842AQ.jpg)
@@ -16,7 +18,8 @@
 | 1.0.8   | 增加 YUV > MediaCodec 硬编码                                 | 刘扬，阳坤 |
 | 1.0.9   | 1.更新默认分辨率内部代码 2.内部代码优化                      | 刘扬，阳坤 |
 | 1.0.1.0 | 1. 增加同步查询是否在线接口；2. 获取组织接口支持传入 unitID 查询;3.增加查询当前组织ID接口 | 刘扬，阳坤 |
-| 1.0.1.0 | 1. ContactsEngine 增加按时间轮训请求在线用户;2. 优化对讲组人数在上万的情况下获取数据慢的性能问题； | 刘扬，阳坤 |
+| 1.0.1.1 | 1. ContactsEngine 增加按时间轮训请求在线用户;2. 优化对讲组人数在上万的情况下获取数据慢的性能问题； | 刘扬，阳坤 |
+| 1.0.1.2 | 1. 增加视频多路呼叫接口。详细信息请看 CallEngine 接口；2. 修改 PttEngine 获取所有对讲组的接口，舍弃同步获取我当前所有组的接口； | 刘扬，阳坤 |
 
 ## 注意
 
@@ -110,11 +113,34 @@
 
 ## PttEngine
 
-- 获取当前对讲组
+- 获取当前对讲组列表
 
   ```Java
   void getCurrentPttGroup(final PttListCallBack pttListListener)
   ```
+
+- PttListCallBack
+
+  ```java
+      /**
+       * 对讲组信息回调
+       */
+      public interface PttListCallBack {
+  
+          /**
+           * 获取当前组列表
+           *
+           * @param userList
+           */
+          void getCurrentPttLists(ArrayList<UserEntity> userList);
+  				/**
+  				* PttVOIP 登录回调 对讲状态
+  				*/
+          void voipLoginState(String meg);
+      }
+  ```
+
+  
 
 - 开始对讲
 
@@ -131,8 +157,23 @@
 - 获取所有对讲组
 
   ```java
-  void getAllPttGroupLists(final PttListCallBack pttListListener);
+  getAllPttGroupLists(final IAllPttGroupCallBack pttListListener)
   ```
+
+- IAllPttGroupCallBack
+
+  ```java
+      public interface IAllPttGroupCallBack{
+          /**
+           * 获取所有组列表
+           *
+           * @param list
+           */
+          void getAllPttLists(ArrayList<GroupEntity> list);
+      }
+  ```
+
+  
 
 - 切换对讲组
 
@@ -156,12 +197,6 @@
 
   ```Java
   void delTmpGroup(int groupId, TempGroupManager.IPttDeleteUpDataListener iPttDeleteUpDataListener);
-  ```
-
-- 获取所有属于我的组
-
-  ```Java
-  List<GroupEntity> getAllGroup();
   ```
 
 - 获取对讲通讯录
@@ -199,8 +234,46 @@
 - 呼出/呼入 电话监听
 
   ```Java
-  /*** type 1 来电，2 呼叫*/
-  void setCallReceiverListener(final ICallEventCallBack callEventListener)；
+  addCallReceiverListener(final CallEngine.ICallEventCallBack callEventListener)
+  ```
+  
+- CallEngine.ICallEventCallBack
+
+  ```java
+  /**
+  *会议
+  */
+  void onCallMeetingComing(CALL_TYPE var1, String var2, NgnAVSession var3);
+  
+  /**
+  *呼出回调
+  */
+  void onCallOutComing(CALL_TYPE var1, String var2, NgnAVSession var3);
+  
+  /**
+  *来电回调
+  */
+  void onCallInComing(CALL_TYPE var1, String var2, NgnAVSession var3);
+  
+  /**
+  *监控回调
+  */
+  void onVideoMonitor(CALL_TYPE var1, String var2);
+  
+  /**
+  *通话或者呼叫失败回调
+  */
+  void onCallError(CALL_TYPE var1, String var2, NgnAVSession var3);
+  
+  /**
+  *通话结束回调
+  */
+  void onTerminated(CALL_TYPE var1, String var2, NgnAVSession var3);
+  
+  /**
+  *正在通话中回调
+  */
+  void onCallInCall(CALL_TYPE var1, String var2, NgnAVSession var3);
   ```
 
 - CALL_TYPE
@@ -213,9 +286,11 @@
       AUDIO_MEETING,//语音会议
       VIDEO_MEETING,//视频会议
       VIDEO_MONITOR,//视频监控-暂时用不到
-      TERMINATED,//通话结束
+      AUDIO_TERMINATED,//语音通话结束
+      VIDEO_TERMINATED,,//视频通话结束
       VIDEO_CALL_IN_CALL,//视频通话中...
       AUDIO_CALL_IN_CALL;//语音通话中...
+  		ERROR;//通话失败的回调
   ```
 
 - 挂断电话
@@ -224,10 +299,28 @@
   boolean hangUpCall()；
   ```
 
+- 挂断电话(多路电话使用此接口)
+
+  ```java
+  boolean hangUpCall(NgnAVSession ngnAVSession) 
+  ```
+
+- 接听电话(多路电话使用此接口)
+
+  ```java
+  boolean acceptCall(NgnAVSession ngnAVSession)；
+  ```
+
 - 接听电话
 
   ```Java
   boolean acceptCall()；
+  ```
+
+- 是否开启免提(多路电话使用)
+
+- ```java
+  void isHandsfree(NgnAVSession ngnAVSession, boolean isHandsfree)
   ```
 
 - 是否开启免提
@@ -242,6 +335,12 @@
   boolean getHandsfreeState()；
   ```
 
+- 是否静音(多路电话使用)
+
+  ```java
+  boolean isMute(NgnAVSession ngnAVSession, boolean mute)
+  ```
+
 - 是否静音
 
   ```Java
@@ -253,6 +352,12 @@
   ```Java
   /***isEx: 如果填写 true 的话需要自己调用 pushYUVB API 自己传输 视频流数据*/
   void startPreviewLocalVideo(FrameLayout localVideoPreview, boolean isEx)；
+  ```
+
+- 根据线路预览视频(多路电话使用)
+
+  ```java
+  void startPreviewRemoteVideo(NgnAVSession ngnAVSession, FrameLayout remoteVideoPreview)
   ```
 
 - 预览对方视频
@@ -341,9 +446,31 @@
     }
   ```
 
-- 快速开始通话
+- 根据线路 ID 获取线路实体类
 
-1. 自定义继承 BaseCallLayout ，实现相关函数，并填写对应的布局（详细可以参考 SDKDEMO）
+  ```java
+  NgnAVSession getNgnAVSession(long sessionId);
+  ```
+
+- 释放线路
+
+  ```java
+  releaseSession(NgnAVSession ngnAVSession)
+  ```
+
+- 判断线路是否存在，线路是打电话的时候实例化的
+
+  ```java
+  boolean isSessionAlive(long id)
+  ```
+
+- 获取当前线路 Size
+
+  ```java
+  int getSessionSize();
+  ```
+
+  
 
 ## MettingEngine
 
