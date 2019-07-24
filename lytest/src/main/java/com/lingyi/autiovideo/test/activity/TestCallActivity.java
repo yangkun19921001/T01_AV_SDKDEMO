@@ -5,6 +5,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.test.suitebuilder.annotation.Suppress;
 import android.view.WindowManager;
 
 import com.lingyi.autiovideo.test.R;
@@ -12,8 +13,10 @@ import com.lingyi.autiovideo.test.widget.popup.MyCallLayout;
 
 /**
  * Created by yangk on 2018/12/10.
+ *
+ *
+ * 视频通话在 @link @VideoCallActivity
  */
-
 public class TestCallActivity extends Activity {
 
     private MyCallLayout mCallLayout;

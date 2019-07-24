@@ -75,12 +75,19 @@
         <activity
             android:name=".activity.TestCallActivity"
             android:launchMode="singleTask"></activity>
+        <activity
+            android:name=".activity.AudioCallActivity"
+            android:launchMode="singleTask"></activity>
 
         <activity android:name=".activity.MettingListActivity"></activity>
         <activity android:name=".activity.CreateGroupActivity"></activity>
-        <activity android:name=".activity.VideoCallActivity"
-            android:screenOrientation="landscape"></activity> <activity android:name=".activity.CallInOrOutActivity"
+        <activity
+            android:name=".activity.VideoCallActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="landscape"></activity>
+        <activity
+            android:name=".activity.CallInOrOutActivity"
+            android:launchMode="singleTask"></activity>
         <activity
             android:name=".activity.MettingGroupMemberActivity"
             android:windowSoftInputMode="adjustPan|stateHidden"></activity>

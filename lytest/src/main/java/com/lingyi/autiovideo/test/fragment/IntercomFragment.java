@@ -65,12 +65,21 @@ public class IntercomFragment extends BaseFragment{
         initRecyclerView();
 
         setItemListener();
+        getCurrentPttLists();
+        getAllGroup();
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+    }
+
+    /**
+     * 获取当前对讲组列表
+     */
+    private void getCurrentPttLists() {
         T01Helper.getInstance().getPttEngine().getCurrentPttGroup(new PttEngine.PttListCallBack() {
             @Override
             public void getCurrentPttLists(ArrayList<UserEntity> arrayList) {
@@ -93,16 +102,10 @@ public class IntercomFragment extends BaseFragment{
             }
 
             @Override
-            public void getAllPttLists(ArrayList<GroupEntity> arrayList) {
-
-            }
-
-            @Override
             public void voipLoginState(String s) {
                 ToastUtils.showLong(s);
             }
         });
-        getAllGroup();
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -183,19 +186,27 @@ public class IntercomFragment extends BaseFragment{
         });
     }
 
+    /**
+     * 获取所有对讲组
+     */
     private void getAllGroup() {
-        List<GroupEntity> allGroup = T01Helper.getInstance().getPttEngine().getAllGroup();
-        lists = (ArrayList<GroupEntity>) allGroup;
-        menuItems.clear();
-        menuItems.add(new MenuItem("#创建临时组#"));
-        if (allGroup != null && allGroup.size() > 0) {
-            for (GroupEntity group : allGroup) {
-                menuItems.add(new MenuItem(group.getGroupName()));
-                if (Constants.curGroupId == group.getGroupId()) {
-                    toolbar_title.setText(group.getGroupName());
+        T01Helper.getInstance().getPttEngine().getAllPttGroupLists(new PttEngine.IAllPttGroupCallBack() {
+            @Override
+            public void getAllPttLists(ArrayList<GroupEntity> allGroup) {
+                lists = allGroup;
+                menuItems.clear();
+                menuItems.add(new MenuItem("#创建临时组#"));
+                if (allGroup != null && allGroup.size() > 0) {
+                    for (GroupEntity group : allGroup) {
+                        menuItems.add(new MenuItem(group.getGroupName()));
+                        if (Constants.curGroupId == group.getGroupId()) {
+                            toolbar_title.setText(group.getGroupName());
+                        }
+                    }
                 }
             }
-        }
+        });
+
     }
 
 
