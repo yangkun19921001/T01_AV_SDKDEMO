@@ -281,9 +281,9 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onTerminated(CALL_TYPE call_type, String error, NgnAVSession ngnAVSession) {
+            public void onTerminated(CALL_TYPE call_type, String error, long sessionID) {
                 Log.i(TAG, "通话结束");
-                sendBroadcast(Constants.CALL_ACION,ngnAVSession.getId(),call_type.ordinal());
+                sendBroadcast(Constants.CALL_ACION,sessionID,call_type.ordinal());
             }
 
             /**

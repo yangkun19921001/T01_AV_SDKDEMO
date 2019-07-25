@@ -27,7 +27,7 @@
             android:hint="请输入密码" />
 
         <EditText
-            android:text="39.104.121.1"
+            android:text="192.168.60.28"
             android:id="@+id/ip"
             android:layout_width="match_parent"
             android:layout_height="@dimen/x80"

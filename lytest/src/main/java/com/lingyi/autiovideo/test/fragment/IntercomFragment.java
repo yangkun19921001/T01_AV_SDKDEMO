@@ -85,7 +85,7 @@ public class IntercomFragment extends BaseFragment{
             public void getCurrentPttLists(ArrayList<UserEntity> arrayList) {
                 try {
                     pro.setVisibility(View.GONE);
-                    ALog.i(
+                    Log.i(
                             TAG,
                             "refreshUserListView() --> " + "callUserId - "
                                     + Constants.callUserId + " targetUserId - "
