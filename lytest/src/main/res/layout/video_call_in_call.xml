@@ -53,8 +53,8 @@
 
     <FrameLayout
         android:id="@+id/video_call_local_video"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
         android:layout_alignParentRight="true"></FrameLayout>
 
     <LinearLayout
