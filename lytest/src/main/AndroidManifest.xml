@@ -83,11 +83,16 @@
         <activity android:name=".activity.CreateGroupActivity"></activity>
         <activity
             android:name=".activity.VideoCallActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"
             android:screenOrientation="landscape"></activity>
         <activity
             android:name=".activity.CallInOrOutActivity"
             android:launchMode="singleTask"></activity>
+        <activity
+            android:name=".activity.TestActivitysShowVIdeoActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="landscape"></activity>
         <activity
             android:name=".activity.MettingGroupMemberActivity"
             android:windowSoftInputMode="adjustPan|stateHidden"></activity>

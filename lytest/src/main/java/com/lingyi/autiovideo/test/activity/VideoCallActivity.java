@@ -6,10 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -17,21 +17,17 @@ import android.widget.Toast;
 
 import com.bnc.activity.T01Helper;
 import com.bnc.activity.engine.CALL_TYPE;
+import com.bnc.activity.service.db.DataDao;
 import com.lingyi.autiovideo.test.Constants;
 import com.lingyi.autiovideo.test.R;
 
+import org.doubango.ngn.media.NgnProxyVideoConsumerGL;
 import org.doubango.ngn.sip.NgnAVSession;
 
 import java.util.HashMap;
-import java.util.Set;
 
 public class VideoCallActivity extends Activity {
 
-    /**
-     * 当前播放的 Session ID 队列
-     */
-    private HashMap<Long, NgnAVSession> mSessionMap = new HashMap<>();
-    private HashMap<Long, FrameLayout> mSessionLayoutMap = new HashMap<>();
     private CallReceiver mCallReceiver;
     private FrameLayout mRemote_1, mRemote_2, mRemote_3, mRemote_4, mLocal;
     private NgnAVSession mFirstSession;
@@ -53,16 +49,16 @@ public class VideoCallActivity extends Activity {
         mLocal = findViewById(R.id.video_call_local_video);
 
 
-
-
         //不发送视频流
         T01Helper.getInstance().getCallEngine().startPreviewLocalVideo(mLocal, false);
 
         //获取第一个线路
         mFirstSession = getFirstSession();
-        mSessionMap.put(mFirstSession.getId(), mFirstSession);
+        if (mFirstSession != null)
+            Constants.mSessionMap.put(mFirstSession.getId(), mFirstSession);
 
-        previewRemote(mFirstSession, mRemote_1);
+        if (mFirstSession != null)
+            previewRemote(mFirstSession, mRemote_1);
         registerReceiver();
 
         btnMakeCall.setOnClickListener(new View.OnClickListener() {
@@ -95,16 +91,18 @@ public class VideoCallActivity extends Activity {
     /**
      * 预览对方框口
      *
-     * @param ngnAVSession
      * @param mRemote_1
+     * @param ngnAVSession
      */
-    private void previewRemote(NgnAVSession ngnAVSession, FrameLayout mRemote) {
-
+    private NgnProxyVideoConsumerGL.NgnProxyVideoConsumerGLPreview previewRemote(NgnAVSession ngnAVSession, FrameLayout mRemote) {
         if (ngnAVSession != null) {
-            T01Helper.getInstance().getCallEngine().startPreviewRemoteVideo(ngnAVSession, mRemote);
-            if (!mSessionLayoutMap.containsKey(ngnAVSession.getId()))
-                mSessionLayoutMap.put(ngnAVSession.getId(), mRemote);
+            NgnProxyVideoConsumerGL.NgnProxyVideoConsumerGLPreview ngnProxyVideoConsumerGLPreview = T01Helper.getInstance().getCallEngine().startPreviewRemoteVideo(ngnAVSession, mRemote);
+            if (!Constants.mSessionLayoutMap.containsKey(ngnAVSession.getId()))
+                Constants.mSessionLayoutMap.put(ngnAVSession.getId(), mRemote);
+
+            return ngnProxyVideoConsumerGLPreview;
         }
+        return null;
     }
 
     /**
@@ -124,17 +122,26 @@ public class VideoCallActivity extends Activity {
         T01Helper.getInstance().getCallEngine().onCallStart();
     }
 
+
+
     public void onResume() {
         super.onResume();
         T01Helper.getInstance().getCallEngine().onResume();
+//
+//        if (Constants.isShow) {
+//            showRemote();
+//        }
 
     }
 
+    boolean isShow = false;
+
     private void showRemote() {
-        //        for (Long aLong : mSessionMap.keySet()) {
-//            NgnAVSession ngnAVSession = mSessionMap.get(aLong);
-//            T01Helper.getInstance().getCallEngine().startPreviewRemoteVideo(ngnAVSession, mSessionLayoutMap.get(aLong));
-//        }
+        if (Constants.mSessionMap.size() > 0)
+            for (Long aLong : Constants.mSessionMap.keySet()) {
+                NgnAVSession ngnAVSession = Constants.mSessionMap.get(aLong);
+                T01Helper.getInstance().getCallEngine().startPreviewRemoteVideo(ngnAVSession, mRemote_1);
+            }
     }
 
     public void onPause() {
@@ -147,14 +154,8 @@ public class VideoCallActivity extends Activity {
         T01Helper.getInstance().getCallEngine().onCallStop();
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        onDestory();
 
-    }
-
-    private void onDestory() {
+    private void onDestorys() {
         T01Helper.getInstance().getCallEngine().onCallDestroy();
         T01Helper.getInstance().getCallEngine().stopLocalVideo();
         T01Helper.getInstance().getCallEngine().stopPreviewVideo();
@@ -167,15 +168,19 @@ public class VideoCallActivity extends Activity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Constants.isShow = true;
         hangUpAllSession();
+//        startActivity(new Intent(this,MainActivity.class));
     }
 
     /**
      * 接收监听器消息
      */
     private class CallReceiver extends BroadcastReceiver {
+        NgnProxyVideoConsumerGL.NgnProxyVideoConsumerGLPreview ngnProxyVideoConsumerGLPreview = null;
+
         @Override
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(Context context, final Intent intent) {
             if (intent != null && intent.getAction() != null && intent.getAction().equals(Constants.CALL_ACION)) {
                 long callType = intent.getIntExtra(Constants.CALL_TYPE, -1);
                 if (callType != -1) {
@@ -184,16 +189,15 @@ public class VideoCallActivity extends Activity {
                         long sessionId = intent.getLongExtra(Constants.SESSION_ID, -1);
                         if (sessionId != -1) {
                             //拿到当前会话 session 可以理解为线路
-                            NgnAVSession ngnAVSession = T01Helper.getInstance().getCallEngine().getNgnAVSession(sessionId);
+                            final NgnAVSession ngnAVSession = T01Helper.getInstance().getCallEngine().getNgnAVSession(sessionId);
                             if (ngnAVSession != null)
-                                mSessionMap.put(sessionId, ngnAVSession);
-                            if (mSessionMap.size() == 2) {
-                                mRemote_2.removeAllViews();
+                                Constants.mSessionMap.put(sessionId, ngnAVSession);
+                            if (Constants.mSessionMap.size() == 2) {
                                 previewRemote(ngnAVSession, mRemote_2);
-                            } else if (mSessionMap.size() == 3) {
+                            } else if (Constants.mSessionMap.size() == 3) {
                                 mRemote_3.removeAllViews();
                                 previewRemote(ngnAVSession, mRemote_3);
-                            } else if (mSessionMap.size() == 4) {
+                            } else if (Constants.mSessionMap.size() == 4) {
                                 mRemote_4.removeAllViews();
                                 previewRemote(ngnAVSession, mRemote_4);
                             }
@@ -202,12 +206,12 @@ public class VideoCallActivity extends Activity {
                     } else if (callType == CALL_TYPE.VIDEO_TERMINATED.ordinal()) {
                         long sessionId = intent.getLongExtra(Constants.SESSION_ID, -1);
                         if (sessionId != -1) {
-                            if (mSessionMap.containsKey(sessionId)){
-                                mSessionMap.get(sessionId).hangUpCall();
-                                mSessionMap.remove(sessionId);
+                            if (Constants.mSessionMap.containsKey(sessionId)) {
+                                Constants.mSessionMap.get(sessionId).hangUpCall();
+                                Constants.mSessionMap.remove(sessionId);
                             }
-                            mSessionLayoutMap.remove(sessionId).removeAllViews();
-                            if (mSessionLayoutMap.size() == 0) {
+                            Constants.mSessionLayoutMap.remove(sessionId).removeAllViews();
+                            if (Constants.mSessionLayoutMap.size() == 0) {
                                 finish();
                             }
                         }
@@ -224,9 +228,9 @@ public class VideoCallActivity extends Activity {
      * 挂断所有的线路
      */
     private void hangUpAllSession() {
-        if (mSessionMap.size() > 0) {
-            for (Long aLong : mSessionMap.keySet()) {
-                mSessionMap.get(aLong).hangUpCall();
+        if (Constants.mSessionMap.size() > 0) {
+            for (Long aLong : Constants.mSessionMap.keySet()) {
+                Constants.mSessionMap.get(aLong).hangUpCall();
             }
             finish();
         }
