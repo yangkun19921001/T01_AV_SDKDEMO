@@ -20,6 +20,7 @@
 | 1.0.1.0 | 1. 增加同步查询是否在线接口；2. 获取组织接口支持传入 unitID 查询;3.增加查询当前组织ID接口 | 刘扬，阳坤 |
 | 1.0.1.1 | 1. ContactsEngine 增加按时间轮训请求在线用户;2. 优化对讲组人数在上万的情况下获取数据慢的性能问题； | 刘扬，阳坤 |
 | 1.0.1.2 | 1. 增加视频多路呼叫接口。详细信息请看 CallEngine 接口；2. 修改 PttEngine 获取所有对讲组的接口，舍弃同步获取我当前所有组的接口； | 刘扬，阳坤 |
+| 1.0.1.3 | 1. 增加了是否需要多路呼叫，默认需要。具体 API 请看 CallEngine；2. 修改电话记录重复问题； | 刘扬，阳坤 |
 
 ## 注意
 
@@ -87,19 +88,10 @@
 
 ## RegisterEngine
 
-- 是否注册 (同步查询，推荐使用)
+- 是否注册
 
   ```java
   boolean isRegister()
-  ```
-
-  
-
-- 是否注册(异步查询，建议使用同步查询接口)
-
-  ```java
-  //loginState = 1 为登录 
-  getIsRegister(final IIsLoginListener iIsLoginListener);
   ```
 
 - 登录
@@ -263,7 +255,7 @@
   /**
   *通话或者呼叫失败回调
   */
-  void onCallError(CALL_TYPE var1, String var2, NgnAVSession var3);
+  void onCallError(CALL_TYPE var1, String var2, long sessionId);
   
   /**
   *通话结束回调
@@ -468,6 +460,12 @@
 
   ```java
   int getSessionSize();
+  ```
+
+- set 是否支持多路
+
+  ```java
+  setMultipleLines(boolean MultipleLines)
   ```
 
   

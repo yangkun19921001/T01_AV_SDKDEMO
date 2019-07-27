@@ -2,6 +2,7 @@ package com.lingyi.autiovideo.test.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.bnc.activity.PttApplication;
@@ -87,6 +89,13 @@ public class MainActivity extends AppCompatActivity {
             T01Helper.getInstance().getSetEngine().setVideoCallInCallQuality(PttApplication.getInstance().getDefVideoSize());
         }
 
+       findViewById(R.id.btn_show).setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               test();
+           }
+       });
+
 
         /*获取所有组织*/
         getAllUnitList();
@@ -112,6 +121,12 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra(Constants.SESSION_ID, id);
         intent.putExtra(Constants.CALL_TYPE, call_type);
         sendBroadcast(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
     }
 
     private void requestOnlineUser() {
@@ -429,4 +444,8 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void test() {
+        Intent video_intent = new Intent(MainActivity.this, VideoCallActivity.class);
+        startActivity(video_intent);
+    }
 }
