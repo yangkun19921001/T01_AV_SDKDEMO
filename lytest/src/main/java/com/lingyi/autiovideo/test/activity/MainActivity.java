@@ -228,7 +228,12 @@ public class MainActivity extends AppCompatActivity {
                         Log.i(TAG, "视频会议" + ": meetingMember" + meetingMember);
                         break;
                     case AUDIO_MEETING:
+                        Intent intent = new Intent(MainActivity.this, CallInOrOutActivity.class);
                         Log.i(TAG, "语音会议" + ": meetingMember" + meetingMember);
+                        intent.putExtra(Constants.SESSION_ID, ngnAVSession.getId());
+                        intent.putExtra(Constants.CALL_NUMBER, meetingMember);
+                        intent.putExtra(Constants.CALL_TYPE, call_type.ordinal());
+                        startActivity(intent);
                         break;
                 }
 
