@@ -21,6 +21,8 @@ public abstract class BaseFragment extends Fragment {
     protected final String TAG = this.getClass().getSimpleName();
     private int layout;
     Unbinder unbinder;
+    public View mView;
+
     @Nullable
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = initView(inflater, container, savedInstanceState);
@@ -31,7 +33,8 @@ public abstract class BaseFragment extends Fragment {
     }
 
     public View initView(LayoutInflater inflater, ViewGroup var2, Bundle var3) {
-        return inflater.inflate(getLayout(), var2, false);
+        mView = inflater.inflate(getLayout(), var2, false);
+        return mView;
     }
 
     protected abstract void initData();
