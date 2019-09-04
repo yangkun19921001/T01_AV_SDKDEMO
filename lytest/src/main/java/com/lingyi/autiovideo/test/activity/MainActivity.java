@@ -13,16 +13,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.bnc.activity.PttApplication;
 import com.bnc.activity.T01Helper;
+import com.bnc.activity.callback.IShowNotityCallBack;
 import com.bnc.activity.engine.CALL_TYPE;
 import com.bnc.activity.engine.CallEngine;
 import com.bnc.activity.engine.RegisterEngine;
+import com.bnc.activity.entity.MsgMessageEntity;
 import com.bnc.activity.entity.UserEntity;
 import com.bnc.activity.utils.PropertyUtil;
 import com.bnc.activity.view.manager.UnitManager;
 import com.lingyi.autiovideo.test.Constants;
 import com.lingyi.autiovideo.test.R;
+import com.lingyi.autiovideo.test.fragment.ChatFragment;
 import com.lingyi.autiovideo.test.fragment.IntercomFragment;
 import com.lingyi.autiovideo.test.utils.FragmentUtils;
 
@@ -58,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_dashboard:
 //                    mTextMessage.setText(R.string.title_dashboard);
                     mReplace = 1;
-//                    FragmentUtils.hideAllShowFragment(mFragments.get(mReplace));
+                    FragmentUtils.hideAllShowFragment(mFragments.get(mReplace));
                     return true;
                 case R.id.navigation_notifications:
 //                    mTextMessage.setText(R.string.title_notifications);
@@ -112,7 +116,18 @@ public class MainActivity extends AppCompatActivity {
         isRegister();
         //请求在线人数
         requestOnlineUser();
+        //后台消息监听
+        addMessageListener();
 
+    }
+
+    private void addMessageListener() {
+        T01Helper.getInstance().getMessageEngine().showMegToNotity(new IShowNotityCallBack() {
+            @Override
+            public void getShowMeg(MsgMessageEntity msgMessageEntity) {
+                ToastUtils.showShort("后台收到消息："+msgMessageEntity.toString());
+            }
+        });
     }
 
     private void sendBroadcast(String action,long id, int call_type) {
@@ -348,15 +363,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void initFragment(Bundle savedInstanceState) {
         IntercomFragment intercomFragment = null;
+        ChatFragment chatFragment = null;
         if (savedInstanceState == null) {
             intercomFragment = new IntercomFragment();
+            chatFragment = ChatFragment.getInstance();
         } else {
             FragmentManager fm = getSupportFragmentManager();
             intercomFragment = (IntercomFragment) FragmentUtils.findFragment(fm, IntercomFragment.class);
+            chatFragment = (ChatFragment) FragmentUtils.findFragment(fm, ChatFragment.class);
         }
         if (mFragments == null) {
             mFragments = new ArrayList<>();
             mFragments.add(intercomFragment);
+            mFragments.add(chatFragment);
         }
         FragmentUtils.addFragments(getSupportFragmentManager(), mFragments, R.id.fragment, 0);
     }
