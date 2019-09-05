@@ -51,6 +51,9 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         chatAdapter = new ChatAdapter(messageEntityArrayList);
         recyclerView.setAdapter(chatAdapter);
+
+        //加载当前对话的默认聊天内容
+        T01Helper.getInstance().getMessageEngine().loadDefaultMeg(1, 100, 71004226);
     }
 
     @Override
@@ -97,11 +100,15 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
              */
             @Override
             public void getAllCurrentMeg(ArrayList<MsgMessageEntity> arrayList, int i) {
-
+                Log.i(TAG, "getAllCurrentMeg--->" + arrayList.size());
+                for (MsgMessageEntity msgMessageEntity : arrayList) {
+                    chatAdapter.addData(msgMessageEntity.getMessageContent());
+                }
             }
 
             @Override
             public void getMoreMeg(ArrayList<MsgMessageEntity> arrayList, int i) {
+                Log.i(TAG, "getMoreMeg--->" + arrayList.size());
 
             }
         }, 1, 71004226);
@@ -122,6 +129,7 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
                     return;
                 }
                 chatAdapter.addData(editText.getText().toString().trim());
+                recyclerView.smoothScrollToPosition(chatAdapter.getData().size()-1);
                 chatAdapter.notifyDataSetChanged();
                 sendMessage(editText.getText().toString().trim());
                 break;
@@ -136,8 +144,8 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
 
     /**
      * @param messageType    @see MsgUtil.IMsgType.TXT --> 0 :txt,1:视频,3:图片,4:录音,10:文件,
-     * @param sendContent   发送的内容
-     * @param sendPoliceId  发送者 ID
+     * @param sendContent    发送的内容
+     * @param sendPoliceId   发送者 ID
      * @param sendPoliceName 发送者姓名
      * @param recverID       对方 ID
      * @param recverName     对方姓名
