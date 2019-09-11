@@ -21,6 +21,7 @@
 | 1.0.1.1 | 1. ContactsEngine 增加按时间轮训请求在线用户;2. 优化对讲组人数在上万的情况下获取数据慢的性能问题； | 刘扬，阳坤 |
 | 1.0.1.2 | 1. 增加视频多路呼叫接口。详细信息请看 CallEngine 接口；2. 修改 PttEngine 获取所有对讲组的接口，舍弃同步获取我当前所有组的接口； | 刘扬，阳坤 |
 | 1.0.1.3 | 1. 增加了是否需要多路呼叫，默认需要。具体 API 请看 CallEngine；2. 修改电话记录重复问题；3. C++ 完善硬编码，应用只需传入 NV21 格式的数据即可。 | 刘扬，阳坤 |
+| 1.0.1.4 | 1. ContactsEngine 增加 getUser() 获取用户信息 API;           |            |
 
 标准版本嘀嗒 APK 扫码下载:
 
@@ -584,7 +585,11 @@
   void getOnlineUserCallBack(int repeatTime, IOnLineUserListener iPttDataListener)
   ```
 
-  
+- 根据 ID 获取用户信息
+
+  ```java
+  UserEntity getUser(String userId) 
+  ```
 
 ## LocationEngine
 
