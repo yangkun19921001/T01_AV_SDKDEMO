@@ -8,11 +8,13 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bnc.activity.PttApplication;
 import com.bnc.activity.T01Helper;
@@ -22,17 +24,23 @@ import com.bnc.activity.engine.CallEngine;
 import com.bnc.activity.engine.RegisterEngine;
 import com.bnc.activity.entity.MsgMessageEntity;
 import com.bnc.activity.entity.UserEntity;
+import com.bnc.activity.service.db.DataDao;
+import com.bnc.activity.utils.LogHelper;
 import com.bnc.activity.utils.PropertyUtil;
+import com.bnc.activity.utils.UserAndGroupCacheMap;
 import com.bnc.activity.view.manager.UnitManager;
 import com.lingyi.autiovideo.test.Constants;
 import com.lingyi.autiovideo.test.R;
 import com.lingyi.autiovideo.test.fragment.ChatFragment;
 import com.lingyi.autiovideo.test.fragment.IntercomFragment;
 import com.lingyi.autiovideo.test.utils.FragmentUtils;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.model.Progress;
 
 import org.doubango.ngn.sip.NgnAVSession;
 import org.doubango.ngn.utils.NgnAVSessionManager;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,12 +101,12 @@ public class MainActivity extends AppCompatActivity {
             T01Helper.getInstance().getSetEngine().setVideoCallInCallQuality(PttApplication.getInstance().getDefVideoSize());
         }
 
-       findViewById(R.id.btn_show).setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               test();
-           }
-       });
+        findViewById(R.id.btn_show).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                test();
+            }
+        });
 
 
         /*获取所有组织*/
@@ -125,12 +133,12 @@ public class MainActivity extends AppCompatActivity {
         T01Helper.getInstance().getMessageEngine().showMegToNotity(new IShowNotityCallBack() {
             @Override
             public void getShowMeg(MsgMessageEntity msgMessageEntity) {
-                ToastUtils.showShort("后台收到消息："+msgMessageEntity.toString());
+                ToastUtils.showShort("后台收到消息：" + msgMessageEntity.toString());
             }
         });
     }
 
-    private void sendBroadcast(String action,long id, int call_type) {
+    private void sendBroadcast(String action, long id, int call_type) {
         Intent intent = new Intent();
         intent.setAction(action);
         intent.putExtra(Constants.SESSION_ID, id);
@@ -251,7 +259,6 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                         break;
                 }
-
             }
 
             @Override
@@ -279,6 +286,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCallInComing(CALL_TYPE call_type, String number, NgnAVSession ngnAVSession) {
                 Intent intent = new Intent(MainActivity.this, CallInOrOutActivity.class);
+                if (!StringUtils.isEmpty(number)){
+                    UserEntity userById = UserAndGroupCacheMap.getInstace().findUserById(Integer.parseInt(number));
+                    Log.d(TAG,userById.toString());
+                }
                 switch (call_type) {
                     case AUDIO_CALL_IN:
                         Log.i(TAG, "语音来电" + ": name" + number);
@@ -311,14 +322,14 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCallError(CALL_TYPE call_type, String error, NgnAVSession ngnAVSession) {
                 Log.i(TAG, "呼叫失败" + ": error" + error);
-                sendBroadcast(Constants.CALL_ACION,ngnAVSession.getId(),call_type.ordinal());
+                sendBroadcast(Constants.CALL_ACION, ngnAVSession.getId(), call_type.ordinal());
 
             }
 
             @Override
             public void onTerminated(CALL_TYPE call_type, String error, long sessionID) {
                 Log.i(TAG, "通话结束");
-                sendBroadcast(Constants.CALL_ACION,sessionID,call_type.ordinal());
+                sendBroadcast(Constants.CALL_ACION, sessionID, call_type.ordinal());
             }
 
             /**
@@ -329,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCallInCall(CALL_TYPE call_type, String number, NgnAVSession ngnAVSession) {
-                sendBroadcast(Constants.CALL_IN_OR_OUR_ACION,ngnAVSession.getId(),call_type.ordinal());
+                sendBroadcast(Constants.CALL_IN_OR_OUR_ACION, ngnAVSession.getId(), call_type.ordinal());
                 switch (call_type) {
                     case AUDIO_CALL_IN_CALL:
                         Log.i(TAG, "语音通话中" + number);
@@ -345,7 +356,7 @@ public class MainActivity extends AppCompatActivity {
                         if (ngnAVSession != null && T01Helper.getInstance().getCallEngine().isSessionAlive(ngnAVSession.getId()) &&
                                 NgnAVSessionManager.getInstace().getNgnObservableHashMap().size() > sessionSize) {
                             //把当前线路加入到播放队列中就不需要再重新开启 Activity 了；
-                            sendBroadcast(Constants.CALL_ACION,ngnAVSession.getId(),call_type.ordinal());
+                            sendBroadcast(Constants.CALL_ACION, ngnAVSession.getId(), call_type.ordinal());
                             return;
                         }
 
@@ -472,4 +483,5 @@ public class MainActivity extends AppCompatActivity {
         Intent video_intent = new Intent(MainActivity.this, VideoCallActivity.class);
         startActivity(video_intent);
     }
+
 }
