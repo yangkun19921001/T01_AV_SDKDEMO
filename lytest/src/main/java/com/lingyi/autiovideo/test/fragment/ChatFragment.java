@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.blankj.utilcode.util.ToastUtils;
+import com.bnc.activity.PttApplication;
 import com.bnc.activity.T01Helper;
 import com.bnc.activity.callback.IRecvMessageListener;
 import com.bnc.activity.entity.MsgMessageEntity;
@@ -30,12 +31,13 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
 
 
     private static ChatFragment chatFragment;
-    private EditText editText;
+    private EditText editText, et_target;
     private RecyclerView recyclerView;
-    private Button btnMessage;
+    private Button btnMessage, btn_save;
     private ChatAdapter chatAdapter;
 
     ArrayList<String> messageEntityArrayList = new ArrayList<>();
+    private String targetNumber;
 
     public static ChatFragment getInstance() {
         chatFragment = new ChatFragment();
@@ -47,18 +49,66 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
     protected void initData() {
         recyclerView = mView.findViewById(R.id.rlv);
         editText = mView.findViewById(R.id.et_meg);
+        et_target = mView.findViewById(R.id.et_target);
         btnMessage = mView.findViewById(R.id.btn_send_message);
+        btn_save = mView.findViewById(R.id.btn_save);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         chatAdapter = new ChatAdapter(messageEntityArrayList);
         recyclerView.setAdapter(chatAdapter);
 
-        //加载当前对话的默认聊天内容
-        T01Helper.getInstance().getMessageEngine().loadDefaultMeg(1, 100, 71004226);
     }
 
     @Override
     protected void initListener() {
         btnMessage.setOnClickListener(this);
+        btn_save.setOnClickListener(this);
+
+    }
+
+    @Override
+    public int getLayout() {
+        return R.layout.fragment_chat;
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_send_message:
+                if (editText.getText().toString().trim().isEmpty()) {
+                    ToastUtils.showShort("输入信息。");
+                    return;
+                }
+                if (et_target.getText().toString().trim().isEmpty()) {
+                    ToastUtils.showShort("输入目标ID");
+                    return;
+                }
+
+                chatAdapter.addData(editText.getText().toString().trim());
+                recyclerView.smoothScrollToPosition(chatAdapter.getData().size() - 1);
+                chatAdapter.notifyDataSetChanged();
+                sendMessage(editText.getText().toString().trim());
+                break;
+            case R.id.btn_save:
+                save(et_target.getText().toString().trim());
+                break;
+        }
+
+    }
+
+    /**
+     * 开始根据号码设置监听
+     *
+     * @param targetNumber
+     */
+    private void save(String targetNumber) {
+        if (targetNumber.isEmpty()) {
+            ToastUtils.showShort("输入目标ID");
+            return;
+        }
+        //加载当前对话的默认聊天内容
+        T01Helper.getInstance().getMessageEngine().loadDefaultMeg(1, 100, Integer.parseInt(targetNumber));
+
         /**
          * 当前发送消息的监听
          */
@@ -111,35 +161,13 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
                 Log.i(TAG, "getMoreMeg--->" + arrayList.size());
 
             }
-        }, 1, 71004226);
-    }
-
-    @Override
-    public int getLayout() {
-        return R.layout.fragment_chat;
-    }
-
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btn_send_message:
-                if (editText.getText().toString().trim().isEmpty()) {
-                    ToastUtils.showShort("输入信息。");
-                    return;
-                }
-                chatAdapter.addData(editText.getText().toString().trim());
-                recyclerView.smoothScrollToPosition(chatAdapter.getData().size()-1);
-                chatAdapter.notifyDataSetChanged();
-                sendMessage(editText.getText().toString().trim());
-                break;
-        }
+        }, 1, Integer.parseInt(targetNumber));
 
     }
 
     private void sendMessage(String message) {
         sendMessage(MsgUtil.IMsgType.TXT, message,
-                "71004225", "发送者", 71004226, "接收者", null, 1, null, null);
+                PttApplication.getInstance().getUserId(), "发送者", Integer.parseInt(et_target.getText().toString().trim()), "接收者", null, 1, null, null);
     }
 
     /**
