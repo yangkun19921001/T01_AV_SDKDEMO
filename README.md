@@ -25,7 +25,7 @@
 
 标准版本嘀嗒 APK 扫码下载:
 
-[![cLTie.jpg](https://storage7.cuntuku.com/2019/08/23/cLTie.jpg)](https://cuntuku.com/image/cLTie)
+![nTuuuR.jpg](https://s2.ax1x.com/2019/09/18/nTuuuR.jpg)
 
 ## 注意
 
