@@ -64,5 +64,16 @@
 
     </LinearLayout>
 
+    <Button
+
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="@dimen/x2"
+        android:id="@+id/btn_test_record"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/length_color"
+        android:text="测试录音(G729)" />
+
 
 </RelativeLayout>

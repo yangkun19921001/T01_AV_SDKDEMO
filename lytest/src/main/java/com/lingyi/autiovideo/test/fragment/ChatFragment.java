@@ -3,6 +3,7 @@ package com.lingyi.autiovideo.test.fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,10 +13,12 @@ import com.bnc.activity.PttApplication;
 import com.bnc.activity.T01Helper;
 import com.bnc.activity.callback.IRecvMessageListener;
 import com.bnc.activity.entity.MsgMessageEntity;
+import com.bnc.activity.service.module.message.MsgRecordManager;
 import com.bnc.activity.utils.MsgUtil;
 import com.lingyi.autiovideo.test.R;
 import com.lingyi.autiovideo.test.adapter.ChatAdapter;
 
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -33,7 +36,7 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
     private static ChatFragment chatFragment;
     private EditText editText, et_target;
     private RecyclerView recyclerView;
-    private Button btnMessage, btn_save, btn_load_more;
+    private Button btnMessage, btn_save, btn_load_more, btn_test_record;
     private ChatAdapter chatAdapter;
 
     ArrayList<String> messageEntityArrayList = new ArrayList<>();
@@ -70,6 +73,7 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
         btnMessage = mView.findViewById(R.id.btn_send_message);
         btn_save = mView.findViewById(R.id.btn_save);
         btn_load_more = mView.findViewById(R.id.btn_load_more);
+        btn_test_record = mView.findViewById(R.id.btn_test_record);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         chatAdapter = new ChatAdapter(messageEntityArrayList);
         recyclerView.setAdapter(chatAdapter);
@@ -82,6 +86,43 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
         btn_save.setOnClickListener(this);
         btn_load_more.setOnClickListener(this);
 
+        btn_test_record.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        ToastUtils.showShort("开始录音...");
+                        btn_test_record.setText("正在录音");
+                        recordAudio(true);
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        btn_test_record.setText("开始录音");
+                        ToastUtils.showShort("录音结束...");
+                        recordAudio(false);
+                        break;
+                    default:
+                        break;
+                }
+                return false;
+            }
+        });
+
+    }
+
+    private void recordAudio(boolean b) {
+        if (b) {
+            T01Helper.getInstance().getMessageEngine().startRecordAudio(new MsgRecordManager.IMsgRecordListenter() {
+                @Override
+                public void onMessageRecordEnd(File file, long recordTime) {
+                    ToastUtils.showShort("得到录音文件：" + file.getAbsolutePath() + " 时长：" + recordTime / 1000 + "s" + " 开始播放");
+
+                    if (file != null && file.exists() && file.isFile())
+                        T01Helper.getInstance().getMessageEngine().playRecordAudio(file.getAbsolutePath());
+                }
+            });
+        } else {
+            T01Helper.getInstance().getMessageEngine().stopRecordAudio();
+        }
     }
 
     @Override
@@ -118,7 +159,7 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
                     return;
                 }
                 pageIndex -= pageCount;
-                T01Helper.getInstance().getMessageEngine().loadMoreMeg(1,getIndex(pageIndex), getPageCount(pageIndex), Integer.parseInt(et_target.getText().toString().trim()));
+                T01Helper.getInstance().getMessageEngine().loadMoreMeg(1, getIndex(pageIndex), getPageCount(pageIndex), Integer.parseInt(et_target.getText().toString().trim()));
                 break;
         }
 
@@ -126,8 +167,9 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
 
     /**
      * 获取当前应该加载消息列表数量
-     * @return
+     *
      * @param pageIndex
+     * @return
      */
     private int getPageCount(int pageIndex) {
         if (pageIndex < 0)
@@ -137,15 +179,16 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
 
     /**
      * 获取当前加载索引
+     *
      * @param pageIndex
      * @return
      */
     private int getIndex(int pageIndex) {
-        if (pageIndex < 0){
+        if (pageIndex < 0) {
             isLoadMore = true;
             pageIndex = 0;
         }
-        return pageIndex ;
+        return pageIndex;
     }
 
     /**
@@ -231,7 +274,7 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
 
     private void sendMessage(String message) {
         sendMessage(MsgUtil.IMsgType.TXT, message,
-                PttApplication.getInstance().getUserId(), "发送者："+PttApplication.getInstance().getUserId(), Integer.parseInt(et_target.getText().toString().trim()), "接收者："+Integer.parseInt(et_target.getText().toString().trim()), null, 1, null, null);
+                PttApplication.getInstance().getUserId(), "发送者：" + PttApplication.getInstance().getUserId(), Integer.parseInt(et_target.getText().toString().trim()), "接收者：" + Integer.parseInt(et_target.getText().toString().trim()), null, 1, null, null);
     }
 
     /**
