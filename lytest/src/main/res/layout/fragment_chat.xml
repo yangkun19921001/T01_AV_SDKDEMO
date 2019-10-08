@@ -54,6 +54,14 @@
             android:background="@color/length_color"
             android:text="发送" />
 
+        <Button
+            android:layout_marginLeft="@dimen/x2"
+            android:id="@+id/btn_load_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/length_color"
+            android:text="加载更多" />
+
     </LinearLayout>
 
 

@@ -33,11 +33,28 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
     private static ChatFragment chatFragment;
     private EditText editText, et_target;
     private RecyclerView recyclerView;
-    private Button btnMessage, btn_save;
+    private Button btnMessage, btn_save, btn_load_more;
     private ChatAdapter chatAdapter;
 
     ArrayList<String> messageEntityArrayList = new ArrayList<>();
     private String targetNumber;
+
+    /**
+     * 每次加载 5 条数据
+     */
+    private int pageCount = 5;
+
+    /**
+     * 当前与聊天消息总数量
+     */
+    private int currentAllMessage = 0;
+
+    /**
+     * 获取数据的开始位置
+     */
+    private int pageIndex = 0;
+
+    private boolean isLoadMore = false;
 
     public static ChatFragment getInstance() {
         chatFragment = new ChatFragment();
@@ -52,6 +69,7 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
         et_target = mView.findViewById(R.id.et_target);
         btnMessage = mView.findViewById(R.id.btn_send_message);
         btn_save = mView.findViewById(R.id.btn_save);
+        btn_load_more = mView.findViewById(R.id.btn_load_more);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         chatAdapter = new ChatAdapter(messageEntityArrayList);
         recyclerView.setAdapter(chatAdapter);
@@ -62,6 +80,7 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
     protected void initListener() {
         btnMessage.setOnClickListener(this);
         btn_save.setOnClickListener(this);
+        btn_load_more.setOnClickListener(this);
 
     }
 
@@ -84,6 +103,7 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
                     return;
                 }
 
+
                 chatAdapter.addData(editText.getText().toString().trim());
                 recyclerView.smoothScrollToPosition(chatAdapter.getData().size() - 1);
                 chatAdapter.notifyDataSetChanged();
@@ -92,8 +112,40 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
             case R.id.btn_save:
                 save(et_target.getText().toString().trim());
                 break;
+            case R.id.btn_load_more:
+                if (isLoadMore) {
+                    ToastUtils.showShort("没有更多消息了。");
+                    return;
+                }
+                pageIndex -= pageCount;
+                T01Helper.getInstance().getMessageEngine().loadMoreMeg(1,getIndex(pageIndex), getPageCount(pageIndex), Integer.parseInt(et_target.getText().toString().trim()));
+                break;
         }
 
+    }
+
+    /**
+     * 获取当前应该加载消息列表数量
+     * @return
+     * @param pageIndex
+     */
+    private int getPageCount(int pageIndex) {
+        if (pageIndex < 0)
+            pageCount = pageIndex + pageCount;
+        return pageCount;
+    }
+
+    /**
+     * 获取当前加载索引
+     * @param pageIndex
+     * @return
+     */
+    private int getIndex(int pageIndex) {
+        if (pageIndex < 0){
+            isLoadMore = true;
+            pageIndex = 0;
+        }
+        return pageIndex ;
     }
 
     /**
@@ -106,9 +158,14 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
             ToastUtils.showShort("输入目标ID");
             return;
         }
-        //加载当前对话的默认聊天内容
-        T01Helper.getInstance().getMessageEngine().loadDefaultMeg(1, 100, Integer.parseInt(targetNumber));
-
+        //获取当前聊天室所有的聊天消息列表数量
+        currentAllMessage = T01Helper.getInstance().getMessageEngine().getTargetMessageCount(Integer.parseInt(targetNumber), 1);
+        //赋值给加载更多的索引
+        pageIndex = currentAllMessage;
+        //加载当前对话的默认聊天内容，默认加载 5 条
+        T01Helper.getInstance().getMessageEngine().loadDefaultMeg(1, pageCount, Integer.parseInt(targetNumber));
+        //如果需要加载更多就需要默认减去 5 条
+        pageIndex -= pageCount;
         /**
          * 当前发送消息的监听
          */
@@ -136,6 +193,7 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
                 Log.i(TAG, msgMessageEntity.toString());
                 chatAdapter.addData(msgMessageEntity.getMessageContent());
                 chatAdapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -159,7 +217,13 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
             @Override
             public void getMoreMeg(ArrayList<MsgMessageEntity> arrayList, int i) {
                 Log.i(TAG, "getMoreMeg--->" + arrayList.size());
-
+                //这里定义的 index 目的是加载列表起始位置
+                int index = 0;
+                for (MsgMessageEntity msgMessageEntity : arrayList) {
+                    chatAdapter.addData(index, msgMessageEntity.getMessageContent());
+                    index += 1;
+                }
+                chatAdapter.notifyDataSetChanged();
             }
         }, 1, Integer.parseInt(targetNumber));
 
@@ -167,7 +231,7 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
 
     private void sendMessage(String message) {
         sendMessage(MsgUtil.IMsgType.TXT, message,
-                PttApplication.getInstance().getUserId(), "发送者", Integer.parseInt(et_target.getText().toString().trim()), "接收者", null, 1, null, null);
+                PttApplication.getInstance().getUserId(), "发送者："+PttApplication.getInstance().getUserId(), Integer.parseInt(et_target.getText().toString().trim()), "接收者："+Integer.parseInt(et_target.getText().toString().trim()), null, 1, null, null);
     }
 
     /**

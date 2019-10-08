@@ -21,7 +21,8 @@
 | 1.0.1.1 | 1. ContactsEngine 增加按时间轮训请求在线用户;2. 优化对讲组人数在上万的情况下获取数据慢的性能问题； | 刘扬，阳坤 |
 | 1.0.1.2 | 1. 增加视频多路呼叫接口。详细信息请看 CallEngine 接口；2. 修改 PttEngine 获取所有对讲组的接口，舍弃同步获取我当前所有组的接口； | 刘扬，阳坤 |
 | 1.0.1.3 | 1. 增加了是否需要多路呼叫，默认需要。具体 API 请看 CallEngine；2. 修改电话记录重复问题；3. C++ 完善硬编码，应用只需传入 NV21 格式的数据即可。 | 刘扬，阳坤 |
-| 1.0.1.4 | 1. ContactsEngine 增加 getUser() 获取用户信息 API;           |            |
+| 1.0.1.4 | 1. ContactsEngine 增加 getUser() 获取用户信息 API;           | 刘扬，阳坤 |
+| 1.0.1.5 | 1. 增加 MessageEngine 消息加载更多接口，解决加载 BUG；2.增加获取当前与谁聊天的历史消息总数量 | 刘扬，阳坤 |
 
 标准版本嘀嗒 APK 扫码下载:
 
@@ -504,6 +505,8 @@
 - 获取发送消息的监听
 
   ```Java
+  //sendType: 1:单聊 ，2 群聊
+  //targetUserId ：加载与谁的聊天记录
   void recvMessageListener(final IRecvMessageListener iRecvMessageListener, int sendType, final int targetUserId);
   ```
 
@@ -519,9 +522,12 @@
   void onChatUiStateOnPause(Class c, String targetUserName, String sendType)
   ```
 
-- 加载历史消息
+- 加载默认消息
 
   ```Java
+  //sendType: 1:单聊 ，2 群聊
+  //nowDataCount : 默认加载消息数量
+  //targetUserId ：加载与谁的聊天记录
   void loadDefaultMeg(int sendType, int nowDataCount, int targetUserId)；
   ```
 
@@ -543,6 +549,26 @@
   ```Java
   void showMegToNotity(final IShowNotityCallBack iShowNotity);
   ```
+  
+- 加载更多聊天消息
+
+  ```java
+  //sendType: 1:单聊 ，2 群聊
+  //nowDataCount : 每次加载历史消息数量
+  //targetUserId ：加载与谁的聊天记录
+  //startIndex ：从数据库的那个位置开始加载历史消息
+  void loadMoreMeg(int sendType, int startIndex, int nowDataCount, int targetUserId)
+  ```
+
+- 根据 target 获取与他聊天历史消息总数量
+
+  ```java
+  //targetUserId ：与谁的聊天记录
+  //sendType: 1:单聊 ，2 群聊
+  int getTargetMessageCount(int targetUserId, int sendType) 
+  ```
+
+  
 
 ## ContactsEngine
 
