@@ -119,6 +119,11 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
                     if (file != null && file.exists() && file.isFile())
                         T01Helper.getInstance().getMessageEngine().playRecordAudio(file.getAbsolutePath());
                 }
+
+                @Override
+                public void onVolume(String volume) {
+                    Log.d(TAG,"当前声音分贝："+volume);
+                }
             });
         } else {
             T01Helper.getInstance().getMessageEngine().stopRecordAudio();

@@ -23,7 +23,8 @@
 | 1.0.1.3 | 1. 增加了是否需要多路呼叫，默认需要。具体 API 请看 CallEngine；2. 修改电话记录重复问题；3. C++ 完善硬编码，应用只需传入 NV21 格式的数据即可。 | 刘扬，阳坤 |
 | 1.0.1.4 | 1. ContactsEngine 增加 getUser() 获取用户信息 API;           | 刘扬，阳坤 |
 | 1.0.1.5 | 1. 增加 MessageEngine 消息加载更多接口，解决加载 BUG；2.增加获取当前与谁聊天的历史消息总数量 | 刘扬，阳坤 |
-| 1.0.1.6 | 开放 G729 格式录音功能 API,详细 API 接口请看 MessageEngine   |            |
+| 1.0.1.6 | 开放 G729 格式录音功能 API,详细 API 接口请看 MessageEngine   | 刘扬，阳坤 |
+| 1.0.1.7 | 增加获取录音实时分贝，详细 API 接口请看 MessageEngine#startRecordAudio | 刘扬，阳坤 |
 
 标准版本嘀嗒 APK 扫码下载:
 
@@ -583,6 +584,11 @@
   @Override
   public void onMessageRecordEnd(File file, long recordTime) {
   
+  	}
+    
+  @Override
+  public void onVolume(String volume) {
+  	Log.d(TAG,"当前声音分贝："+volume);
   	}
   });
   ```
