@@ -55,10 +55,10 @@
             android:text="发送" />
 
         <Button
-            android:layout_marginLeft="@dimen/x2"
             android:id="@+id/btn_load_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/x2"
             android:background="@color/length_color"
             android:text="加载更多" />
 
@@ -66,14 +66,27 @@
 
     <Button
 
-        android:layout_centerVertical="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginLeft="@dimen/x2"
         android:id="@+id/btn_test_record"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/x2"
         android:background="@color/length_color"
         android:text="测试录音(G729)" />
+
+
+    <Button
+        android:id="@+id/btn_stop_play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/btn_test_record"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/x2"
+        android:layout_marginTop="@dimen/x10"
+        android:background="@color/length_color"
+        android:text="停止播放" />
 
 
 </RelativeLayout>

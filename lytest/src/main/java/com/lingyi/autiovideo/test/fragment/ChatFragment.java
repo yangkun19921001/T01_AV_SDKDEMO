@@ -13,7 +13,9 @@ import com.bnc.activity.PttApplication;
 import com.bnc.activity.T01Helper;
 import com.bnc.activity.callback.IRecvMessageListener;
 import com.bnc.activity.entity.MsgMessageEntity;
+import com.bnc.activity.service.module.message.MsgPlayManager;
 import com.bnc.activity.service.module.message.MsgRecordManager;
+import com.bnc.activity.utils.AudioPlayUtil;
 import com.bnc.activity.utils.MsgUtil;
 import com.lingyi.autiovideo.test.R;
 import com.lingyi.autiovideo.test.adapter.ChatAdapter;
@@ -36,7 +38,7 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
     private static ChatFragment chatFragment;
     private EditText editText, et_target;
     private RecyclerView recyclerView;
-    private Button btnMessage, btn_save, btn_load_more, btn_test_record;
+    private Button btnMessage, btn_save, btn_load_more, btn_test_record, btn_stop_play;
     private ChatAdapter chatAdapter;
 
     ArrayList<String> messageEntityArrayList = new ArrayList<>();
@@ -74,9 +76,11 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
         btn_save = mView.findViewById(R.id.btn_save);
         btn_load_more = mView.findViewById(R.id.btn_load_more);
         btn_test_record = mView.findViewById(R.id.btn_test_record);
+        btn_stop_play = mView.findViewById(R.id.btn_stop_play);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         chatAdapter = new ChatAdapter(messageEntityArrayList);
         recyclerView.setAdapter(chatAdapter);
+
 
     }
 
@@ -85,6 +89,7 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
         btnMessage.setOnClickListener(this);
         btn_save.setOnClickListener(this);
         btn_load_more.setOnClickListener(this);
+        btn_stop_play.setOnClickListener(this);
 
         btn_test_record.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -113,20 +118,33 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
         if (b) {
             T01Helper.getInstance().getMessageEngine().startRecordAudio(new MsgRecordManager.IMsgRecordListenter() {
                 @Override
-                public void onMessageRecordEnd(File file, long recordTime) {
+                public void onMessageRecordEnd(final File file, final long recordTime) {
                     ToastUtils.showShort("得到录音文件：" + file.getAbsolutePath() + " 时长：" + recordTime / 1000 + "s" + " 开始播放");
 
                     if (file != null && file.exists() && file.isFile())
                         T01Helper.getInstance().getMessageEngine().playRecordAudio(file.getAbsolutePath());
+
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            chatAdapter.addData(file.getAbsolutePath() + "   时长：" + (recordTime / 1000) + "");
+                            recyclerView.smoothScrollToPosition(chatAdapter.getData().size() - 1);
+                            chatAdapter.notifyDataSetChanged();
+                        }
+                    });
+                    sendMessage(file.getAbsolutePath(), file.getAbsolutePath(), (recordTime / 1000) + "");
                 }
 
                 @Override
                 public void onVolume(String volume) {
-                    Log.d(TAG,"当前声音分贝："+volume);
+                    Log.d(TAG, "当前声音分贝：" + volume);
                 }
             });
         } else {
             T01Helper.getInstance().getMessageEngine().stopRecordAudio();
+
+
         }
     }
 
@@ -165,6 +183,9 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
                 }
                 pageIndex -= pageCount;
                 T01Helper.getInstance().getMessageEngine().loadMoreMeg(1, getIndex(pageIndex), getPageCount(pageIndex), Integer.parseInt(et_target.getText().toString().trim()));
+                break;
+            case R.id.btn_stop_play:
+                T01Helper.getInstance().getMessageEngine().stopPlayRecordAudio();
                 break;
         }
 
@@ -241,7 +262,6 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
                 Log.i(TAG, msgMessageEntity.toString());
                 chatAdapter.addData(msgMessageEntity.getMessageContent());
                 chatAdapter.notifyDataSetChanged();
-
             }
 
             @Override
@@ -258,7 +278,10 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
             public void getAllCurrentMeg(ArrayList<MsgMessageEntity> arrayList, int i) {
                 Log.i(TAG, "getAllCurrentMeg--->" + arrayList.size());
                 for (MsgMessageEntity msgMessageEntity : arrayList) {
-                    chatAdapter.addData(msgMessageEntity.getMessageContent());
+                    if (msgMessageEntity.getMessageContentType() == MsgUtil.IMsgType.RADIO)
+                        chatAdapter.addData(msgMessageEntity.getMessageContent() + " 时长：" + msgMessageEntity.getRecordTime());
+                    else
+                        chatAdapter.addData(msgMessageEntity.getMessageContent());
                 }
             }
 
@@ -274,12 +297,16 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
                 chatAdapter.notifyDataSetChanged();
             }
         }, 1, Integer.parseInt(targetNumber));
-
     }
 
     private void sendMessage(String message) {
         sendMessage(MsgUtil.IMsgType.TXT, message,
                 PttApplication.getInstance().getUserId(), "发送者：" + PttApplication.getInstance().getUserId(), Integer.parseInt(et_target.getText().toString().trim()), "接收者：" + Integer.parseInt(et_target.getText().toString().trim()), null, 1, null, null);
+    }
+
+    private void sendMessage(String message, String filePath, String time) {
+        sendMessage(MsgUtil.IMsgType.RADIO, message,
+                PttApplication.getInstance().getUserId(), "发送者：" + PttApplication.getInstance().getUserId(), Integer.parseInt(et_target.getText().toString().trim()), "接收者：" + Integer.parseInt(et_target.getText().toString().trim()), filePath, 1, time, null);
     }
 
     /**

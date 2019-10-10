@@ -24,7 +24,7 @@
 | 1.0.1.4 | 1. ContactsEngine 增加 getUser() 获取用户信息 API;           | 刘扬，阳坤 |
 | 1.0.1.5 | 1. 增加 MessageEngine 消息加载更多接口，解决加载 BUG；2.增加获取当前与谁聊天的历史消息总数量 | 刘扬，阳坤 |
 | 1.0.1.6 | 开放 G729 格式录音功能 API,详细 API 接口请看 MessageEngine   | 刘扬，阳坤 |
-| 1.0.1.7 | 增加获取录音实时分贝，详细 API 接口请看 MessageEngine#startRecordAudio | 刘扬，阳坤 |
+| 1.0.1.7 | 1.增加获取录音实时分贝，详细 API 接口请看 MessageEngine#startRecordAudio;2. 增加停止播放录音接口 | 刘扬，阳坤 |
 
 标准版本嘀嗒 APK 扫码下载:
 
@@ -612,6 +612,14 @@
   ```java
   boolean playRecordAudio(String path)
   ```
+  
+- 停止播放 G729
+
+  ```java
+  void stopPlayRecordAudio();
+  ```
+
+  
 
 ## ContactsEngine
 
