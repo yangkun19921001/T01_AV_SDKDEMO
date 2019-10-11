@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity {
 //                    mTextMessage.setText(R.string.title_notifications);
                     mReplace = 2;
 //                    FragmentUtils.hideAllShowFragment(mFragments.get(mReplace));
+
+                    startActivity(new Intent(MainActivity.this,ChatUIActivity.class));
                     return true;
             }
             return false;

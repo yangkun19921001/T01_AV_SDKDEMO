@@ -143,8 +143,6 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
             });
         } else {
             T01Helper.getInstance().getMessageEngine().stopRecordAudio();
-
-
         }
     }
 
@@ -300,20 +298,18 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
     }
 
     private void sendMessage(String message) {
-        sendMessage(MsgUtil.IMsgType.TXT, message,
-                PttApplication.getInstance().getUserId(), "发送者：" + PttApplication.getInstance().getUserId(), Integer.parseInt(et_target.getText().toString().trim()), "接收者：" + Integer.parseInt(et_target.getText().toString().trim()), null, 1, null, null);
+        sendMessage(MsgUtil.IMsgType.TXT, message, Integer.parseInt(et_target.getText().toString().trim()), "接收者：" + Integer.parseInt(et_target.getText().toString().trim()), null, 1, null, null,false);
     }
 
     private void sendMessage(String message, String filePath, String time) {
         sendMessage(MsgUtil.IMsgType.RADIO, message,
-                PttApplication.getInstance().getUserId(), "发送者：" + PttApplication.getInstance().getUserId(), Integer.parseInt(et_target.getText().toString().trim()), "接收者：" + Integer.parseInt(et_target.getText().toString().trim()), filePath, 1, time, null);
+                Integer.parseInt(et_target.getText().toString().trim()), "接收者：" + Integer.parseInt(et_target.getText().toString().trim()), filePath, 1, time, null,false);
     }
 
     /**
      * @param messageType    @see MsgUtil.IMsgType.TXT --> 0 :txt,1:视频,3:图片,4:录音,10:文件,
      * @param sendContent    发送的内容
-     * @param sendPoliceId   发送者 ID
-     * @param sendPoliceName 发送者姓名
+
      * @param recverID       对方 ID
      * @param recverName     对方姓名
      * @param file           发送的文件
@@ -321,8 +317,8 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
      * @param sendVoicelong  语音长度
      * @param uuid           消息唯一 ID
      */
-    public void sendMessage(int messageType, String sendContent, String sendPoliceId, String sendPoliceName, int recverID,
-                            String recverName, String file, int type, String sendVoicelong, String uuid) {
-        T01Helper.getInstance().getMessageEngine().sendMessage(messageType, sendContent, sendPoliceId, sendPoliceName, recverID, recverName, file, type, sendVoicelong, uuid);
+    public void sendMessage(int messageType, String sendContent, int recverID,
+                            String recverName, String file, int type, String sendVoicelong, String uuid,boolean isResend) {
+        T01Helper.getInstance().getMessageEngine().sendMessage(messageType, sendContent, recverID, recverName, file, type, sendVoicelong, uuid,isResend);
     }
 }

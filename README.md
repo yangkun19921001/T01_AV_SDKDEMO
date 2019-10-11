@@ -498,10 +498,22 @@
 - 发送消息
 
   ```Java
-  //me_0   0 :txt,1:视频,3:图片,4:录音,10:文件
-  //type 1:单聊 ，2 群聊
-  MsgMessageEntity sendMessage(int me_0, String sendContent, String sendPoliceId
-            , String sendPoliceName, int recverID, String recverName, String file, int type, String sendVoicelong);
+  //messageContentType MsgUtil.IMsgType.xx   0 :txt,1:视频,3:图片,4:录音,10:文件
+  //chatType_1_or_2 1:单聊 ，2 群聊
+  //content: 发送的内容
+  //receiverId: 接收消息者的 ID
+  //receiverName: 接收消息者的姓名
+  //filePath ： 文件路径
+  //sendVoicelong: 录音时长
+  //uuid ： 消息唯一值,可填，可不填-----如果消息重发需要带上重发消息的 uuid
+  //isReSend：是否重发；
+  MsgMessageEntity sendMessage(int messageContentType, String content, int receiverId, String receiverName, String filePath, int chatType_1_or_2, String sendVoicelong, String uuid,boolean isReSend)
+  ```
+
+- 删除消息
+
+  ```java
+  boolean deleteMessage(String uuid)
   ```
 
 - 获取发送消息的监听

@@ -96,6 +96,7 @@
         <activity
             android:name=".activity.MettingGroupMemberActivity"
             android:windowSoftInputMode="adjustPan|stateHidden"></activity>
+        <activity android:name=".activity.ChatUIActivity" />
     </application>
 
 </manifest>

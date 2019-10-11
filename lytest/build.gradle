@@ -76,7 +76,8 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile(name: 'T01_AV3.25_Android_SDK_2019-10-10-19-09_v1.0.1.7_', ext: 'aar')
+    compile(name: 'T01_AV3.25_Android_SDK_2019-10-11-17-52_v1.0.1.9_', ext: 'aar')
+
     //适配器
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
 
@@ -90,4 +91,10 @@ dependencies {
 //以下三个选择添加，okrx和okrx2不能同时使用
     compile 'com.lzy.net:okrx2:2.0.2'
     compile 'com.lzy.net:okserver:2.0.5'
+
+
+//    测试阶段 聊天框架  暂时不开放使用
+    compile(name: 'chat_base_component-release', ext: 'aar')
+    compile(name: 'chatinput-release', ext: 'aar')
+    compile(name: 'messagelist-release', ext: 'aar')
 }
