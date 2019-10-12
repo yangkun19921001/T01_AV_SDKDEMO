@@ -27,6 +27,7 @@
 | 1.0.1.7 | 1.增加获取录音实时分贝，详细 API 接口请看 MessageEngine#startRecordAudio;2. 增加停止播放录音接口 | 刘扬，阳坤 |
 | 1.0.1.8 | 修改 SDK 聊天异常 BUG                                        | 刘扬，阳坤 |
 | 1.0.1.9 | 优化即时通讯 sendMessage 接口，并支持重发 isReSend           | 刘扬，阳坤 |
+| 1.0.2.0 | 增加上传文件回调                                             |            |
 
 标准版本嘀嗒 APK 扫码下载:
 
@@ -535,6 +536,25 @@
   //sendType: 1:单聊 ，2 群聊
   //targetUserId ：加载与谁的聊天记录
   void recvMessageListener(final IRecvMessageListener iRecvMessageListener, int sendType, final int targetUserId);
+  
+  
+  public interface IRecvMessageListener {
+    //uniqueID: 消息唯一值
+    	//消息发送失败
+      void setSEND_MSG_ERROR(String uniqueID, int reason);
+  		//消息发送成功
+      void setSEND_MSG_SUCCEED(String uniqueID);
+  		//接收当前与 targetUserId 的消息
+      void getCurrentRevMeg(MsgMessageEntity messageEntity);
+  
+      void getUserIsOnline(boolean targetUserIsOnline, boolean curUserIsOnline);
+  		//第一次进来默认加载与 targetUserId 的所有消息
+      void getAllCurrentMeg(ArrayList<MsgMessageEntity> datas,int count);
+  		//加载更多消息
+      void getMoreMeg(ArrayList<MsgMessageEntity> more, int size);
+  		//上传文件的进度 messageContentType ：{@link MsgUtil.IMsgType} 对比
+      void postFileProgress(double pro, String uuid, int messageContentType);
+  }
   ```
 
 - 离开聊天室

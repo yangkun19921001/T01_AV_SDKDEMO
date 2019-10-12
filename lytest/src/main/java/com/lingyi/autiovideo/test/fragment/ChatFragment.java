@@ -294,6 +294,18 @@ public class ChatFragment extends BaseFragment implements View.OnClickListener {
                 }
                 chatAdapter.notifyDataSetChanged();
             }
+
+            /**
+             * 上传文件的进度
+             * @param pro
+             * @param messageContentType {@link MsgUtil.IMsgType} 对比
+             * @param uuid
+             */
+            @Override
+            public void postFileProgress(double pro, String uuid, int messageContentType) {
+                Log.d(TAG,"进度："+ pro + " 消息唯一值："+ uuid + " 消息类型：" + messageContentType);
+
+            }
         }, 1, Integer.parseInt(targetNumber));
     }
 
