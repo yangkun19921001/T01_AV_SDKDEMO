@@ -9,8 +9,8 @@ android {
         applicationId "com.lingyi.autiovideo.test"
         minSdkVersion 18
         targetSdkVersion 22
-        versionCode 1007
-        versionName "1.0.0.7"
+        versionCode 1019
+        versionName "1.0.1.9"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -76,7 +76,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile(name: 'T01_AV3.25_Android_SDK_2019-10-11-17-52_v1.0.1.9_', ext: 'aar')
+    compile(name: 'T01_AV3.25_Android_SDK_2019-10-11-18-36_v1.0.1.9_', ext: 'aar')
 
     //适配器
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'

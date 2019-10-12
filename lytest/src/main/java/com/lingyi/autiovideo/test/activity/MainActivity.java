@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                     mReplace = 2;
 //                    FragmentUtils.hideAllShowFragment(mFragments.get(mReplace));
 
-                    startActivity(new Intent(MainActivity.this,ChatUIActivity.class));
+//                    startActivity(new Intent(MainActivity.this,ChatUIActivity.class));
                     return true;
             }
             return false;
