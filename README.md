@@ -25,6 +25,8 @@
 | 1.0.1.5 | 1. 增加 MessageEngine 消息加载更多接口，解决加载 BUG；2.增加获取当前与谁聊天的历史消息总数量 | 刘扬，阳坤 |
 | 1.0.1.6 | 开放 G729 格式录音功能 API,详细 API 接口请看 MessageEngine   | 刘扬，阳坤 |
 | 1.0.1.7 | 1.增加获取录音实时分贝，详细 API 接口请看 MessageEngine#startRecordAudio;2. 增加停止播放录音接口 | 刘扬，阳坤 |
+| 1.0.1.8 | 修改 SDK 聊天异常 BUG                                        | 刘扬，阳坤 |
+| 1.0.1.9 | 优化即时通讯 sendMessage 接口，并支持重发 isReSend           | 刘扬，阳坤 |
 
 标准版本嘀嗒 APK 扫码下载:
 
@@ -44,11 +46,22 @@
 
 1. 将 .aar SDK 放入 app/lib ,或者 module/lib 中
 
-2. 在 module/build.gradle 或者 app/build.gradle 中配置
+2. 将 so 库放入 src/main/jniLibs 目录 并配置 ndk
+
+3. 在 module/build.gradle 或者 app/build.gradle 中配置
 
    ```java
    android{   
       ...
+        
+       defaultConfig {
+   		....
+   
+           //设置支持的 so 库支持
+           ndk {
+               abiFilters  'armeabi-v7a'
+           }
+       }
    allprojects {
           repositories {
               flatDir {
@@ -65,9 +78,9 @@
    }
    ```
 
-3. 继承 PttApplication
+4. 继承 PttApplication
 
-4. 添加 XML 配置
+5. 添加 `AndroidManifest.xml` 配置
 
    ```java
    <service android:name="com.bnc.activity.service.MessengerService" />
@@ -80,13 +93,13 @@
    </receiver>
    ```
 
-5. 初始化 SDK
+6. 初始化 SDK
 
    ```java
    T01Helper.getInstance().initAppContext(mContext);
    ```
-   
-6. 退出 SDK
+
+7. 退出 SDK
 
    ```java
    exitLyHelperSDK(final ILoginOutListener loginOutListener);
