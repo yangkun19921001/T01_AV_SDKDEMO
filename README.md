@@ -231,6 +231,18 @@
   ```Java
   autoChangePtt(boolean isAuto);
   ```
+  
+- 判断当前对讲组是否是空闲状态
+
+  ```java
+  boolean getCurPttState();
+  ```
+
+- 当前对讲组正在说话的 user
+
+  ```java
+  int getCurPttCall();
+  ```
 
 ## CallEngine
 
@@ -713,6 +725,14 @@
   ```java
   UserEntity getUser(String userId) 
   ```
+  
+- 获取当前用户 ID
+
+  ```java
+  String getCurrentUserVoipId()
+  ```
+
+  
 
 ## LocationEngine
 

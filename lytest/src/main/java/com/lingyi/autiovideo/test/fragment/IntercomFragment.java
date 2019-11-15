@@ -85,12 +85,10 @@ public class IntercomFragment extends BaseFragment{
             public void getCurrentPttLists(ArrayList<UserEntity> arrayList) {
                 try {
                     pro.setVisibility(View.GONE);
-                    Log.i(
-                            TAG,
-                            "refreshUserListView() --> " + "callUserId - "
+                    Log.i(TAG,"refreshUserListView() --> " + "callUserId - "
                                     + Constants.callUserId + " targetUserId - "
                                     + Constants.targetUserId + " callType - "
-                                    + Constants.callType);
+                                    + Constants.callType + " --->" + arrayList.size());
                     mCurrentDepartmentAdapter.setUserList(arrayList);
                     ArrayList<UserEntity> userList = mCurrentDepartmentAdapter.getUserList();
                     if (userList != null && userList.size() > 0)
@@ -193,6 +191,7 @@ public class IntercomFragment extends BaseFragment{
         T01Helper.getInstance().getPttEngine().getAllPttGroupLists(new PttEngine.IAllPttGroupCallBack() {
             @Override
             public void getAllPttLists(ArrayList<GroupEntity> allGroup) {
+                Log.d(TAG,"getAllPttLists");
                 lists = allGroup;
                 menuItems.clear();
                 menuItems.add(new MenuItem("#创建临时组#"));

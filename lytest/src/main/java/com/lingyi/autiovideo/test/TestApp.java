@@ -28,7 +28,7 @@ public class TestApp extends PttApplication {
         T01Helper.getInstance().initAppContext(getApplicationContext());
         //手机不需要多路
         T01Helper.getInstance().getCallEngine().setMultipleLines(false);
-        //默认交给 so 库编码
-        T01Helper.getInstance().getSetEngine().isJavaMediacodec(false);
+        //交给Java硬编码
+        T01Helper.getInstance().getSetEngine().isJavaMediacodec(true);
     }
 }
