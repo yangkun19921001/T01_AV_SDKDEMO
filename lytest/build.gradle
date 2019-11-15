@@ -9,8 +9,8 @@ android {
         applicationId "com.lingyi.autiovideo.test"
         minSdkVersion 18
         targetSdkVersion 22
-        versionCode 1019
-        versionName "1.0.1.9"
+        versionCode 1023
+        versionName "1.0.2.3"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -76,7 +76,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile(name: 'T01_AV3.25_Android_SDK_2019-10-15-11-36_v1.0.2.1_', ext: 'aar')
+    compile(name: 'T01_AV3.25_Android_SDK_2019-11-15-11-55_v1.0.2.3_', ext: 'aar')
 
     //适配器
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
@@ -94,7 +94,7 @@ dependencies {
 
 
 //    测试阶段 聊天框架  暂时不开放使用
-    compile(name: 'chat_base_component-release', ext: 'aar')
-    compile(name: 'chatinput-release', ext: 'aar')
-    compile(name: 'messagelist-release', ext: 'aar')
+//    compile(name: 'chat_base_component-release', ext: 'aar')
+//    compile(name: 'chatinput-release', ext: 'aar')
+//    compile(name: 'messagelist-release', ext: 'aar')
 }
