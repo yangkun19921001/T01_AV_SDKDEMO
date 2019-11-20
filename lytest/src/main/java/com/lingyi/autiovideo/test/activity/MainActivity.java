@@ -290,7 +290,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, CallInOrOutActivity.class);
                 if (!StringUtils.isEmpty(number)){
                     UserEntity userById = UserAndGroupCacheMap.getInstace().findUserById(Integer.parseInt(number));
-                    Log.d(TAG,userById.toString());
                 }
                 switch (call_type) {
                     case AUDIO_CALL_IN:
