@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -49,8 +50,9 @@ public class VideoCallActivity extends Activity {
         mLocal = findViewById(R.id.video_call_local_video);
 
 
-        //不发送视频流
+        //预览本地并发送视频流，false：为内部发送视频流，true 为自己处理视频采集
         T01Helper.getInstance().getCallEngine().startPreviewLocalVideo(mLocal, false);
+
 
         //获取第一个线路
         mFirstSession = getFirstSession();
@@ -65,9 +67,10 @@ public class VideoCallActivity extends Activity {
             @Override
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(et_number.getText().toString().trim())) {
+                    Log.d("IntercomFragment", "callNunber:" + et_number.getText().toString().trim() + " callType:Constants.IVoipLaunchType.VOIP_LAUNCH_TYPE_VIDEO" + " callName:" + "测试多路");
                     T01Helper.getInstance().getCallEngine().call(et_number.getText().toString().trim(),
                             org.doubango.ngn.Constants.IVoipLaunchType.VOIP_LAUNCH_TYPE_VIDEO,
-                            et_number.getText().toString().trim());
+                            "测试多路");
                 } else {
                     Toast.makeText(getApplicationContext(), "请输入号码", Toast.LENGTH_SHORT).show();
                 }
@@ -123,7 +126,6 @@ public class VideoCallActivity extends Activity {
     }
 
 
-
     public void onResume() {
         super.onResume();
         T01Helper.getInstance().getCallEngine().onResume();
@@ -131,6 +133,11 @@ public class VideoCallActivity extends Activity {
 //        if (Constants.isShow) {
 //            showRemote();
 //        }
+
+        if (T01Helper.getInstance().getSetEngine().isCameraFront()) {
+            T01Helper.getInstance().getCallEngine().changeCamera(isChangeCamera = false);
+        }
+
 
     }
 
@@ -173,6 +180,13 @@ public class VideoCallActivity extends Activity {
 //        startActivity(new Intent(this,MainActivity.class));
     }
 
+
+    private boolean isChangeCamera = false;
+
+    public void changeCamera(View view) {
+        T01Helper.getInstance().getCallEngine().changeCamera(isChangeCamera = !isChangeCamera);
+    }
+
     /**
      * 接收监听器消息
      */
@@ -210,7 +224,8 @@ public class VideoCallActivity extends Activity {
                                 Constants.mSessionMap.get(sessionId).hangUpCall();
                                 Constants.mSessionMap.remove(sessionId);
                             }
-                            Constants.mSessionLayoutMap.remove(sessionId).removeAllViews();
+                            if (Constants.mSessionLayoutMap.remove(sessionId) != null)
+                                Constants.mSessionLayoutMap.remove(sessionId);
                             if (Constants.mSessionLayoutMap.size() == 0) {
                                 finish();
                             }

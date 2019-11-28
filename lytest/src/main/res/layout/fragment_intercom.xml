@@ -28,6 +28,7 @@
     </android.support.v7.widget.RecyclerView>
 
     <LinearLayout
+        android:orientation="vertical"
         android:id="@+id/ll_start_intercom"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -43,5 +44,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
              />
+
+
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints">
+
+        <EditText
+            android:textColor="@color/red"
+            android:id="@+id/et_number"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <Button
+            android:text="拨打"
+            android:id="@+id/btn_make_call"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+
 </android.support.constraint.ConstraintLayout>
