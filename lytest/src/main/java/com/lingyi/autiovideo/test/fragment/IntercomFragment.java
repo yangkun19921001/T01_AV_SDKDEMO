@@ -5,12 +5,16 @@ import android.content.Intent;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.blankj.ALog;
 import com.blankj.utilcode.util.ToastUtils;
@@ -35,7 +39,6 @@ import butterknife.BindView;
 /**
  * Created by yangk on 2018/1/5.
  */
-
 public class IntercomFragment extends BaseFragment{
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerView;
@@ -49,6 +52,10 @@ public class IntercomFragment extends BaseFragment{
     TextView toolbar_title;
     @BindView(R.id.tv_metting)
     TextView tv_metting;
+    @BindView(R.id.btn_make_call)
+    Button btn_make_call;
+    @BindView(R.id.et_number)
+    EditText et_number;
     private boolean isTalking;
     private CurrentDepartmentAdapter mCurrentDepartmentAdapter;
     private List<MenuItem> menuItems = new ArrayList<>();
@@ -63,11 +70,28 @@ public class IntercomFragment extends BaseFragment{
     protected void initData() {
         toolbar_title.setText("对讲组");
         initRecyclerView();
-
         setItemListener();
         getCurrentPttLists();
         getAllGroup();
 
+        initEditCall();
+    }
+
+    private void initEditCall() {
+
+        btn_make_call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!TextUtils.isEmpty(et_number.getText().toString().trim())) {
+                    Log.d("IntercomFragment", "callNunber:" + et_number.getText().toString().trim() + " callType:Constants.IVoipLaunchType.VOIP_LAUNCH_TYPE_VIDEO" + " callName:" + "高新10号");
+                    T01Helper.getInstance().getCallEngine().call(et_number.getText().toString().trim(),
+                            org.doubango.ngn.Constants.IVoipLaunchType.VOIP_LAUNCH_TYPE_VIDEO,
+                            "高新10号");
+                } else {
+                    Toast.makeText(getActivity(), "请输入号码", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     @Override
@@ -232,6 +256,7 @@ public class IntercomFragment extends BaseFragment{
             @Override
             public void voipVideoCall(UserEntity userEntity) {
                 if (T01Helper.getInstance().getCallEngine().canCallAudioVideo(userEntity.getUserState())) {
+                    Log.d(TAG,"callNunber:" +userEntity.getUserId() + " callType:Constants.IVoipLaunchType.VOIP_LAUNCH_TYPE_VIDEO"   + " callName:" +userEntity.getUserName() );
                     T01Helper.getInstance().getCallEngine().call(userEntity.getUserId() + "",Constants.IVoipLaunchType.VOIP_LAUNCH_TYPE_VIDEO,  userEntity.getUserName());
                 }
             }
@@ -239,6 +264,7 @@ public class IntercomFragment extends BaseFragment{
             @Override
             public void voipVoiceCall(UserEntity userEntity) {
                 if (T01Helper.getInstance().getCallEngine().canCallAudioVideo(userEntity.getUserState())) {
+                    Log.d(TAG,"callNunber:" +userEntity.getUserId() + " callType:Constants.IVoipLaunchType.VOIP_LAUNCH_TYPE_TELE"  + " callName:" +userEntity.getUserName() );
                     T01Helper.getInstance().getCallEngine().call(userEntity.getUserId() + "",Constants.IVoipLaunchType.VOIP_LAUNCH_TYPE_TELE,  userEntity.getUserName());
 
                 }
