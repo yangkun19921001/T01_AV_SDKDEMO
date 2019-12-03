@@ -15,9 +15,7 @@ import com.lingyi.autiovideo.test.R;
 
 import java.util.List;
 
-/**
- * Author：Bro0cL on 2016/12/26.
- */
+
 public class TRMenuAdapter extends RecyclerView.Adapter<TRMenuAdapter.TRMViewHolder> {
     private Context mContext;
     private List<MenuItem> menuItemList;

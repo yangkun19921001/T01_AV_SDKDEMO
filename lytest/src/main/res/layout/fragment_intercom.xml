@@ -49,23 +49,25 @@
     </LinearLayout>
 
     <LinearLayout
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="50dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         tools:ignore="MissingConstraints">
 
         <EditText
-            android:textColor="@color/red"
             android:id="@+id/et_number"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_weight="1"
+            android:textColor="@color/red" />
 
         <Button
-            android:text="拨打"
             android:id="@+id/btn_make_call"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent"
+            android:text="拨打电话" />
     </LinearLayout>
 
 

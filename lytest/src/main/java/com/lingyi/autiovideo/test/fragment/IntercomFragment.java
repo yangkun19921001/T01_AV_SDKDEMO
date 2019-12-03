@@ -78,14 +78,13 @@ public class IntercomFragment extends BaseFragment{
     }
 
     private void initEditCall() {
-
         btn_make_call.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!TextUtils.isEmpty(et_number.getText().toString().trim())) {
                     Log.d("IntercomFragment", "callNunber:" + et_number.getText().toString().trim() + " callType:Constants.IVoipLaunchType.VOIP_LAUNCH_TYPE_VIDEO" + " callName:" + "高新10号");
                     T01Helper.getInstance().getCallEngine().call(et_number.getText().toString().trim(),
-                            org.doubango.ngn.Constants.IVoipLaunchType.VOIP_LAUNCH_TYPE_VIDEO,
+                            Constants.IVoipLaunchType.VOIP_LAUNCH_TYPE_VIDEO,
                             "高新10号");
                 } else {
                     Toast.makeText(getActivity(), "请输入号码", Toast.LENGTH_SHORT).show();

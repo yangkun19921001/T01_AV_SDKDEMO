@@ -72,9 +72,7 @@
         <activity
             android:name=".activity.MainActivity"
             android:launchMode="singleTask"></activity>
-        <activity
-            android:name=".activity.TestCallActivity"
-            android:launchMode="singleTask"></activity>
+
         <activity
             android:name=".activity.AudioCallActivity"
             android:launchMode="singleTask"></activity>
@@ -89,14 +87,10 @@
         <activity
             android:name=".activity.CallInOrOutActivity"
             android:launchMode="singleTask"></activity>
-        <activity
-            android:name=".activity.TestActivitysShowVIdeoActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="landscape"></activity>
+
         <activity
             android:name=".activity.MettingGroupMemberActivity"
             android:windowSoftInputMode="adjustPan|stateHidden"></activity>
-        <activity android:name=".activity.ChatUIActivity" />
     </application>
 
 </manifest>
