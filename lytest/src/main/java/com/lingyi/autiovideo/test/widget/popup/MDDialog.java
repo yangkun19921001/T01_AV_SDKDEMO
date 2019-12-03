@@ -1,8 +1,6 @@
 package com.lingyi.autiovideo.test.widget.popup;
 
-/**
- * Created by Carbs.Wang on 2016/5/25.
- */
+
 
 import android.app.Dialog;
 import android.content.Context;
@@ -26,7 +24,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lingyi.autiovideo.test.R;
-
 
 /**
  *

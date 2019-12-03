@@ -1,8 +1,5 @@
 package com.lingyi.autiovideo.test.widget.popup;
 
-/**
- * Author：Bro0cL on 2016/12/26.
- */
 
 public class MenuItem {
     private int icon;

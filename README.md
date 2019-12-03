@@ -29,7 +29,7 @@
 | 1.0.1.9 | 优化即时通讯 sendMessage 接口，并支持重发 isReSend           | 刘扬，阳坤 |
 | 1.0.2.0 | 增加上传文件回调                                             | 刘扬，阳坤 |
 | 1.0.2.1 | 解决通话异常 BUG                                             | 刘扬，阳坤 |
-| 1.0.2.4 | 1.PttEngine 增加 changePttCurState 接口                                   2. 解决通话状态 call_type 不更新问题 | 刘扬，阳坤 |
+| 1.0.2.4 | 1.PttEngine 增加 changePttCurState 接口                                   2. 解决通话状态 call_type 不更新问题 3. 增加通话详细历史字段 4. rtp 重复 10次为 1 次。 | 刘扬，阳坤 |
 
 标准版本嘀嗒 APK 扫码下载:
 

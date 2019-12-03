@@ -75,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
         initListener();
 
         OkGo.getInstance().init(getApplication());
-        appRequest();
+//        appRequest();
     }
 
 
