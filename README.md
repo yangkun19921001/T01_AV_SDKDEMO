@@ -30,6 +30,7 @@
 | 1.0.2.0 | 增加上传文件回调                                             | 刘扬，阳坤 |
 | 1.0.2.1 | 解决通话异常 BUG                                             | 刘扬，阳坤 |
 | 1.0.2.4 | 1.PttEngine 增加 changePttCurState 接口                                   2. 解决通话状态 call_type 不更新问题 3. 增加通话详细历史字段 4. rtp 重复 10次为 1 次。 | 刘扬，阳坤 |
+| 1.0.2.5 | 1.增加 音视频来电 声音大小控制接口，详细请看 `SetEngine#onKeyDown` 函数；2. 解决多路通话历史记录异常问题。 |            |
 
 标准版本嘀嗒 APK 扫码下载:
 
@@ -851,4 +852,17 @@
   ```Java
   int getMediaOutGain();
   ```
+  
+- 音视频来电声音控制
+
+  ```java
+  //1. 重写 Activity onKeyDown 方法
+  //2. 返回 T01Helper.getInstance().getSetEngine().onKeyDown(keyCode,event);
+  @Override
+  public boolean onKeyDown(int keyCode, KeyEvent event) {
+    return T01Helper.getInstance().getSetEngine().onKeyDown(keyCode,event);
+  }
+  ```
+
+  
 

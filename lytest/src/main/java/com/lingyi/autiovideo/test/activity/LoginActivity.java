@@ -16,6 +16,7 @@ import com.bnc.activity.T01Helper;
 import com.bnc.activity.callback.IIsLoginListener;
 import com.bnc.activity.callback.LoginCallBack;
 import com.bnc.activity.utils.LogHelper;
+import com.bnc.activity.utils.PropertyUtil;
 import com.lingyi.autiovideo.test.R;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Progress;
@@ -76,6 +77,15 @@ public class LoginActivity extends AppCompatActivity {
 
         OkGo.getInstance().init(getApplication());
 //        appRequest();
+
+        initUser();
+    }
+
+    private void initUser() {
+        etUser.setText(PropertyUtil.getInstance(getApplicationContext()).getString("user",""));
+        pwd.setText(PropertyUtil.getInstance(getApplicationContext()).getString("pwd",""));
+        ip.setText(PropertyUtil.getInstance(getApplicationContext()).getString("ip",""));
+        port.setText(PropertyUtil.getInstance(getApplicationContext()).getString("port","29014"));
     }
 
 
@@ -96,7 +106,11 @@ public class LoginActivity extends AppCompatActivity {
             ) {
                 ToastUtils.showLong("检查用户名或密码是否填写？");
             } else {
-                onLogin(etUser.getText().toString().trim(), pwd.getText().toString().trim(), ip.getText().toString().trim(), port.getText().toString().trim());
+                PropertyUtil.getInstance(getApplicationContext()).putString("user",etUser.getText().toString().trim());
+               PropertyUtil.getInstance(getApplicationContext()).putString("pwd",pwd.getText().toString().trim());
+               PropertyUtil.getInstance(getApplicationContext()).putString("ip",ip.getText().toString().trim());
+               PropertyUtil.getInstance(getApplicationContext()).putString("port",port.getText().toString().trim());
+               onLogin(etUser.getText().toString().trim(), pwd.getText().toString().trim(), ip.getText().toString().trim(), port.getText().toString().trim());
             }
 
     }

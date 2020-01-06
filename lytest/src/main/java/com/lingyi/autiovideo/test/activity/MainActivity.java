@@ -18,12 +18,14 @@ import com.blankj.utilcode.util.StringUtils;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bnc.activity.PttApplication;
 import com.bnc.activity.T01Helper;
+import com.bnc.activity.callback.ICallHistoryDataCallBack;
 import com.bnc.activity.callback.IShowNotityCallBack;
 import com.bnc.activity.engine.CALL_TYPE;
 import com.bnc.activity.engine.CallEngine;
 import com.bnc.activity.engine.RegisterEngine;
 import com.bnc.activity.entity.MsgMessageEntity;
 import com.bnc.activity.entity.UserEntity;
+import com.bnc.activity.entity.VoipContactEntity;
 import com.bnc.activity.service.db.DataDao;
 import com.bnc.activity.utils.LogHelper;
 import com.bnc.activity.utils.PropertyUtil;
@@ -129,6 +131,18 @@ public class MainActivity extends AppCompatActivity {
         //后台消息监听
         addMessageListener();
 
+
+    }
+
+
+
+    private void getCallHistory() {
+        T01Helper.getInstance().getCallEngine().getCallHistoryList(new ICallHistoryDataCallBack() {
+            @Override
+            public void getCallHistoryData(ArrayList<VoipContactEntity> arrayList) {
+                Log.i(TAG, arrayList.toString());
+            }
+        });
     }
 
     private void addMessageListener() {
@@ -151,6 +165,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        //获取通话记录
+        getCallHistory();
 
     }
 
@@ -288,8 +304,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCallInComing(CALL_TYPE call_type, String number, NgnAVSession ngnAVSession) {
                 Intent intent = new Intent(MainActivity.this, CallInOrOutActivity.class);
-                if (!StringUtils.isEmpty(number)){
-                    UserEntity userById = UserAndGroupCacheMap.getInstace().findUserById(Integer.parseInt(number));
+                if (!StringUtils.isEmpty(number)) {
+//                    UserEntity userById = UserAndGroupCacheMap.getInstace().findUserById(Integer.parseInt(number));
                 }
                 switch (call_type) {
                     case AUDIO_CALL_IN:
@@ -484,5 +500,8 @@ public class MainActivity extends AppCompatActivity {
         Intent video_intent = new Intent(MainActivity.this, VideoCallActivity.class);
         startActivity(video_intent);
     }
+
+
+
 
 }
