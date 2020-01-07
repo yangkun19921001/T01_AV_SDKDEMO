@@ -140,7 +140,10 @@ public class MainActivity extends AppCompatActivity {
         T01Helper.getInstance().getCallEngine().getCallHistoryList(new ICallHistoryDataCallBack() {
             @Override
             public void getCallHistoryData(ArrayList<VoipContactEntity> arrayList) {
-                Log.i(TAG, arrayList.toString());
+
+                for (VoipContactEntity voipContactEntity : arrayList) {
+                    Log.i(TAG, "历史记录---》"+voipContactEntity.getCurCallRecord());
+                }
             }
         });
     }
