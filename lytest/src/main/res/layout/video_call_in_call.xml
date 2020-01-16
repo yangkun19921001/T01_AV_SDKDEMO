@@ -85,4 +85,48 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+
+
+    <LinearLayout
+
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:onClick="pushAudio1"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:text="线路1推送音频数据"
+            android:layout_height="wrap_content" />
+        <Button
+            android:onClick="pushAudio2"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:text="线路2推送音频数据"
+            android:layout_height="wrap_content" />
+        <Button
+            android:onClick="pushAudio1_1"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:text="播放线路1"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+        <Button
+            android:onClick="pushAudio2_2"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:text="播放线路2"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
 </RelativeLayout>

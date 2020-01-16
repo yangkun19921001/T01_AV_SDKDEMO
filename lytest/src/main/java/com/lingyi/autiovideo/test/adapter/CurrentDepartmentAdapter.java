@@ -44,6 +44,7 @@ public class CurrentDepartmentAdapter extends BaseQuickAdapter<UserEntity, BaseV
 
     @Override
     protected void convert(BaseViewHolder baseViewHolder, UserEntity user) {
+        Log.d(TAG,user.getUserId()+"");
         position = baseViewHolder.getPosition();
         int section = getSectionForPosition(baseViewHolder.getPosition());
                 TextView letter = baseViewHolder.getView(R.id.user_catalog);

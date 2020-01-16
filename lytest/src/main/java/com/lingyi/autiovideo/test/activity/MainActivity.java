@@ -39,11 +39,17 @@ import com.lingyi.autiovideo.test.utils.FragmentUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.model.Progress;
 
+import org.doubango.ngn.media.NgnProxyAudioConsumer;
+import org.doubango.ngn.media.NgnProxyMoreAudioProducer;
+import org.doubango.ngn.media.NgnProxyPluginMgr;
 import org.doubango.ngn.sip.NgnAVSession;
 import org.doubango.ngn.utils.NgnAVSessionManager;
+import org.doubango.tinyWRAP.ProxyAudioConsumer;
 
 import java.io.File;
+import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -56,6 +62,20 @@ public class MainActivity extends AppCompatActivity {
     private List<Fragment> mFragments;
     private List<Integer> mNavIds;
     private int mReplace = 0;
+
+    public static HashMap<Integer, BigInteger> mAudioMpCache = new HashMap<>();
+
+    private int audioLineCount = 0;
+
+
+    /**
+     * 管理多路 push 流
+     */
+    public static ArrayList<NgnProxyMoreAudioProducer> mPushLists = new ArrayList<>();
+    /**
+     * 管理多路 play 流
+     */
+    public static ArrayList<NgnProxyAudioConsumer> mPlayLists = new ArrayList<>();
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -130,10 +150,32 @@ public class MainActivity extends AppCompatActivity {
         requestOnlineUser();
         //后台消息监听
         addMessageListener();
+        //多路通话音频数据处理
+        addAudioMoreLineListener();
 
 
     }
 
+    private void addAudioMoreLineListener() {
+        T01Helper.getInstance().getCallEngine().addAudioLineListener(new NgnProxyPluginMgr.IAudioMoreLineLinstener() {
+            @Override
+            public void onAudioPush(BigInteger bigInteger, NgnProxyMoreAudioProducer proxyMoreAudioProducer) {
+                Log.i(TAG, "big--onAudioPush->" + bigInteger);
+                mPushLists.add(proxyMoreAudioProducer);
+            }
+
+            @Override
+            public void onAudioPlay(BigInteger bigInteger, NgnProxyAudioConsumer ngnProxyAudioConsumer) {
+                Log.i(TAG, "big--onAudioPlay->" + bigInteger);
+                mPlayLists.add(ngnProxyAudioConsumer);
+            }
+
+            @Override
+            public void onLineError(BigInteger bigInteger, NgnProxyMoreAudioProducer ngnProxyMoreAudioProducer) {
+                mPushLists.remove(ngnProxyMoreAudioProducer);
+            }
+        });
+    }
 
 
     private void getCallHistory() {
@@ -142,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
             public void getCallHistoryData(ArrayList<VoipContactEntity> arrayList) {
 
                 for (VoipContactEntity voipContactEntity : arrayList) {
-                    Log.i(TAG, "历史记录---》"+voipContactEntity.getCurCallRecord());
+                    Log.i(TAG, "历史记录---》" + voipContactEntity.getCurCallRecord());
                 }
             }
         });
@@ -503,8 +545,6 @@ public class MainActivity extends AppCompatActivity {
         Intent video_intent = new Intent(MainActivity.this, VideoCallActivity.class);
         startActivity(video_intent);
     }
-
-
 
 
 }

@@ -23,9 +23,13 @@ import com.lingyi.autiovideo.test.Constants;
 import com.lingyi.autiovideo.test.R;
 
 import org.doubango.ngn.media.NgnProxyVideoConsumerGL;
+import org.doubango.ngn.media.NgnVoipAudioRecord;
 import org.doubango.ngn.sip.NgnAVSession;
 
 import java.util.HashMap;
+
+import static com.lingyi.autiovideo.test.activity.MainActivity.mPlayLists;
+import static com.lingyi.autiovideo.test.activity.MainActivity.mPushLists;
 
 public class VideoCallActivity extends Activity {
 
@@ -187,6 +191,7 @@ public class VideoCallActivity extends Activity {
         T01Helper.getInstance().getCallEngine().changeCamera(isChangeCamera = !isChangeCamera);
     }
 
+
     /**
      * 接收监听器消息
      */
@@ -234,9 +239,7 @@ public class VideoCallActivity extends Activity {
                 }
 
             }
-
         }
-
     }
 
     /**
@@ -249,5 +252,44 @@ public class VideoCallActivity extends Activity {
             }
             finish();
         }
+    }
+
+    /**
+     * 禁言
+     */
+    private boolean isPush_1 = true;
+    private boolean isPush_2 = true;
+
+    /**
+     * 是否播放
+     */
+    private boolean isPush1_1 = false;
+    private boolean isPush2_2 = false;
+
+    public void pushAudio1(View view) {
+        mPushLists.get(0).setOnMute(isPush_1 = !isPush_1);
+    }
+
+    public void pushAudio2(View view) {
+        mPushLists.get(1).setOnMute(isPush_2 = !isPush_2);
+    }
+
+    public void pushAudio1_1(View view) {
+        mPlayLists.get(0).setAudioPlay(isPush1_1 = !isPush1_1);
+    }
+
+    public void pushAudio2_2(View view) {
+        mPlayLists.get(1).setAudioPlay(isPush2_2 = !isPush2_2);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mPushLists.clear();
+        mPlayLists.clear();
+        //停止所有发送音频流
+        T01Helper.getInstance().getCallEngine().setAllStopPushAudio();
+
+
     }
 }
