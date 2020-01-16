@@ -30,7 +30,8 @@
 | 1.0.2.0 | 增加上传文件回调                                             | 刘扬，阳坤 |
 | 1.0.2.1 | 解决通话异常 BUG                                             | 刘扬，阳坤 |
 | 1.0.2.4 | 1.PttEngine 增加 changePttCurState 接口                                   2. 解决通话状态 call_type 不更新问题 3. 增加通话详细历史字段 4. rtp 重复 10次为 1 次。 | 刘扬，阳坤 |
-| 1.0.2.5 | 1.增加 音视频来电 声音大小控制接口，详细请看 `SetEngine#onKeyDown` 函数；2. 解决多路通话历史记录异常问题。 |            |
+| 1.0.2.5 | 1.增加 音视频来电 声音大小控制接口，详细请看 `SetEngine#onKeyDown` 函数；2. 解决多路通话历史记录异常问题。 | 刘扬，阳坤 |
+| 1.0.2.6 | 1. 增加多路音频的操作(静言，播放功能)，详细使用请看 CallEngine | 刘扬，阳坤 |
 
 标准版本嘀嗒 APK 扫码下载:
 
@@ -512,6 +513,79 @@
 
   ```java
   setMultipleLines(boolean MultipleLines)
+  ```
+
+- 多路音频(禁言，播放操作)[详细代码请看源码 DEMO](https://github.com/yangkun19921001/T01_AV_SDKDEMO)
+
+  ```java
+  //API 调用
+  //1. Application 中初始化
+  if (T01Helper.getInstance().getCallEngine().isMultipleLines()) {
+  //设置多路全部禁言模式（true:不推音频流->对端听不见发送端的声音，false :推送音频流;          T01Helper.getInstance().getCallEngine().setMoreAudioMute(true);
+  //设置多路全部播放模式（true:播放->播放对端的声音，false :不播放对端声音）            T01Helper.getInstance().getCallEngine().setMoreAudioPlay(false);
+  }
+  
+  //2. 设置对音频线路操作的回调    T01Helper.getInstance().getCallEngine().addAudioLineListener(new NgnProxyPluginMgr.IAudioMoreLineLinstener() {
+              @Override
+              public void onAudioPush(BigInteger bigInteger, NgnProxyMoreAudioProducer proxyMoreAudioProducer) {
+                  Log.i(TAG, "big--onAudioPush->" + bigInteger);
+                  mPushLists.add(proxyMoreAudioProducer);
+              }
+  
+              @Override
+              public void onAudioPlay(BigInteger bigInteger, NgnProxyAudioConsumer ngnProxyAudioConsumer) {
+                  Log.i(TAG, "big--onAudioPlay->" + bigInteger);
+                  mPlayLists.add(ngnProxyAudioConsumer);
+              }
+  
+              @Override
+              public void onLineError(BigInteger bigInteger, NgnProxyMoreAudioProducer ngnProxyMoreAudioProducer) {
+                  mPushLists.remove(ngnProxyMoreAudioProducer);
+              }
+          });
+  
+  //3. 对线路使用禁言，播放功能
+   		/**
+       * 禁言
+       */
+      private boolean isPush_1 = true;
+      private boolean isPush_2 = true;
+  
+      /**
+       * 是否播放
+       */
+      private boolean isPush1_1 = false;
+      private boolean isPush2_2 = false;
+  
+      public void pushAudio1(View view) {
+        	//拿到线路 1 , true：禁言不推流 false :推流
+          mPushLists.get(0).setOnMute(isPush_1 = !isPush_1);
+      }
+  
+      public void pushAudio2(View view) {
+        //拿到线路 2 , true：禁言不推流 false :推流
+          mPushLists.get(1).setOnMute(isPush_2 = !isPush_2);
+      }
+  
+      public void pushAudio1_1(View view) {
+        	//拿到播放线路1 ；true: 播放，false 不播放
+          mPlayLists.get(0).setAudioPlay(isPush1_1 = !isPush1_1);
+      }
+  
+      public void pushAudio2_2(View view) {
+        //拿到播放线路2 ；true: 播放，false 不播放
+          mPlayLists.get(1).setAudioPlay(isPush2_2 = !isPush2_2);
+      }
+  
+  //4. UI 页面销毁释放线路
+      @Override
+      protected void onDestroy() {
+          super.onDestroy();
+          mPushLists.clear();
+          mPlayLists.clear();
+  //停止所有发送音频流     T01Helper.getInstance().getCallEngine().setAllStopPushAudio();
+  
+      }
   ```
 
   

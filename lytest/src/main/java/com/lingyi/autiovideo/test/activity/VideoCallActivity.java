@@ -282,6 +282,8 @@ public class VideoCallActivity extends Activity {
         mPlayLists.get(1).setAudioPlay(isPush2_2 = !isPush2_2);
     }
 
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -289,7 +291,6 @@ public class VideoCallActivity extends Activity {
         mPlayLists.clear();
         //停止所有发送音频流
         T01Helper.getInstance().getCallEngine().setAllStopPushAudio();
-
 
     }
 }
