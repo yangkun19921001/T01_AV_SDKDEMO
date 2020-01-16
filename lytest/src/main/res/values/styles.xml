@@ -9,6 +9,11 @@
         <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
+    <style name="App_Dialog" parent="@style/Theme.AppCompat.Dialog.Alert">
+        <!-- Customize your theme here. -->
+        <item name="android:windowBackground">@drawable/dia_bg</item>
+    </style>
+
     <style name="TRM_ANIM_STYLE">
         <item name="android:windowEnterAnimation">@anim/trm_popup_enter</item>
         <item name="android:windowExitAnimation">@anim/trm_popup_exit</item>
