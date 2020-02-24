@@ -2,13 +2,16 @@ package com.lingyi.autiovideo.test.fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -25,6 +28,7 @@ import com.bnc.activity.entity.UserEntity;
 import com.lingyi.autiovideo.test.R;
 import com.lingyi.autiovideo.test.activity.CreateGroupActivity;
 import com.lingyi.autiovideo.test.activity.MettingListActivity;
+import com.lingyi.autiovideo.test.activity.PttPlaybackActivity;
 import com.lingyi.autiovideo.test.adapter.CurrentDepartmentAdapter;
 import com.lingyi.autiovideo.test.widget.popup.MenuItem;
 import com.lingyi.autiovideo.test.widget.popup.TopRightMenu;
@@ -35,11 +39,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import butterknife.Unbinder;
 
 /**
  * Created by yangk on 2018/1/5.
  */
-public class IntercomFragment extends BaseFragment{
+public class IntercomFragment extends BaseFragment {
     @BindView(R.id.recyclerview)
     RecyclerView mRecyclerView;
     @BindView(R.id.ll_start_intercom)
@@ -56,6 +63,9 @@ public class IntercomFragment extends BaseFragment{
     Button btn_make_call;
     @BindView(R.id.et_number)
     EditText et_number;
+    @BindView(R.id.tv_ptt_play_back)
+    TextView tvPttPlayBack;
+    Unbinder unbinder;
     private boolean isTalking;
     private CurrentDepartmentAdapter mCurrentDepartmentAdapter;
     private List<MenuItem> menuItems = new ArrayList<>();
@@ -69,6 +79,7 @@ public class IntercomFragment extends BaseFragment{
     @Override
     protected void initData() {
         toolbar_title.setText("对讲组");
+        tvPttPlayBack.setVisibility(View.VISIBLE);
         initRecyclerView();
         setItemListener();
         getCurrentPttLists();
@@ -91,6 +102,14 @@ public class IntercomFragment extends BaseFragment{
                 }
             }
         });
+
+        tvPttPlayBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), PttPlaybackActivity.class));
+            }
+        });
+
     }
 
     @Override
@@ -108,10 +127,10 @@ public class IntercomFragment extends BaseFragment{
             public void getCurrentPttLists(ArrayList<UserEntity> arrayList) {
                 try {
                     pro.setVisibility(View.GONE);
-                    Log.i(TAG,"refreshUserListView() --> " + "callUserId - "
-                                    + Constants.callUserId + " targetUserId - "
-                                    + Constants.targetUserId + " callType - "
-                                    + Constants.callType + " --->" + arrayList.size());
+                    Log.i(TAG, "refreshUserListView() --> " + "callUserId - "
+                            + Constants.callUserId + " targetUserId - "
+                            + Constants.targetUserId + " callType - "
+                            + Constants.callType + " --->" + arrayList.size());
                     mCurrentDepartmentAdapter.setUserList(arrayList);
                     ArrayList<UserEntity> userList = mCurrentDepartmentAdapter.getUserList();
                     if (userList != null && userList.size() > 0)
@@ -148,14 +167,14 @@ public class IntercomFragment extends BaseFragment{
                         .setOnMenuItemClickListener(new TopRightMenu.OnMenuItemClickListener() {
                             @Override
                             public void onMenuItemClick(int position) {
-                                if (position == 0){
+                                if (position == 0) {
                                     Intent intent = new Intent(getActivity(), CreateGroupActivity.class);
                                     intent.putExtra(getString(R.string.Select_User), 2);
                                     startActivity(intent);
                                     return;
                                 }
                                 if (menuItems != null && menuItems.size() > 0 && lists != null && menuItems.size() > 0) {
-                                    T01Helper.getInstance().getPttEngine().setCurrentPttGroup(lists.get(position-1).getGroupId());
+                                    T01Helper.getInstance().getPttEngine().setCurrentPttGroup(lists.get(position - 1).getGroupId());
                                 } else {
                                     ToastUtils.showShort("没有查找到对讲组");
                                 }
@@ -202,7 +221,7 @@ public class IntercomFragment extends BaseFragment{
         tv_metting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(),MettingListActivity.class));
+                startActivity(new Intent(getActivity(), MettingListActivity.class));
             }
         });
     }
@@ -214,7 +233,7 @@ public class IntercomFragment extends BaseFragment{
         T01Helper.getInstance().getPttEngine().getAllPttGroupLists(new PttEngine.IAllPttGroupCallBack() {
             @Override
             public void getAllPttLists(ArrayList<GroupEntity> allGroup) {
-                Log.d(TAG,"getAllPttLists");
+                Log.d(TAG, "getAllPttLists");
                 lists = allGroup;
                 menuItems.clear();
                 menuItems.add(new MenuItem("#创建临时组#"));
@@ -249,25 +268,40 @@ public class IntercomFragment extends BaseFragment{
     }
 
 
-
     public void setItemListener() {
         mCurrentDepartmentAdapter.setItemClickListener(new CurrentDepartmentAdapter.ItemClickListener() {
             @Override
             public void voipVideoCall(UserEntity userEntity) {
                 if (T01Helper.getInstance().getCallEngine().canCallAudioVideo(userEntity.getUserState())) {
-                    Log.d(TAG,"callNunber:" +userEntity.getUserId() + " callType:Constants.IVoipLaunchType.VOIP_LAUNCH_TYPE_VIDEO"   + " callName:" +userEntity.getUserName() );
-                    T01Helper.getInstance().getCallEngine().call(userEntity.getUserId() + "",Constants.IVoipLaunchType.VOIP_LAUNCH_TYPE_VIDEO,  userEntity.getUserName());
+                    Log.d(TAG, "callNunber:" + userEntity.getUserId() + " callType:Constants.IVoipLaunchType.VOIP_LAUNCH_TYPE_VIDEO" + " callName:" + userEntity.getUserName());
+                    T01Helper.getInstance().getCallEngine().call(userEntity.getUserId() + "", Constants.IVoipLaunchType.VOIP_LAUNCH_TYPE_VIDEO, userEntity.getUserName());
                 }
             }
 
             @Override
             public void voipVoiceCall(UserEntity userEntity) {
                 if (T01Helper.getInstance().getCallEngine().canCallAudioVideo(userEntity.getUserState())) {
-                    Log.d(TAG,"callNunber:" +userEntity.getUserId() + " callType:Constants.IVoipLaunchType.VOIP_LAUNCH_TYPE_TELE"  + " callName:" +userEntity.getUserName() );
-                    T01Helper.getInstance().getCallEngine().call(userEntity.getUserId() + "",Constants.IVoipLaunchType.VOIP_LAUNCH_TYPE_TELE,  userEntity.getUserName());
+                    Log.d(TAG, "callNunber:" + userEntity.getUserId() + " callType:Constants.IVoipLaunchType.VOIP_LAUNCH_TYPE_TELE" + " callName:" + userEntity.getUserName());
+                    T01Helper.getInstance().getCallEngine().call(userEntity.getUserId() + "", Constants.IVoipLaunchType.VOIP_LAUNCH_TYPE_TELE, userEntity.getUserName());
 
                 }
             }
         });
     }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // TODO: inflate a fragment view
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        unbinder = ButterKnife.bind(this, rootView);
+        return rootView;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+
 }

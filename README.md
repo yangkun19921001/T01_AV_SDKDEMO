@@ -32,6 +32,7 @@
 | 1.0.2.4 | 1.PttEngine 增加 changePttCurState 接口                                   2. 解决通话状态 call_type 不更新问题 3. 增加通话详细历史字段 4. rtp 重复 10次为 1 次。 | 刘扬，阳坤 |
 | 1.0.2.5 | 1.增加 音视频来电 声音大小控制接口，详细请看 `SetEngine#onKeyDown` 函数；2. 解决多路通话历史记录异常问题。 | 刘扬，阳坤 |
 | 1.0.2.6 | 1. 增加多路音频的操作(静言，播放功能)，详细使用请看 CallEngine | 刘扬，阳坤 |
+| 1.0.2.7 | 1. 将 so 放入 aar 中，无需在外部导入。2. 增加 PTT (录音回放/PCM 播放)接口详细请看 PttEntine | 刘扬，阳坤 |
 
 标准版本嘀嗒 APK 扫码下载:
 
@@ -252,6 +253,129 @@
   ```java
   //1,监听，2 取消监听，3 强拆，4 强插
   changePttCurState(int type, int groupId, TempGroupManager.IPttStateListener iPttStateListener)
+  ```
+
+- 查询所有的对讲回放数据
+
+  ```java
+  //同步， 根据时间降序返回
+  List<PttHistoryEntity> getAllPttAudioHistory()
+  //异步
+  void getAllPttAudioHistoryAsyn(PttAudioHistoryDataDao.IFindCallback iFindCallback)
+  ```
+
+- 删除所有数据
+
+  ```java
+  //同步，返回共总删除的条目数量
+  int delAllPlaybackData()；
+  //异步
+  void delAllPlaybackDataAsyn(PttAudioHistoryDataDao.IDelCallback iDelCallback)
+  ```
+
+- 根据对应的组 ID 来查找数据
+
+  ```java
+  //同步
+  List<PttHistoryEntity> getPttGroupAudioHistory(int groupId)
+  //异步
+  void getPttGroupAudioHistory(int groupId, PttAudioHistoryDataDao.IFindCallback iFindGroupCallback)
+  ```
+
+- 根据对应的组 ID 和说话 ID 来找历史数据
+
+  ```java
+  //同步
+  List<PttHistoryEntity> getGroupAndTalkToPttPlaybackData(int groupId, int talkId)
+  //异步
+  void getGroupAndTalkToPttPlaybackDataAsyn(int groupId, int talkId, PttAudioHistoryDataDao.IFindCallback iFindCallback);
+  ```
+
+  
+
+- 查询所有组对应的数据，二级组织
+
+  ```java
+  void getAllGroupPttPlaybackDataAsyn(PttAudioHistoryDataDao.IFindGroupCallback iFindGroupCallback)
+  ```
+
+  
+
+- 动态通知存储回放数据又更新了，你需要更新 UI
+
+  ```java
+  //异步
+  void addPttPlaybackDataListener(PttAudioHistoryDataDao.IPttPlaybackDataChange iPttPlaybackDataChange)
+  ```
+
+  
+
+- 播放PTT音频文件
+
+  ```java
+  void playPttPlayback(String audioPath, AudioTracker.IPlayListener iPlayListener)
+  ```
+
+  
+
+- 停止播放PTT 音频文件 
+
+  ```java
+  void stopPttPlayback()
+  ```
+
+- 操作 PTT 回放数据返回 PttHistoryEntity 实体类说明
+
+  ```java
+  
+      /**
+       * 当前讲话人所在组 ID
+       */
+      public int groupId;
+      /**
+       * 当前讲话人所在组 name
+       */
+      public String groupName;
+      /**
+       * 当前讲话人
+       */
+      public String talkName;
+  
+      /**
+       * 当前讲话人 ID
+       */
+      public int talkId;
+  
+      /**
+       * 当前讲话人录音文件
+       */
+      public String recordAudioPath;
+  
+      /**
+       * 保存的时间
+       */
+      public String recordAudioTime;
+  
+      /**
+       * 类型 组呼/单呼/全呼
+       *
+       *
+       **/
+      /**
+       * 单呼
+       * int CALL_SINGLE_MSG = 0xd1;
+       */
+  
+      /**
+       * 组呼
+       *   CALL_MULTI_MSG = 0xd2;
+       */
+  
+      /**
+       * 全呼
+       * CALL_ALL_MSG = 0xd8;
+       */
+      public int audioType;
   ```
 
   
@@ -525,69 +649,21 @@
   //设置多路全部播放模式（true:播放->播放对端的声音，false :不播放对端声音）            T01Helper.getInstance().getCallEngine().setMoreAudioPlay(false);
   }
   
-  //2. 设置对音频线路操作的回调    T01Helper.getInstance().getCallEngine().addAudioLineListener(new NgnProxyPluginMgr.IAudioMoreLineLinstener() {
-              @Override
-              public void onAudioPush(BigInteger bigInteger, NgnProxyMoreAudioProducer proxyMoreAudioProducer) {
-                  Log.i(TAG, "big--onAudioPush->" + bigInteger);
-                  mPushLists.add(proxyMoreAudioProducer);
-              }
+  //2. 对线路使用禁言功能
+  NgnProxyMoreAudioProducer findAudioPushLine(int sessionID);
+  //true 使用禁言 false 不禁言
+  NgnProxyMoreAudioProducer#setOnMute(boolean mute);
+  //当前线路是否禁言
+  NgnProxyMoreAudioProducer#boolean isOnMute()
   
-              @Override
-              public void onAudioPlay(BigInteger bigInteger, NgnProxyAudioConsumer ngnProxyAudioConsumer) {
-                  Log.i(TAG, "big--onAudioPlay->" + bigInteger);
-                  mPlayLists.add(ngnProxyAudioConsumer);
-              }
-  
-              @Override
-              public void onLineError(BigInteger bigInteger, NgnProxyMoreAudioProducer ngnProxyMoreAudioProducer) {
-                  mPushLists.remove(ngnProxyMoreAudioProducer);
-              }
-          });
-  
-  //3. 对线路使用禁言，播放功能
-   		/**
-       * 禁言
-       */
-      private boolean isPush_1 = true;
-      private boolean isPush_2 = true;
-  
-      /**
-       * 是否播放
-       */
-      private boolean isPush1_1 = false;
-      private boolean isPush2_2 = false;
-  
-      public void pushAudio1(View view) {
-        	//拿到线路 1 , true：禁言不推流 false :推流
-          mPushLists.get(0).setOnMute(isPush_1 = !isPush_1);
-      }
-  
-      public void pushAudio2(View view) {
-        //拿到线路 2 , true：禁言不推流 false :推流
-          mPushLists.get(1).setOnMute(isPush_2 = !isPush_2);
-      }
-  
-      public void pushAudio1_1(View view) {
-        	//拿到播放线路1 ；true: 播放，false 不播放
-          mPlayLists.get(0).setAudioPlay(isPush1_1 = !isPush1_1);
-      }
-  
-      public void pushAudio2_2(View view) {
-        //拿到播放线路2 ；true: 播放，false 不播放
-          mPlayLists.get(1).setAudioPlay(isPush2_2 = !isPush2_2);
-      }
-  
-  //4. UI 页面销毁释放线路
-      @Override
-      protected void onDestroy() {
-          super.onDestroy();
-          mPushLists.clear();
-          mPlayLists.clear();
-  //停止所有发送音频流     T01Helper.getInstance().getCallEngine().setAllStopPushAudio();
-  
-      }
+  //3. 对线路使用播放功能
+  NgnProxyAudioConsumer findAudioPlayLine(int sessionID)；
+  //play: true: 播放，false 不播放
+  NgnProxyAudioConsumer#setAudioPlay(boolean play);
+  //当前线路是否播放
+  NgnProxyAudioConsumer#boolean getAudioState();
   ```
-
+  
   
 
 ## MettingEngine

@@ -68,14 +68,7 @@ public class MainActivity extends AppCompatActivity {
     private int audioLineCount = 0;
 
 
-    /**
-     * 管理多路 push 流
-     */
-    public static ArrayList<NgnProxyMoreAudioProducer> mPushLists = new ArrayList<>();
-    /**
-     * 管理多路 play 流
-     */
-    public static ArrayList<NgnProxyAudioConsumer> mPlayLists = new ArrayList<>();
+
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -150,39 +143,15 @@ public class MainActivity extends AppCompatActivity {
         requestOnlineUser();
         //后台消息监听
         addMessageListener();
-        //多路通话音频数据处理
-        addAudioMoreLineListener();
-
-
     }
 
-    private void addAudioMoreLineListener() {
-        T01Helper.getInstance().getCallEngine().addAudioLineListener(new NgnProxyPluginMgr.IAudioMoreLineLinstener() {
-            @Override
-            public void onAudioPush(BigInteger bigInteger, NgnProxyMoreAudioProducer proxyMoreAudioProducer) {
-                Log.i(TAG, "big--onAudioPush->" + bigInteger);
-                mPushLists.add(proxyMoreAudioProducer);
-            }
 
-            @Override
-            public void onAudioPlay(BigInteger bigInteger, NgnProxyAudioConsumer ngnProxyAudioConsumer) {
-                Log.i(TAG, "big--onAudioPlay->" + bigInteger);
-                mPlayLists.add(ngnProxyAudioConsumer);
-            }
-
-            @Override
-            public void onLineError(BigInteger bigInteger, NgnProxyMoreAudioProducer ngnProxyMoreAudioProducer) {
-                mPushLists.remove(ngnProxyMoreAudioProducer);
-            }
-        });
-    }
 
 
     private void getCallHistory() {
         T01Helper.getInstance().getCallEngine().getCallHistoryList(new ICallHistoryDataCallBack() {
             @Override
             public void getCallHistoryData(ArrayList<VoipContactEntity> arrayList) {
-
                 for (VoipContactEntity voipContactEntity : arrayList) {
                     Log.i(TAG, "历史记录---》" + voipContactEntity.getCurCallRecord());
                 }

@@ -31,7 +31,7 @@ public class TestApp extends PttApplication {
     private void initT01SDK() {
         //初始化 SDK
         T01Helper.getInstance().initAppContext(getApplicationContext());
-        //手机不需要多路
+        //需要多路 true
         T01Helper.getInstance().getCallEngine().setMultipleLines(true);
 
         //交给Java硬编码
@@ -43,7 +43,7 @@ public class TestApp extends PttApplication {
             //设置多路全部禁言模式（true:不推音频流->对端听不见发送端的声音，false :推送音频流）
             T01Helper.getInstance().getCallEngine().setMoreAudioMute(true);
             //设置多路全部播放模式（true:播放->播放对端的声音，false :不播放对端声音）
-            T01Helper.getInstance().getCallEngine().setMoreAudioPlay(false);
+            T01Helper.getInstance().getCallEngine().setMoreAudioPlay(true);
         }
     }
 }
