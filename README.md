@@ -32,7 +32,7 @@
 | 1.0.2.4 | 1.PttEngine 增加 changePttCurState 接口                                   2. 解决通话状态 call_type 不更新问题 3. 增加通话详细历史字段 4. rtp 重复 10次为 1 次。 | 刘扬，阳坤 |
 | 1.0.2.5 | 1.增加 音视频来电 声音大小控制接口，详细请看 `SetEngine#onKeyDown` 函数；2. 解决多路通话历史记录异常问题。 | 刘扬，阳坤 |
 | 1.0.2.6 | 1. 增加多路音频的操作(静言，播放功能)，详细使用请看 CallEngine | 刘扬，阳坤 |
-| 1.0.2.7 | 1. 将 so 放入 aar 中，无需在外部导入。2. 增加 PTT (录音回放/PCM 播放)接口详细请看 PttEntine | 刘扬，阳坤 |
+| 1.0.2.7 | 1. 将 so 放入 aar 中，无需在外部导入。2. 增加 PTT (录音回放/PCM 播放)接口详细请看 PttEntine 、[DEMO](https://github.com/yangkun19921001/T01_AV_SDKDEMO/blob/master/lytest/src/main/java/com/lingyi/autiovideo/test/activity/PttPlaybackActivity.java) | 刘扬，阳坤 |
 
 标准版本嘀嗒 APK 扫码下载:
 
@@ -50,9 +50,13 @@
 
 ## 快速集成
 
+
+
 1. 将 .aar SDK 放入 app/lib ,或者 module/lib 中
 
 2. 将 so 库放入 src/main/jniLibs 目录 并配置 ndk
+
+   SDK  > 1.0.2.7  不需要外部放入 so
 
 3. 在 module/build.gradle 或者 app/build.gradle 中配置
 
