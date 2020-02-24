@@ -22,14 +22,15 @@ import com.bnc.activity.service.db.DataDao;
 import com.lingyi.autiovideo.test.Constants;
 import com.lingyi.autiovideo.test.R;
 
+import org.doubango.ngn.media.NgnMoreLineManager;
+import org.doubango.ngn.media.NgnProxyAudioConsumer;
+import org.doubango.ngn.media.NgnProxyMoreAudioProducer;
 import org.doubango.ngn.media.NgnProxyVideoConsumerGL;
 import org.doubango.ngn.media.NgnVoipAudioRecord;
 import org.doubango.ngn.sip.NgnAVSession;
 
 import java.util.HashMap;
 
-import static com.lingyi.autiovideo.test.activity.MainActivity.mPlayLists;
-import static com.lingyi.autiovideo.test.activity.MainActivity.mPushLists;
 
 public class VideoCallActivity extends Activity {
 
@@ -38,6 +39,11 @@ public class VideoCallActivity extends Activity {
     private NgnAVSession mFirstSession;
     private EditText et_number;
     private Button btnMakeCall;
+
+    /**
+     * 线路2
+     */
+    private long line2 = -1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -133,7 +139,7 @@ public class VideoCallActivity extends Activity {
     public void onResume() {
         super.onResume();
         T01Helper.getInstance().getCallEngine().onResume();
-//
+
 //        if (Constants.isShow) {
 //            showRemote();
 //        }
@@ -141,8 +147,6 @@ public class VideoCallActivity extends Activity {
         if (T01Helper.getInstance().getSetEngine().isCameraFront()) {
             T01Helper.getInstance().getCallEngine().changeCamera(isChangeCamera = false);
         }
-
-
     }
 
     boolean isShow = false;
@@ -207,6 +211,7 @@ public class VideoCallActivity extends Activity {
                     if (callType == CALL_TYPE.VIDEO_CALL_IN_CALL.ordinal()) {
                         long sessionId = intent.getLongExtra(Constants.SESSION_ID, -1);
                         if (sessionId != -1) {
+                            line2 = sessionId;
                             //拿到当前会话 session 可以理解为线路
                             final NgnAVSession ngnAVSession = T01Helper.getInstance().getCallEngine().getNgnAVSession(sessionId);
                             if (ngnAVSession != null)
@@ -267,30 +272,32 @@ public class VideoCallActivity extends Activity {
     private boolean isPush2_2 = false;
 
     public void pushAudio1(View view) {
-        mPushLists.get(0).setOnMute(isPush_1 = !isPush_1);
+
+        NgnProxyMoreAudioProducer pushInstance = NgnMoreLineManager.findAudioPushLine((int) mFirstSession.getId());
+        pushInstance.setOnMute(isPush_1 = !isPush_1);
     }
 
     public void pushAudio2(View view) {
-        mPushLists.get(1).setOnMute(isPush_2 = !isPush_2);
+        NgnProxyMoreAudioProducer pushInstance = NgnMoreLineManager.findAudioPushLine((int) line2);
+        pushInstance.setOnMute(isPush_2 = !isPush_2);
     }
 
     public void pushAudio1_1(View view) {
-        mPlayLists.get(0).setAudioPlay(isPush1_1 = !isPush1_1);
+
+        NgnProxyAudioConsumer pushInstance = NgnMoreLineManager.findAudioPlayLine((int) mFirstSession.getId());
+        pushInstance.setAudioPlay(isPush1_1 = !isPush1_1);
     }
 
     public void pushAudio2_2(View view) {
-        mPlayLists.get(1).setAudioPlay(isPush2_2 = !isPush2_2);
+        NgnProxyAudioConsumer pushInstance = NgnMoreLineManager.findAudioPlayLine((int) line2);
+        pushInstance.setAudioPlay(isPush2_2 = !isPush2_2);
     }
-
 
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mPushLists.clear();
-        mPlayLists.clear();
-        //停止所有发送音频流
-        T01Helper.getInstance().getCallEngine().setAllStopPushAudio();
+
 
     }
 }

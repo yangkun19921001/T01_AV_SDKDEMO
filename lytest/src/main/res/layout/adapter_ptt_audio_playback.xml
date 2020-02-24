@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/user_catalog"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/x2"
+            android:layout_weight="1"
+            android:src="@drawable/unit_group" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/x2"
+            android:layout_weight="6"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_groupName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:text="@string/uerName"
+                android:textColor="@color/alarm_item"
+                android:textSize="@dimen/f4" />
+
+            <TextView
+                android:id="@+id/tv_talkName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/x5"
+                android:maxLines="1"
+                android:text="@string/userId"
+                android:textColor="@color/alarm_item_content"
+                android:textSize="@dimen/f3" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_marginRight="@dimen/x5"
+        android:layout_toStartOf="@+id/btn_play"
+        android:id="@+id/tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/x5"
+        android:maxLines="1"
+        android:text="ss"
+        android:textColor="@color/alarm_item_content"
+        android:textSize="@dimen/f3" />
+
+
+    <Button
+        android:id="@+id/btn_play"
+        android:layout_centerVertical="true"
+        android:text="播放"
+        android:layout_alignParentRight="true"
+        android:layout_width="@dimen/x100"
+        android:layout_height="@dimen/x50" />
+
+</RelativeLayout>
