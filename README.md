@@ -33,6 +33,7 @@
 | 1.0.2.5 | 1.增加 音视频来电 声音大小控制接口，详细请看 `SetEngine#onKeyDown` 函数；2. 解决多路通话历史记录异常问题。 | 刘扬，阳坤 |
 | 1.0.2.6 | 1. 增加多路音频的操作(静言，播放功能)，详细使用请看 CallEngine | 刘扬，阳坤 |
 | 1.0.2.7 | 1. 将 so 放入 aar 中，无需在外部导入。2. 增加 PTT (录音回放/PCM 播放)接口详细请看 PttEntine 、[DEMO](https://github.com/yangkun19921001/T01_AV_SDKDEMO/blob/master/lytest/src/main/java/com/lingyi/autiovideo/test/activity/PttPlaybackActivity.java) | 刘扬，阳坤 |
+| 1.0.2.8 | 1. 增加会议启动成功返回了一个 会议 id 值(MeetingCallBack##onGetMettingSuccess(String id))。2. 增加了对语音会议(邀请入会，踢人，禁言)等接口。 | 刘扬，阳坤 |
 
 标准版本嘀嗒 APK 扫码下载:
 
@@ -670,7 +671,7 @@
   
   
 
-## MettingEngine
+## MeetingEngine
 
 - 获取会议列表
 
@@ -682,8 +683,64 @@
 
   ```Java
   //meetingtype 0 语音会议，1 视频会议
-  void createMettingGroup(int meetingtype, String groupName, ArrayList<Integer> meetingMember, MeetingCallBack meetingListsListener);
+  void launchMeeting(int meetingtype, String groupName, ArrayList<Integer> meetingMember, MeetingCallBack meetingListsListener);
   ```
+  
+- 对会议中的人员操作禁言
+
+  ```java
+      /**
+       *
+       * @param isMute 是否禁言
+       * @param conferenceId
+       * @param muteType 禁言类型：
+       *               =   MeetingHandle.ALL 禁言/恢复通话全部参与人员
+       *               =   MeetingHandle.NON_MODERATOR 禁言/恢复通话除会议主持人的其他人
+       *               =  userID 禁言某个人ID
+       * @param handleListener
+       */
+  void meetingMemberMuteHandle(boolean isMute, String conferenceId, int muteType, MeetingManager.IMeetingMemberMuteListener handleListener)
+  ```
+
+- 踢人
+
+  ```java
+      /**
+       *
+       * @param conferenceId
+       * @param delType  =   MeetingHandle.ALL 踢出全部参与人员
+       *                 =   MeetingHandle.NON_MODERATOR 踢出除会议主持人的其他人
+       *                 =  userID 踢出某个人
+       * @param handleListener
+       */
+  void delMeetingMember(String conferenceId, int delType, MeetingManager.IMeetingDelListener handleListener)
+  ```
+
+- 邀请入会
+
+  ```java
+      /**
+       * 加入会议
+       * @param joinMember 加入会议人的 ID
+       * @param conferenceId 会议 ID
+       * @param iMeetingHandleListener
+       */
+  void joinMeeting(int joinMember, String conferenceId, MeetingManager.IMeetingJoinListener iMeetingHandleListener)
+  ```
+
+- 会议组成员状态监听
+
+  ```java
+  void addMeetingStateListener(String conferenceId, MeetingManager.IMeetingStateListener iMeetingHandleListener)
+  ```
+
+- 停止会议
+
+  ```java
+  void stopMeeting(String conferenceId, MeetingManager.IMeetingStopListener iMeetingHandleListener)
+  ```
+
+  
 
 ## MessageEngine
 

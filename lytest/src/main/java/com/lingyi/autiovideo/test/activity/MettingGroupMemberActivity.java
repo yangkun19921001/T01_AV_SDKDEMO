@@ -133,9 +133,11 @@ public class MettingGroupMemberActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onGetMettingSuccess() {
+            public void onGetMettingSuccess(String meetingID) {
 
             }
+
+
         });
 //              LYHelper.getInstance().callPhone("c885893", NgnMediaType.Audio,CallActivity.class);
         else
