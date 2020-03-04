@@ -159,7 +159,7 @@ public class MettingListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onGetMettingSuccess() {
+            public void onGetMettingSuccess(String id) {
 
             }
         });
