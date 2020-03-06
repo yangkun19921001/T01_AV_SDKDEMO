@@ -34,6 +34,7 @@
 | 1.0.2.6 | 1. 增加多路音频的操作(静言，播放功能)，详细使用请看 CallEngine | 刘扬，阳坤 |
 | 1.0.2.7 | 1. 将 so 放入 aar 中，无需在外部导入。2. 增加 PTT (录音回放/PCM 播放)接口详细请看 PttEntine 、[DEMO](https://github.com/yangkun19921001/T01_AV_SDKDEMO/blob/master/lytest/src/main/java/com/lingyi/autiovideo/test/activity/PttPlaybackActivity.java) | 刘扬，阳坤 |
 | 1.0.2.8 | 1. 增加会议启动成功返回了一个 会议 id 值(MeetingCallBack##onGetMettingSuccess(String id))。2. 增加了对语音会议(邀请入会，踢人，禁言)等接口。 | 刘扬，阳坤 |
+| 1.0.2.9 | 1. 修改了PTT本地录制 BUG,2. 修改了 pushYUV 为 pushH264 接口。 |            |
 
 标准版本嘀嗒 APK 扫码下载:
 
@@ -518,7 +519,7 @@
 - 预览本地视频
 
   ```Java
-  /***isEx: 如果填写 true 的话需要自己调用 pushYUVB API 自己传输 视频流数据*/
+  /***isEx: 如果填写 true 的话需要自己调用 pushH264 API 自己传输 视频流数据*/
   void startPreviewLocalVideo(FrameLayout localVideoPreview, boolean isEx)；
   ```
 
@@ -578,10 +579,10 @@
   String getRemoteDisplay();
   ```
 
-- push YUV 视频裸流
+- push H264 视频编码格式
 
   ```Java
-  pushYUV(byte[] videoFrame, int width, int height);
+  pushH264(byte[] videoFrame, int width, int height);
   ```
 
 - 配置对应的 Activity 声明周期
