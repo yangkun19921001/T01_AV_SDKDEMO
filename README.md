@@ -34,7 +34,8 @@
 | 1.0.2.6 | 1. 增加多路音频的操作(静言，播放功能)，详细使用请看 CallEngine | 刘扬，阳坤 |
 | 1.0.2.7 | 1. 将 so 放入 aar 中，无需在外部导入。2. 增加 PTT (录音回放/PCM 播放)接口详细请看 PttEntine 、[DEMO](https://github.com/yangkun19921001/T01_AV_SDKDEMO/blob/master/lytest/src/main/java/com/lingyi/autiovideo/test/activity/PttPlaybackActivity.java) | 刘扬，阳坤 |
 | 1.0.2.8 | 1. 增加会议启动成功返回了一个 会议 id 值(MeetingCallBack##onGetMettingSuccess(String id))。2. 增加了对语音会议(邀请入会，踢人，禁言)等接口。 | 刘扬，阳坤 |
-| 1.0.2.9 | 1. 修改了PTT本地录制 BUG,2. 修改了 pushYUV 为 pushH264 接口。 |            |
+| 1.0.2.9 | 1. 修改了PTT本地录制 BUG,2. 修改了 pushYUV 为 pushH264 接口。 | 刘扬，阳坤 |
+| 1.0.3.0 | 1. 增加 PTT 回放时间段查询 PttEngine#getGroupAndTalkToPttPlaybackDataAsyn(int groupId, int talkId, String startTime,String stopTime,PttAudioHistoryDataDao.IFindCallback iFindCallback) | 刘扬，阳坤 |
 
 标准版本嘀嗒 APK 扫码下载:
 
@@ -329,6 +330,22 @@
   ```java
   void stopPttPlayback()
   ```
+
+- 根据时间段查询 PTT 回放数据
+
+  ```java
+      /**
+       *
+       * @param groupId 填 0 表示 查询所有
+       * @param talkId 填 0 表示 查询所有
+       * @param startTime  格式 "yyyy-MM-dd HH:mm:ss"
+       * @param stopTime 格式 "yyyy-MM-dd HH:mm:ss"
+       * @param iFindCallback
+       */
+  public void getGroupAndTalkToPttPlaybackDataAsyn(int groupId, int talkId, String startTime,String stopTime,PttAudioHistoryDataDao.IFindCallback iFindCallback);
+  ```
+
+  
 
 - 操作 PTT 回放数据返回 PttHistoryEntity 实体类说明
 
