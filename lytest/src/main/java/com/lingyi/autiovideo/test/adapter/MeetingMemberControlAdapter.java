@@ -18,6 +18,7 @@ import java.util.List;
 public class MeetingMemberControlAdapter extends BaseQuickAdapter<VoipContactEntity, BaseViewHolder> {
     private IMeetingControlListener iMeetingControlListener;
 
+
     public MeetingMemberControlAdapter(@Nullable List<VoipContactEntity> data) {
         super(R.layout.adapter_metting_detail, data);
     }
@@ -25,19 +26,27 @@ public class MeetingMemberControlAdapter extends BaseQuickAdapter<VoipContactEnt
     @Override
     protected void convert(final BaseViewHolder baseViewHolder, final VoipContactEntity voipContactEntity) {
         String name = voipContactEntity.getName();
-
-        if (!voipContactEntity.isTalk())
+        boolean isShowBtn = false;
+        if (!voipContactEntity.isTalk() && voipContactEntity.isJoin()) {
             name = (voipContactEntity.getName() != null
                     && voipContactEntity.getName() == null) ? voipContactEntity.getNumber() : name;
-        else {
+            isShowBtn = true;
+        } else if (voipContactEntity.isTalk()) {
             name = (voipContactEntity.getName() != null
-                    && voipContactEntity.getName() == null) ? voipContactEntity.getNumber() + ":[正在说话...]" : name + ":[正在说话...]";
+                    && voipContactEntity.getName() == null) ? voipContactEntity.getNumber() : name;
+            name = name + ":[正在说话...]";
+            isShowBtn = true;
+        } else if (!voipContactEntity.isJoin()) {
+            name = (voipContactEntity.getName() != null
+                    && voipContactEntity.getName() == null) ? voipContactEntity.getNumber() : name;
+            name = "邀请中..." + name;
+            isShowBtn = false;
         }
 
         baseViewHolder.setText(R.id.tv_metting_name, (voipContactEntity.getName() != null
                 && voipContactEntity.getName() == null) ? voipContactEntity.getNumber() : name)
-                .setVisible(R.id.btn_del, true)
-                .setVisible(R.id.btn_mute, true)
+                .setVisible(R.id.btn_del, isShowBtn)
+                .setVisible(R.id.btn_mute, isShowBtn)
                 .setOnClickListener(R.id.btn_mute, new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

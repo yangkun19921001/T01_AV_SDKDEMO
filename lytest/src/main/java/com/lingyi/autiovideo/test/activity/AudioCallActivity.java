@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.ToastUtils;
 import com.bnc.activity.T01Helper;
+import com.bnc.activity.camera.encoder.H264EncoderConsumer;
 import com.bnc.activity.engine.MeetingEngine;
 import com.bnc.activity.entity.ConferenceEntity;
 import com.bnc.activity.entity.PttHistoryEntity;
@@ -47,7 +48,6 @@ public class AudioCallActivity extends Activity {
     private String mMeetingID;
 
 
-
     private ExecutorService executorService = new ThreadPoolExecutor(10, 10,
             0L, TimeUnit.MILLISECONDS,
             new LinkedBlockingQueue<Runnable>());
@@ -75,6 +75,7 @@ public class AudioCallActivity extends Activity {
             mName.setText("会议:" + mMeetingID);
             meetingMemberControlAdapter.setNewData(getData());
             findViewById(R.id.join).setVisibility(View.VISIBLE);
+            findViewById(R.id.btn_all_mute).setVisibility(View.VISIBLE);
         }
         registerReceiver();
         initListener();
@@ -153,8 +154,6 @@ public class AudioCallActivity extends Activity {
                     public void run() {
                         MeetingMemberControlEntity meetingMemberControlEntity = JsonUtil.json2Bean(json, MeetingMemberControlEntity.class);
                         upDateMeetingMember(meetingMemberControlEntity);
-
-
                     }
                 });
             }
@@ -195,8 +194,8 @@ public class AudioCallActivity extends Activity {
                     //talking :true/false
                     String talking = memberBean.getFlags().getTalking();
 
-                    if (TextUtils.isEmpty(caller_id_number) || !TextUtils.isEmpty(caller_id_name) ||
-                            TextUtils.isEmpty(id) || TextUtils.isEmpty(talking)) {
+                    if (!TextUtils.isEmpty(caller_id_number) || !TextUtils.isEmpty(caller_id_name) ||
+                            !TextUtils.isEmpty(id) || !TextUtils.isEmpty(talking)) {
                         upData(caller_id_number, caller_id_name, id, talking);
                     }
                 }
@@ -209,15 +208,23 @@ public class AudioCallActivity extends Activity {
             for (VoipContactEntity datum : meetingMemberControlAdapter.getData()) {
                 if (caller_id_number.equals(datum.getNumber())) {
                     boolean aTrue = talking.equals("true") ? true : false;
-                    if (datum.isTalk() == aTrue) continue;//如果状态一样，不要更新
                     datum.setMeetingMemberId(id);
                     datum.setName(caller_id_name);
+                    if (!datum.isJoin()) {
+                        datum.setTalk(aTrue);
+                        datum.setJoin(true);
+                        updata();
+                    }
+
+                    if (datum.isTalk() == aTrue) continue;//如果状态一样，不要更新
                     datum.setTalk(aTrue);
+                    datum.setJoin(true);
                     updata();
                 }
             }
         }
     }
+
     private void updata() {
         runOnUiThread(runnable);
     }

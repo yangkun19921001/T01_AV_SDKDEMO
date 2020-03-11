@@ -55,6 +55,19 @@ public class VoipContactEntity implements Serializable, MultiItemEntity, Parcela
         this.meetingMemberId = Id;
     }
 
+    public boolean isJoin() {
+        return isJoin;
+    }
+
+    public void setJoin(boolean join) {
+        isJoin = join;
+    }
+
+    /**
+     * 是否加入
+     */
+    private boolean isJoin;
+
 
     public void setTalk(boolean talk) {
         isTalk = talk;
