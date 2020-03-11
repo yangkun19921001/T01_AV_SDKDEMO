@@ -11,6 +11,9 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.lingyi.autiovideo.test.R;
 import com.lingyi.autiovideo.test.activity.CreateGroupActivity;
+import com.lingyi.autiovideo.test.model.GroupEntity;
+import com.lingyi.autiovideo.test.model.UserEntity;
+import com.lingyi.autiovideo.test.model.VoipContactEntity;
 
 import java.util.ArrayList;
 import java.util.Iterator;

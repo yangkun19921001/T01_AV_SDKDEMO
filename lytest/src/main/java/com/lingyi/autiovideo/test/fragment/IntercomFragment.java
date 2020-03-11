@@ -27,7 +27,7 @@ import com.bnc.activity.entity.GroupEntity;
 import com.bnc.activity.entity.UserEntity;
 import com.lingyi.autiovideo.test.R;
 import com.lingyi.autiovideo.test.activity.CreateGroupActivity;
-import com.lingyi.autiovideo.test.activity.MettingListActivity;
+import com.lingyi.autiovideo.test.activity.MeetingListActivity;
 import com.lingyi.autiovideo.test.activity.PttPlaybackActivity;
 import com.lingyi.autiovideo.test.adapter.CurrentDepartmentAdapter;
 import com.lingyi.autiovideo.test.widget.popup.MenuItem;
@@ -40,7 +40,6 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 
 /**
@@ -221,7 +220,7 @@ public class IntercomFragment extends BaseFragment {
         tv_metting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), MettingListActivity.class));
+                startActivity(new Intent(getActivity(), MeetingListActivity.class));
             }
         });
     }

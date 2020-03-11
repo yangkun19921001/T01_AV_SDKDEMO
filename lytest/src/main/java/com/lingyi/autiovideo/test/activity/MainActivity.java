@@ -68,9 +68,6 @@ public class MainActivity extends AppCompatActivity {
     private int audioLineCount = 0;
 
 
-
-
-
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -146,8 +143,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
     private void getCallHistory() {
         T01Helper.getInstance().getCallEngine().getCallHistoryList(new ICallHistoryDataCallBack() {
             @Override
@@ -168,11 +163,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
     private void sendBroadcast(String action, long id, int call_type) {
+        sendBroadcast(action, id, call_type, "");
+    }
+
+    private void sendBroadcast(String action, long id, int call_type, String number) {
         Intent intent = new Intent();
         intent.setAction(action);
         intent.putExtra(Constants.SESSION_ID, id);
         intent.putExtra(Constants.CALL_TYPE, call_type);
+        intent.putExtra(Constants.CALL_MEETING_ID, number);
         sendBroadcast(intent);
     }
 
@@ -284,10 +285,14 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case AUDIO_MEETING:
                         Intent intent = new Intent(MainActivity.this, CallInOrOutActivity.class);
+                        String id = ngnAVSession.getRemotePartyUri();
+                        if (id.contains("sip") && id.contains(":") && id.contains("c88"))
+                            id = id.split(":")[1].split("@")[0];
                         Log.i(TAG, "语音会议" + ": meetingMember" + meetingMember);
                         intent.putExtra(Constants.SESSION_ID, ngnAVSession.getId());
                         intent.putExtra(Constants.CALL_NUMBER, meetingMember);
                         intent.putExtra(Constants.CALL_TYPE, call_type.ordinal());
+                        intent.putExtra(Constants.CALL_MEETING_ID, id);
                         startActivity(intent);
                         break;
                 }
@@ -324,6 +329,8 @@ public class MainActivity extends AppCompatActivity {
                 switch (call_type) {
                     case AUDIO_CALL_IN:
                         Log.i(TAG, "语音来电" + ": name" + number);
+
+
                         intent.putExtra(Constants.SESSION_ID, ngnAVSession.getId());
                         intent.putExtra(Constants.CALL_NUMBER, number);
                         intent.putExtra(Constants.CALL_TYPE, call_type.ordinal());
@@ -371,9 +378,12 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCallInCall(CALL_TYPE call_type, String number, NgnAVSession ngnAVSession) {
-                sendBroadcast(Constants.CALL_IN_OR_OUR_ACION, ngnAVSession.getId(), call_type.ordinal());
+                sendBroadcast(Constants.CALL_IN_OR_OUR_ACION, ngnAVSession.getId(), call_type.ordinal(), ngnAVSession.getRemotePartyUri());
                 switch (call_type) {
                     case AUDIO_CALL_IN_CALL:
+                        String id = ngnAVSession.getRemotePartyUri();
+                        if (id.contains("sip") && id.contains(":") && id.contains("c88"))
+                            return; //代表会议
                         Log.i(TAG, "语音通话中" + number);
                         Intent intent = new Intent(MainActivity.this, AudioCallActivity.class);
                         intent.putExtra(Constants.SESSION_ID, ngnAVSession.getId());
