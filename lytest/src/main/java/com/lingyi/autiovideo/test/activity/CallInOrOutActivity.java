@@ -115,7 +115,7 @@ public class CallInOrOutActivity extends Activity {
         if (getIntent() != null && getIntent().getIntExtra(Constants.CALL_TYPE, -1) != -1) {
             //根据 sessionID 获取线路
             int callType = getIntent().getIntExtra(Constants.CALL_TYPE, -1);
-            if (callType == CALL_TYPE.AUDIO_CALL_OUT.ordinal() || callType == CALL_TYPE.VIDEO_CALL_OUT.ordinal()) {
+            if (callType == CALL_TYPE.AUDIO_CALL_OUT.ordinal() || callType == CALL_TYPE.VIDEO_CALL_OUT.ordinal() || callType == CALL_TYPE.AUDIO_MEETING.ordinal()) {
                 return true;
             }
         }

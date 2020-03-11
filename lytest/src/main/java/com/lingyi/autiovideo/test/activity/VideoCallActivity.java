@@ -17,6 +17,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.bnc.activity.T01Helper;
+import com.bnc.activity.camera.encoder.H264EncoderConsumer;
 import com.bnc.activity.engine.CALL_TYPE;
 import com.bnc.activity.service.db.DataDao;
 import com.lingyi.autiovideo.test.Constants;
@@ -297,6 +298,7 @@ public class VideoCallActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+
 
 
     }
