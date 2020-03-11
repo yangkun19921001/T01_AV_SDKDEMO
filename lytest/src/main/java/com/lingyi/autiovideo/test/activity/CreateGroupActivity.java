@@ -21,7 +21,7 @@ import com.bnc.activity.callback.ICreateTempListener;
 import com.bnc.activity.entity.GroupEntity;
 import com.lingyi.autiovideo.test.R;
 import com.lingyi.autiovideo.test.adapter.CreateMettingGroupAdapter;
-import com.lingyi.autiovideo.test.adapter.VoipContactEntity;
+import com.lingyi.autiovideo.test.model.VoipContactEntity;
 import com.lingyi.autiovideo.test.widget.popup.MDDialog;
 
 import java.util.ArrayList;
@@ -81,8 +81,8 @@ public class CreateGroupActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mCreateMettingGroupAdapter);
         if (null != getIntent().getExtras() && getIntent().getExtras().getInt(getString(R.string.Select_User), -1) != -1) {
             open_type = getIntent().getExtras().getInt(getString(R.string.Select_User), -1);
-            toolbarTitle.setText(open_type == 1 ? "创建会议" : "创建对讲组");
-            tvAlarmmore.setText("确认创建");
+            toolbarTitle.setText(open_type == 1 ? "创建会议" : open_type == 3 ? "邀请会议人员" : "创建对讲组");
+            tvAlarmmore.setText("确认");
         }
     }
 
@@ -92,7 +92,14 @@ public class CreateGroupActivity extends AppCompatActivity {
             public void onClick(View v) {
                 pro.setVisibility(View.VISIBLE);
                 final ArrayList<VoipContactEntity> selectUserList = mCreateMettingGroupAdapter.getSelectUserList();
-                if (selectUserList != null || selectUserList.size() > 0) {
+                if (selectUserList != null && selectUserList.size() > 0) {
+                    if (open_type == 3) {//会议邀请
+                        Intent intent = new Intent();
+                        intent.putParcelableArrayListExtra("JOIN_MEMBER", selectUserList);
+                        setResult(2, intent);
+                        finish();
+                        return;
+                    }
                     new MDDialog.Builder(CreateGroupActivity.this)
                             .setContentView(R.layout.layout_create_group)
                             .setContentViewOperator(new MDDialog.ContentViewOperator() {
@@ -111,14 +118,14 @@ public class CreateGroupActivity extends AppCompatActivity {
                                     }
                                     if (open_type == 1) { //创建会议组
                                         ArrayList<Integer> integers = handleCreateTempGroup(selectUserList);
-                                        Intent intent = new Intent(CreateGroupActivity.this, MettingGroupMemberActivity.class);
+                                        Intent intent = new Intent(CreateGroupActivity.this, MeetingGroupMemberActivity.class);
                                         intent.putParcelableArrayListExtra("MettingGroupMember", selectUserList);
                                         intent.putExtra("MettingThem", et_group_name.getText().toString().trim());
                                         if (integers != null && integers.size() > 0)
                                             intent.putIntegerArrayListExtra("MettingMember", integers);
                                         startActivity(intent);
                                         finish();
-                                    } else { //创建对讲组
+                                    }  else { //创建对讲组
                                         createTemp(et_group_name.getText().toString().trim(), selectUserList);
                                     }
 
@@ -138,20 +145,19 @@ public class CreateGroupActivity extends AppCompatActivity {
 
 
                 } else {
+                    pro.setVisibility(View.GONE);
                     ToastUtils.showShort("请选择添加的用户");
                 }
             }
         });
 
-        mCreateMettingGroupAdapter.setGroupMemberChange(new CreateMettingGroupAdapter.IGroupMemberChangeListener()
-
-        {
+        mCreateMettingGroupAdapter.setGroupMemberChange(new CreateMettingGroupAdapter.IGroupMemberChangeListener() {
             @Override
             public void onSelectMemberChange(int count) {
                 if (count == 0) {
-                    toolbarTitle.setText(open_type == 1 ? "创建会议" : "创建对讲组");
+                    toolbarTitle.setText(open_type == 1 ? "创建会议" : open_type == 3 ? "邀请会议人员" : "创建对讲组");
                 } else {
-                    toolbarTitle.setText(open_type == 1 ? "创建会议" + count + "/16" : "创建对讲组" + count + "/16");
+                    toolbarTitle.setText(open_type == 1 ? "创建会议" + count + "/16" : open_type == 3 ? "邀请会议人员" :"创建对讲组" + count + "/16");
                 }
 
             }
@@ -206,8 +212,8 @@ public class CreateGroupActivity extends AppCompatActivity {
     private void initData() {
         List<GroupEntity> allGroup = T01Helper.getInstance().getPttEngine().getAllGroup();
         for (GroupEntity group : allGroup
-                ) {
-            com.lingyi.autiovideo.test.adapter.GroupEntity groupEntity = new com.lingyi.autiovideo.test.adapter.GroupEntity();
+        ) {
+            com.lingyi.autiovideo.test.model.GroupEntity groupEntity = new com.lingyi.autiovideo.test.model.GroupEntity();
             groupEntity.setGroupId(group.getGroupId());
             groupEntity.setGroupName(group.getGroupName());
             groupEntity.setGroupPriority(group.getGroupPriority());

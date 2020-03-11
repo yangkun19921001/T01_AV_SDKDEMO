@@ -30,18 +30,16 @@ public class TestApp extends PttApplication {
 
     private void initT01SDK() {
         //初始化 SDK
-        T01Helper.getInstance().initAppContext(getApplicationContext());
+        T01Helper.getInstance().initT01SDK(getApplicationContext());
         //需要多路 true
         T01Helper.getInstance().getCallEngine().setMultipleLines(true);
-
         //交给Java硬编码
         T01Helper.getInstance().getSetEngine().setJavaMediacodec(true);
         //0:320P 1:480P 2:720P 3:1080P
         T01Helper.getInstance().getSetEngine().setVideoCallInCallQuality(2);
-
         if (T01Helper.getInstance().getCallEngine().isMultipleLines()) {
             //设置多路全部禁言模式（true:不推音频流->对端听不见发送端的声音，false :推送音频流）
-            T01Helper.getInstance().getCallEngine().setMoreAudioMute(true);
+            T01Helper.getInstance().getCallEngine().setMoreAudioMute(false);
             //设置多路全部播放模式（true:播放->播放对端的声音，false :不播放对端声音）
             T01Helper.getInstance().getCallEngine().setMoreAudioPlay(true);
         }

@@ -77,7 +77,7 @@
             android:name=".activity.AudioCallActivity"
             android:launchMode="singleTask"></activity>
 
-        <activity android:name=".activity.MettingListActivity"></activity>
+        <activity android:name=".activity.MeetingListActivity"></activity>
         <activity android:name=".activity.CreateGroupActivity"></activity>
 
         <activity
@@ -90,7 +90,7 @@
             android:launchMode="singleTask"></activity>
 
         <activity
-            android:name=".activity.MettingGroupMemberActivity"
+            android:name=".activity.MeetingGroupMemberActivity"
             android:windowSoftInputMode="adjustPan|stateHidden"></activity>
         <activity android:name=".activity.PttPlaybackActivity" />
     </application>

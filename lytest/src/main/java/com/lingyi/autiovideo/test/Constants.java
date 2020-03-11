@@ -19,6 +19,7 @@ public class Constants {
     public static final String CALL_TYPE = "CALL_TYPE";
     public static final String CALL_ERROR = "CALL_ERROR";
     public static final String CALL_IN_OR_OUR_ACION = "com.lingyi.autiovideo.test.CALL_IN_OR_OUR_ACION";
+    public static final String CALL_MEETING_ID = "CALL_MEETING_ID";
 
 
     /**
