@@ -46,7 +46,6 @@ public class AudioCallActivity extends Activity {
     private MeetingMemberControlAdapter meetingMemberControlAdapter;
     private String mMeetingID;
 
-    private Gson mGson = new Gson();
 
 
     private ExecutorService executorService = new ThreadPoolExecutor(10, 10,
