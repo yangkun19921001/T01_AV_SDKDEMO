@@ -44,8 +44,9 @@ public class CallInOrOutActivity extends Activity {
 
 
         if (getCallType()) {
-            findViewById(R.id.acceptCall).setVisibility(View.GONE);
 
+            if (getIntent().getIntExtra(Constants.CALL_TYPE, -1) != CALL_TYPE.AUDIO_MEETING.ordinal())
+                findViewById(R.id.acceptCall).setVisibility(View.GONE);
         }
 
         TextView name = findViewById(R.id.tv_name);
@@ -115,7 +116,7 @@ public class CallInOrOutActivity extends Activity {
         if (getIntent() != null && getIntent().getIntExtra(Constants.CALL_TYPE, -1) != -1) {
             //根据 sessionID 获取线路
             int callType = getIntent().getIntExtra(Constants.CALL_TYPE, -1);
-            if (callType == CALL_TYPE.AUDIO_CALL_OUT.ordinal() || callType == CALL_TYPE.VIDEO_CALL_OUT.ordinal() || callType == CALL_TYPE.AUDIO_MEETING.ordinal()) {
+            if (callType == CALL_TYPE.AUDIO_CALL_OUT.ordinal() || callType == CALL_TYPE.VIDEO_CALL_OUT.ordinal()) {
                 return true;
             }
         }

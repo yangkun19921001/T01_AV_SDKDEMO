@@ -33,6 +33,17 @@ public class VoipContactEntity implements Serializable, MultiItemEntity, Parcela
         return isSelect;
     }
 
+
+    public boolean isOnLine() {
+        return isOnLine;
+    }
+
+    public void setOnLine(boolean onLine) {
+        isOnLine = onLine;
+    }
+
+    private boolean isOnLine;
+
     /**
      * 是否在说话
      *

@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.Button;
 
+import com.bnc.activity.T01Helper;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.lingyi.autiovideo.test.R;
@@ -28,23 +29,31 @@ public class MeetingMemberControlAdapter extends BaseQuickAdapter<VoipContactEnt
         String name = voipContactEntity.getName();
         boolean isShowBtn = false;
         if (!voipContactEntity.isTalk() && voipContactEntity.isJoin()) {
-            name = (voipContactEntity.getName() != null
-                    && voipContactEntity.getName() == null) ? voipContactEntity.getNumber() : name;
-            isShowBtn = true;
+            if (!voipContactEntity.isOnLine()) {
+                name = (voipContactEntity.getName() != null
+                        && voipContactEntity.getName() == null) ? voipContactEntity.getNumber() : name;
+                name = "[已退出]" + name;
+                isShowBtn = false;
+            } else {
+                name = (voipContactEntity.getName() != null
+                        && voipContactEntity.getName() == null) ? voipContactEntity.getNumber() : name;
+                isShowBtn = true;
+            }
         } else if (voipContactEntity.isTalk()) {
             name = (voipContactEntity.getName() != null
                     && voipContactEntity.getName() == null) ? voipContactEntity.getNumber() : name;
             name = name + ":[正在说话...]";
             isShowBtn = true;
-        } else if (!voipContactEntity.isJoin()) {
+        } else if (!voipContactEntity.isJoin() && !voipContactEntity.isOnLine()) {
             name = (voipContactEntity.getName() != null
                     && voipContactEntity.getName() == null) ? voipContactEntity.getNumber() : name;
             name = "邀请中..." + name;
             isShowBtn = false;
         }
 
-        baseViewHolder.setText(R.id.tv_metting_name, (voipContactEntity.getName() != null
-                && voipContactEntity.getName() == null) ? voipContactEntity.getNumber() : name)
+        if (voipContactEntity.getNumber().equals(T01Helper.getInstance().getContactsEngine().getCurrentUserVoipId()))
+            isShowBtn = false;
+        baseViewHolder.setText(R.id.tv_metting_name, name)
                 .setVisible(R.id.btn_del, isShowBtn)
                 .setVisible(R.id.btn_mute, isShowBtn)
                 .setOnClickListener(R.id.btn_mute, new View.OnClickListener() {
