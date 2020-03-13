@@ -31,6 +31,7 @@ import com.lingyi.autiovideo.test.model.VoipContactEntity;
 import com.lingyi.autiovideo.test.utils.JsonUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -51,7 +52,10 @@ public class AudioCallActivity extends Activity {
     private ExecutorService executorService = new ThreadPoolExecutor(10, 10,
             0L, TimeUnit.MILLISECONDS,
             new LinkedBlockingQueue<Runnable>());
+
+
     private RecyclerView mRecyclerView;
+    private volatile int mApdataIndex;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,6 +83,7 @@ public class AudioCallActivity extends Activity {
         }
         registerReceiver();
         initListener();
+
     }
 
     private void initListener() {
@@ -141,7 +146,7 @@ public class AudioCallActivity extends Activity {
             });
         }
 
-        T01Helper.getInstance().getMeetingEngine().addMeetingStateListener(mMeetingID, 3000, new MeetingManager.IMeetingStateListener() {
+        T01Helper.getInstance().getMeetingEngine().addMeetingStateListener(mMeetingID, 2000, new MeetingManager.IMeetingStateListener() {
             @Override
             public void onError(String s) {
 
@@ -182,6 +187,13 @@ public class AudioCallActivity extends Activity {
                     && conferenceEntity.getConferences().getConference().getMembers().getMember() != null
                     && conferenceEntity.getConferences().getConference().getMembers().getMember().size() > 0) {
 
+
+                setOffLine();
+
+                /**
+                 * 会议当前总人数
+                 */
+                String member_count = conferenceEntity.getConferences().getConference().getMember_count();
                 for (MeetingMemberControlEntity.ConferencesBean.ConferenceBean.MembersBean.MemberBean memberBean :
                         conferenceEntity.getConferences().getConference().getMembers().getMember()) {
                     if (memberBean == null || memberBean.getFlags() == null) continue;
@@ -193,37 +205,51 @@ public class AudioCallActivity extends Activity {
                     String id = memberBean.getId();
                     //talking :true/false
                     String talking = memberBean.getFlags().getTalking();
-
                     if (!TextUtils.isEmpty(caller_id_number) || !TextUtils.isEmpty(caller_id_name) ||
                             !TextUtils.isEmpty(id) || !TextUtils.isEmpty(talking)) {
-                        upData(caller_id_number, caller_id_name, id, talking);
+                        upData(caller_id_number, caller_id_name, id, talking, Integer.parseInt(member_count));
                     }
                 }
             }
         }
     }
 
-    private void upData(String caller_id_number, String caller_id_name, String id, String talking) {
-        if (meetingMemberControlAdapter != null && meetingMemberControlAdapter.getData().size() > 0) {
+    private void setOffLine() {
+        if (meetingMemberControlAdapter.getData().size() > 0) {
             for (VoipContactEntity datum : meetingMemberControlAdapter.getData()) {
+                if (datum.getNumber().equals(T01Helper.getInstance().getContactsEngine().getCurrentUnitId()))
+                    continue;
+                datum.setOnLine(false);
+                datum.setTalk(false);
+            }
+        }
+    }
+
+    private void upData(final String caller_id_number, final String caller_id_name, final String id, final String talking, int memberCount) {
+        boolean isUpdata = false;
+        if (meetingMemberControlAdapter != null && meetingMemberControlAdapter.getData().size() > 0) {
+            for (int i = 0; i < meetingMemberControlAdapter.getData().size(); i++) {
+                VoipContactEntity datum = meetingMemberControlAdapter.getData().get(i);
                 if (caller_id_number.equals(datum.getNumber())) {
                     boolean aTrue = talking.equals("true") ? true : false;
                     datum.setMeetingMemberId(id);
-                    datum.setName(caller_id_name);
-                    if (!datum.isJoin()) {
-                        datum.setTalk(aTrue);
-                        datum.setJoin(true);
-                        updata();
-                    }
-
-                    if (datum.isTalk() == aTrue) continue;//如果状态一样，不要更新
+                    if (datum.getNumber().equals(T01Helper.getInstance().getContactsEngine().getCurrentUserVoipId()))
+                        datum.setName("我");
+                    else
+                        datum.setName(caller_id_number);
                     datum.setTalk(aTrue);
                     datum.setJoin(true);
-                    updata();
+                    datum.setOnLine(true);
+                    isUpdata = true;
+                    break;
                 }
             }
         }
+
+        if (isUpdata)
+            updata();
     }
+
 
     private void updata() {
         runOnUiThread(runnable);
@@ -244,6 +270,10 @@ public class AudioCallActivity extends Activity {
 
                 @Override
                 public void onData(String str) {
+                    if (str.contains("-1")) {
+                        ToastUtils.showShort("踢人失败:");
+                        return;
+                    }
                     ToastUtils.showShort("操作成功:" + str);
                     meetingMemberControlAdapter.remove(postion);
                     meetingMemberControlAdapter.notifyItemChanged(postion);
@@ -263,7 +293,7 @@ public class AudioCallActivity extends Activity {
     private void requestMeetingMuteHandle(final int postion, final VoipContactEntity voipContactEntity) {
         int number;
         if (postion == -1 && null == voipContactEntity) {
-            isMute = !isALLMute;
+            isMute = isALLMute = !isALLMute;
             number = MeetingEngine.MeetingHandle.ALL.ordinal();
         } else {
             isMute = !voipContactEntity.isSelect();
@@ -318,6 +348,12 @@ public class AudioCallActivity extends Activity {
 
     private List<VoipContactEntity> getData() {
         ArrayList<VoipContactEntity> voipContactEntities = new ArrayList<>();
+        VoipContactEntity voipContactEntity = new VoipContactEntity();
+        voipContactEntity.setJoin(true);//自己默认是加入的。
+        voipContactEntity.setOnLine(true);
+        voipContactEntity.setName("我");
+        voipContactEntity.setNumber(T01Helper.getInstance().getContactsEngine().getCurrentUserVoipId());
+        voipContactEntities.add(voipContactEntity);
         if (!getNumber().isEmpty()) {
             if (getNumber().contains(",")) {
                 String[] numbers = getNumber().split(",");
@@ -341,17 +377,6 @@ public class AudioCallActivity extends Activity {
 
     @Override
     protected void onDestroy() {
-        if (!TextUtils.isEmpty(mMeetingID))
-            T01Helper.getInstance().getMeetingEngine().stopMeeting(mMeetingID, new MeetingManager.IMeetingStopListener() {
-                @Override
-                public void onError(String s) {
-
-                }
-
-                @Override
-                public void onData(String s) {
-                }
-            });
         super.onDestroy();
         if (mCllReceiver != null) {
             unregisterReceiver(mCllReceiver);
@@ -401,10 +426,7 @@ public class AudioCallActivity extends Activity {
                     }
                 }
             }
-
             requestJoinMeeting(join_member);
-
-
         }
 
     }
@@ -418,7 +440,7 @@ public class AudioCallActivity extends Activity {
     private void requestJoinMeeting(final ArrayList<VoipContactEntity> joinMember) {
         String members = getJoinMember(joinMember);
         if (members != null && !members.isEmpty() && mMeetingID != null && !mMeetingID.isEmpty()) {
-            T01Helper.getInstance().getMeetingEngine().joinMeeting(mMeetingID, members, new MeetingManager.IMeetingJoinListener() {
+            T01Helper.getInstance().getMeetingEngine().joinMeeting(members, mMeetingID, new MeetingManager.IMeetingJoinListener() {
                 @Override
                 public void onError(String eror) {
                     Log.i("requestJoinMeeting", eror);
@@ -430,6 +452,7 @@ public class AudioCallActivity extends Activity {
                     Log.i("requestJoinMeeting", json);
                     meetingMemberControlAdapter.addData(joinMember);
                     meetingMemberControlAdapter.notifyDataSetChanged();
+                    ToastUtils.showShort("邀请成功:");
                 }
             });
         }

@@ -71,10 +71,12 @@
 
         <activity
             android:name=".activity.MainActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"></activity>
 
         <activity
             android:name=".activity.AudioCallActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"></activity>
 
         <activity android:name=".activity.MeetingListActivity"></activity>
@@ -87,10 +89,12 @@
 
         <activity
             android:name=".activity.CallInOrOutActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:launchMode="singleTask"></activity>
 
         <activity
             android:name=".activity.MeetingGroupMemberActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:windowSoftInputMode="adjustPan|stateHidden"></activity>
         <activity android:name=".activity.PttPlaybackActivity" />
     </application>

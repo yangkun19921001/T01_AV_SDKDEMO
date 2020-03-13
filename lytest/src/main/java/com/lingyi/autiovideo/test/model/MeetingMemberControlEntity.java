@@ -217,7 +217,7 @@ public class MeetingMemberControlEntity {
                      */
 
                     private String type;
-                    private JoinTimeBean join_time;
+//                    private JoinTimeBean join_time;
                     private String record_path;
                     private String output_volume;
                     private String input_volume;

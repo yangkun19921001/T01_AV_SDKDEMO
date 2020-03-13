@@ -1,12 +1,20 @@
 package com.lingyi.autiovideo.test;
 
+import android.content.Context;
 import android.support.multidex.MultiDex;
+import android.text.TextUtils;
 
+import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.CrashUtils;
 import com.blankj.utilcode.util.Utils;
 import com.bnc.activity.PttApplication;
 import com.bnc.activity.T01Helper;
 import com.bnc.activity.service.module.log.CrashHandler;
+import com.tencent.bugly.crashreport.CrashReport;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * Created by yangk on 2018/1/4.
@@ -17,6 +25,8 @@ public class TestApp extends PttApplication {
     public void onCreate() {
         super.onCreate();
         MultiDex.install(getApplicationContext());
+
+        initCarsh();
         /**
          * 初始化 SDK
          */
@@ -24,7 +34,6 @@ public class TestApp extends PttApplication {
 
         Utils.init(this);
 
-        CrashHandler.getInstance().register(this);
 
     }
 
@@ -43,5 +52,48 @@ public class TestApp extends PttApplication {
             //设置多路全部播放模式（true:播放->播放对端的声音，false :不播放对端声音）
             T01Helper.getInstance().getCallEngine().setMoreAudioPlay(true);
         }
+    }
+
+    public void initCarsh(){
+        Context context = getApplicationContext();
+            // 获取当前包名
+        String packageName = context.getPackageName();
+        // 获取当前进程名
+        String processName = getProcessName(android.os.Process.myPid());
+        // 设置是否为上报进程
+        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(context);
+        strategy.setUploadProcess(processName == null || processName.equals(packageName));
+        // 初始化Bugly
+        CrashReport.initCrashReport(context, "8f2decddec", BuildConfig.DEBUG, strategy);
+    }
+
+
+    /**
+     * 获取进程号对应的进程名
+     *
+     * @param pid 进程号
+     * @return 进程名
+     */
+    private static String getProcessName(int pid) {
+        BufferedReader reader = null;
+        try {
+            reader = new BufferedReader(new FileReader("/proc/" + pid + "/cmdline"));
+            String processName = reader.readLine();
+            if (!TextUtils.isEmpty(processName)) {
+                processName = processName.trim();
+            }
+            return processName;
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        } finally {
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (IOException exception) {
+                exception.printStackTrace();
+            }
+        }
+        return null;
     }
 }
