@@ -77,7 +77,7 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile(name: 'T01_AV3.25_Android_SDK_2020-03-13-14-55_v1.0.3.0_', ext: 'aar')
+    compile(name: 'T01_AV3.25_Android_SDK_2020-03-13-17-34_v1.0.3.0_', ext: 'aar')
 
     //适配器
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
