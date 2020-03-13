@@ -41,6 +41,8 @@ import java.util.concurrent.TimeUnit;
 
 public class AudioCallActivity extends Activity {
 
+    private String TAG = this.getClass().getSimpleName();
+
     private boolean isHandfree = false;
     private boolean isMute = false;
     private AudioCallReceiver mCllReceiver;
@@ -154,6 +156,7 @@ public class AudioCallActivity extends Activity {
 
             @Override
             public void onData(final String json) {
+                Log.e(TAG,"MeetingState..."+json);
                 executorService.execute(new Runnable() {
                     @Override
                     public void run() {
