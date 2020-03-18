@@ -1,1 +1,2 @@
-include  ':lytest'/*,"LY_AudioVideoHelp_SDK"*/
+include  ':lytest'
+/*,"LY_AudioVideoHelp_SDK"*/
