@@ -356,10 +356,7 @@ public class VideoCallActivity extends Activity {
             @Override
             public void onPreviewResult(byte[] data, int width, int height) {
                 try {
-     /*               Bitmap bitmap = mFastYUVtoRGB.convertYUVtoRGB(data, width, height);
-                    ivShowUSBVideo.setImageBitmap(bitmap);*/
                     Log.e(TAG, width + " " + height);
-//                    T01Helper.getInstance().getCallEngine().pushH264(data, width, height);
                     H264EncoderConsumer.getInstance().putQueue(data, width, height);
                 } catch (Exception e) {
                     LogHelper.e(TAG, e.getMessage());
