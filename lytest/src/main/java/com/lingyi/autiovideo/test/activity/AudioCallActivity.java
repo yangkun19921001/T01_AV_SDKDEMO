@@ -156,7 +156,7 @@ public class AudioCallActivity extends Activity {
 
             @Override
             public void onData(final String json) {
-                Log.e(TAG,"MeetingState..."+json);
+                Log.e(TAG, "MeetingState..." + json);
                 executorService.execute(new Runnable() {
                     @Override
                     public void run() {
@@ -320,8 +320,10 @@ public class AudioCallActivity extends Activity {
                         }
                         meetingMemberControlAdapter.notifyDataSetChanged();
                     } else {
-                        meetingMemberControlAdapter.getData().get(postion).setSelect(!voipContactEntity.isSelect());//指定禁言或者取消禁言
-                        meetingMemberControlAdapter.notifyItemChanged(postion);
+                        if (meetingMemberControlAdapter.getData() != null && meetingMemberControlAdapter.getData().get(postion) != null) {
+                            meetingMemberControlAdapter.getData().get(postion).setSelect(!voipContactEntity.isSelect());//指定禁言或者取消禁言
+                            meetingMemberControlAdapter.notifyItemChanged(postion);
+                        }
                     }
 
                 }
@@ -468,7 +470,6 @@ public class AudioCallActivity extends Activity {
                 sb.append(voipContactEntity.getNumber()).append(",");
             }
             return sb.toString();
-
         }
         return join_member.size() == 0 ? "" : join_member.get(0) == null ? "" : join_member.get(0).getNumber();
     }
