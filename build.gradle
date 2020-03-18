@@ -31,6 +31,8 @@ allprojects {
             // Alternative URL is 'https://dl.google.com/dl/android/maven2/'
         }
         maven { url "https://maven.google.com" }
+        //适配 USB 需要用到
+        maven { url 'http://raw.github.com/saki4510t/libcommon/master/repository/' }
         google()
     }
 }

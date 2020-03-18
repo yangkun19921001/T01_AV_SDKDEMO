@@ -10,7 +10,9 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -20,8 +22,12 @@ import com.bnc.activity.T01Helper;
 import com.bnc.activity.camera.encoder.H264EncoderConsumer;
 import com.bnc.activity.engine.CALL_TYPE;
 import com.bnc.activity.service.db.DataDao;
+import com.bnc.activity.utils.LogHelper;
+import com.jiangdg.usbcamera.USBCameraHelper;
 import com.lingyi.autiovideo.test.Constants;
 import com.lingyi.autiovideo.test.R;
+import com.serenegiant.usb.common.AbstractUVCCameraHandler;
+import com.serenegiant.usb.widget.UVCCameraTextureView;
 
 import org.doubango.ngn.media.NgnMoreLineManager;
 import org.doubango.ngn.media.NgnProxyAudioConsumer;
@@ -31,6 +37,10 @@ import org.doubango.ngn.media.NgnVoipAudioRecord;
 import org.doubango.ngn.sip.NgnAVSession;
 
 import java.util.HashMap;
+
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+import static com.joysee.common.download.JDownloadManager.TAG;
 
 
 public class VideoCallActivity extends Activity {
@@ -62,7 +72,12 @@ public class VideoCallActivity extends Activity {
 
 
         //预览本地并发送视频流，false：为内部发送视频流，true 为自己处理视频采集
-        T01Helper.getInstance().getCallEngine().startPreviewLocalVideo(mLocal, false);
+
+        //适配 USB 摄像头
+        if (checkUSBCamera(getWindow().getDecorView())) {
+
+        }
+//        T01Helper.getInstance().getCallEngine().startPreviewLocalVideo(mLocal, false);
 
 
         //获取第一个线路
@@ -298,8 +313,58 @@ public class VideoCallActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        USBCameraHelper.getInstance(this).onDestroy();
+        H264EncoderConsumer.getInstance().stopEncodeH264Sync();
+
+    }
+
+    private boolean checkUSBCamera(View decorView) {
+        int count = USBCameraHelper.getInstance(this).detectUsbDeviceWithUsbManager(getApplicationContext());
+        Log.e(TAG, "USB start " + count);
+        //适配 USB 外接摄像头
+        if (count > 0) {
+            decorView.findViewById(R.id.fl_usb_camera).setVisibility(VISIBLE);
+            UVCCameraTextureView uvcCameraTextureView = decorView.findViewById(R.id.camera_view);
+            FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) uvcCameraTextureView.getLayoutParams();
+            layoutParams.gravity = Gravity.RIGHT;
+            layoutParams.width = 500;
+            layoutParams.height = 500;
+            uvcCameraTextureView.setLayoutParams(layoutParams);
+            T01Helper.getInstance().getCallEngine().startPreviewLocalVideo(mLocal, true);
+            USBCameraHelper.getInstance(this).init(decorView);
+            USBCameraHelper.getInstance(this).onStart();
+            H264EncoderConsumer
+                    .getInstance()
+                    .setEncoderParams(T01Helper.getInstance().getSetEngine().getVideoFps(), 1280, 720)
+                    .startEncodeH264Data();
+            pushH264();
+            return true;
+        } else {
+            decorView.findViewById(R.id.fl_usb_camera).setVisibility(GONE);
+            //预览本地视频
+            T01Helper.getInstance().getCallEngine().startPreviewLocalVideo(mLocal, false);
+        }
+        return false;
+    }
 
 
-
+    /**
+     * 适配 USB 传输 YUV
+     */
+    private void pushH264() {
+        USBCameraHelper.getInstance(this).setOnPreviewFrameListener(new AbstractUVCCameraHandler.OnPreViewResultListener() {
+            @Override
+            public void onPreviewResult(byte[] data, int width, int height) {
+                try {
+     /*               Bitmap bitmap = mFastYUVtoRGB.convertYUVtoRGB(data, width, height);
+                    ivShowUSBVideo.setImageBitmap(bitmap);*/
+                    Log.e(TAG, width + " " + height);
+//                    T01Helper.getInstance().getCallEngine().pushH264(data, width, height);
+                    H264EncoderConsumer.getInstance().putQueue(data, width, height);
+                } catch (Exception e) {
+                    LogHelper.e(TAG, e.getMessage());
+                }
+            }
+        });
     }
 }
