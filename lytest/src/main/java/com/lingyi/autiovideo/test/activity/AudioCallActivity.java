@@ -82,6 +82,7 @@ public class AudioCallActivity extends Activity {
             meetingMemberControlAdapter.setNewData(getData());
             findViewById(R.id.join).setVisibility(View.VISIBLE);
             findViewById(R.id.btn_all_mute).setVisibility(View.VISIBLE);
+            initMeetingListener();
         }
         registerReceiver();
         initListener();
@@ -148,6 +149,10 @@ public class AudioCallActivity extends Activity {
             });
         }
 
+
+    }
+
+    private void initMeetingListener() {
         T01Helper.getInstance().getMeetingEngine().addMeetingStateListener(mMeetingID, 2000, new MeetingManager.IMeetingStateListener() {
             @Override
             public void onError(String s) {
@@ -182,7 +187,7 @@ public class AudioCallActivity extends Activity {
      * @param conferenceEntity
      */
     private void upDateMeetingMember(MeetingMemberControlEntity conferenceEntity) {
-        if (conferenceEntity != null && meetingMemberControlAdapter.getData() != null && meetingMemberControlAdapter.getData().size() > 0) {
+        if (conferenceEntity != null && meetingMemberControlAdapter != null && meetingMemberControlAdapter.getData() != null && meetingMemberControlAdapter.getData().size() > 0) {
             if (conferenceEntity != null
                     && conferenceEntity.getConferences() != null
                     && conferenceEntity.getConferences().getConference() != null
