@@ -80,8 +80,7 @@ dependencies {
     //T01 音视频 SDK
     compile(name: 'T01_AV3.25_Android_SDK_2020-03-18-13-23_v1.0.3.0_', ext: 'aar')
     //USB 适配 需要用到
-//    compile(name: 'T01_AV_USBCamera_2020-03-18-22-44_v1.1_', ext: 'aar')
-    compile(name: 'T01_AV_USBCamera_2020-03-19-12-48_v1.2_', ext: 'aar')
+    compile(name: 'T01_AV_USBCamera_2020-03-19-17-37_v1.3_', ext: 'aar')
     //由于项目报错，暂时先打开
     compile 'com.serenegiant:common:1.5.20'
 
