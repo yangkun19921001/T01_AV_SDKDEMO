@@ -44,6 +44,7 @@
 | 版本 | 说明                      | 备注       |
 | ---- | ------------------------- | ---------- |
 | v1.2 | 增加单独的 USB 摄像头 SDK | 刘扬、阳坤 |
+| v1.3 | 解决异常 Crash            | 刘扬、阳坤 |
 
 标准版本嘀嗒 APK 扫码下载:
 
@@ -1167,6 +1168,12 @@
    
    //6. 预览 NV21 数据回调
    USBCameraHelper.getInstance(this).setOnPreviewFrameListener(OnPreViewResultListener listener);
+   ```
+
+3. 销毁
+
+   ```java
+    USBCameraHelper.getInstance(this).onDestroy();
    ```
 
    
