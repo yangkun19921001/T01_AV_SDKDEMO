@@ -18,11 +18,13 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.ToastUtils;
 import com.bnc.activity.T01Helper;
 import com.bnc.activity.camera.encoder.H264EncoderConsumer;
 import com.bnc.activity.engine.CALL_TYPE;
 import com.bnc.activity.service.db.DataDao;
 import com.bnc.activity.utils.LogHelper;
+import com.jiangdg.usbcamera.IUSBCameraConnectListener;
 import com.jiangdg.usbcamera.USBCameraHelper;
 import com.lingyi.autiovideo.test.Constants;
 import com.lingyi.autiovideo.test.R;
@@ -315,6 +317,8 @@ public class VideoCallActivity extends Activity {
         super.onDestroy();
         USBCameraHelper.getInstance(this).onDestroy();
         H264EncoderConsumer.getInstance().stopEncodeH264Sync();
+        if (iusbCameraConnectListener != null)
+            iusbCameraConnectListener = null;
 
     }
 
@@ -331,7 +335,8 @@ public class VideoCallActivity extends Activity {
             layoutParams.height = 500;
             uvcCameraTextureView.setLayoutParams(layoutParams);
             T01Helper.getInstance().getCallEngine().startPreviewLocalVideo(mLocal, true);
-            USBCameraHelper.getInstance(this).init(decorView);
+            USBCameraHelper.getInstance(this).addUSBCameraListener(iusbCameraConnectListener);
+            USBCameraHelper.getInstance(this).init(decorView, 1280, 720);
             USBCameraHelper.getInstance(this).onStart();
             H264EncoderConsumer
                     .getInstance()
@@ -353,6 +358,7 @@ public class VideoCallActivity extends Activity {
      */
     private void pushH264() {
         USBCameraHelper.getInstance(this).setOnPreviewFrameListener(new AbstractUVCCameraHandler.OnPreViewResultListener() {
+
             @Override
             public void onPreviewResult(byte[] data, int width, int height) {
                 try {
@@ -364,4 +370,59 @@ public class VideoCallActivity extends Activity {
             }
         });
     }
+
+    public void updateUI(final String meg) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ToastUtils.showShort(meg);
+            }
+        });
+    }
+
+
+
+    private IUSBCameraConnectListener iusbCameraConnectListener = new IUSBCameraConnectListener() {
+        @Override
+        public void onPrepare() {
+            updateUI("开始准备");
+        }
+
+        @Override
+        public void onError(String error) {
+            updateUI("出错:"+error);
+        }
+
+        @Override
+        public void onDettach(String s) {
+
+        }
+
+        @Override
+        public void onConnect() {
+            updateUI("设备连接成功!");
+        }
+
+        @Override
+        public void onDisConnect(String s) {
+            updateUI("取消链接!");
+        }
+
+        @Override
+        public void onPreview() {
+            updateUI("开始预览!");
+        }
+
+        @Override
+        public void onUSBDeviceDel() {
+            updateUI("拔掉 USB!");
+        }
+
+        @Override
+        public void onUSBDeviceAttached() {
+            updateUI("插入 USB!");
+        }
+    };
+
+
 }
