@@ -10,7 +10,9 @@
 
 ![img](http://12145169.s21i.faiusr.com/2/ABUIABACGAAg3Yi-wgUo2rT6zQQw-g44ywQ.jpg)
 
-## 版本 log
+## 版本
+
+### 音视频 SDK
 
 | 版本    | 功能                                                         | 负责人     |
 | ------- | ------------------------------------------------------------ | ---------- |
@@ -36,6 +38,12 @@
 | 1.0.2.8 | 1. 增加会议启动成功返回了一个 会议 id 值(MeetingCallBack##onGetMettingSuccess(String id))。2. 增加了对语音会议(邀请入会，踢人，禁言)等接口。 | 刘扬，阳坤 |
 | 1.0.2.9 | 1. 修改了PTT本地录制 BUG,2. 修改了 pushYUV 为 pushH264 接口。 | 刘扬，阳坤 |
 | 1.0.3.0 | 1. 增加 PTT 回放时间段查询 PttEngine#getGroupAndTalkToPttPlaybackDataAsyn(int groupId, int talkId, String startTime,String stopTime,PttAudioHistoryDataDao.IFindCallback iFindCallback) | 刘扬，阳坤 |
+
+### USBCamera SDK
+
+| 版本 | 说明                      | 备注       |
+| ---- | ------------------------- | ---------- |
+| v1.2 | 增加单独的 USB 摄像头 SDK | 刘扬、阳坤 |
 
 标准版本嘀嗒 APK 扫码下载:
 
@@ -116,6 +124,36 @@
 
    ```java
    exitLyHelperSDK(final ILoginOutListener loginOutListener);
+   ```
+
+8. 在 module/build.gradle 或者 app/build.gradle 中配置 USB Camera SDK
+
+   ```
+   android{   
+      ...
+        
+       defaultConfig {
+   		....
+   
+           //设置支持的 so 库支持
+           ndk {
+               abiFilters  'armeabi-v7a'
+           }
+       }
+   allprojects {
+          repositories {
+              flatDir {
+                  //dirs '../t01_module/libs'; //多模块开发参考这种集成方式。
+                   dirs 'libs';
+              }
+          }
+      }
+   }
+   
+   dependencies{
+      ...
+      compile(name: 'T01_AV_USBCamera_2020-03-19-12-48_v1.2_', ext: 'aar') //名字以 aar 名字为准
+   }
    ```
 
    
@@ -1093,5 +1131,42 @@
   }
   ```
 
-  
 
+
+
+## USBCamera SDK 使用
+
+1. 当前使用 USB Activity  layout 中添加如下布局代码
+
+   ```xml
+    <include layout="@layout/layout_usbcamera"></include>
+   ```
+
+2. 使用
+
+   ```java
+   //1. 设置显示 USB Camera View
+   decorView.findViewById(R.id.fl_usb_camera).setVisibility(VISIBLE);
+   
+   //2. 设置预览框口大小，不设置默认全屏
+   UVCCameraTextureView uvcCameraTextureView = decorView.findViewById(R.id.camera_view);
+               FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) uvcCameraTextureView.getLayoutParams();
+               layoutParams.gravity = Gravity.RIGHT;
+               layoutParams.width = 500;
+               layoutParams.height = 500;
+               uvcCameraTextureView.setLayoutParams(layoutParams);
+   
+   //3. 添加连接 USB Camera 服务监听
+   USBCameraHelper.getInstance(this).addUSBCameraListener(IUSBCameraConnectListener listener);
+   
+   //4. 初始化 decorView 当前 Activity 根布局
+   USBCameraHelper.getInstance(this).init(decorView, 1280, 720);
+   
+   //5. 开始预览
+   USBCameraHelper.getInstance(this).onStart();
+   
+   //6. 预览 NV21 数据回调
+   USBCameraHelper.getInstance(this).setOnPreviewFrameListener(OnPreViewResultListener listener);
+   ```
+
+   
