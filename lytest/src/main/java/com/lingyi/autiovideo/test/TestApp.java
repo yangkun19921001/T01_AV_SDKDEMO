@@ -10,6 +10,7 @@ import com.blankj.utilcode.util.Utils;
 import com.bnc.activity.PttApplication;
 import com.bnc.activity.T01Helper;
 import com.bnc.activity.service.module.log.CrashHandler;
+import com.jiangdg.usbcamera.USBCameraHelper;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import java.io.BufferedReader;
@@ -33,8 +34,6 @@ public class TestApp extends PttApplication {
         initT01SDK();
 
         Utils.init(this);
-
-
     }
 
     private void initT01SDK() {
