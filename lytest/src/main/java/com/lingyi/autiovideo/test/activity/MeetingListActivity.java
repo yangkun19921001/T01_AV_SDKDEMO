@@ -2,6 +2,8 @@ package com.lingyi.autiovideo.test.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -66,8 +68,6 @@ public class MeetingListActivity extends AppCompatActivity {
         initView();
 
         initListener();
-
-
     }
 
     private void initView() {
@@ -108,7 +108,7 @@ public class MeetingListActivity extends AppCompatActivity {
                 voipContactEntities.clear();
                 integers.clear();
                 for (com.bnc.activity.entity.VoipContactEntity list : members
-                        ) {
+                ) {
                     VoipContactEntity voipContactEntity = new VoipContactEntity();
                     voipContactEntity.setId(list.getId());
                     voipContactEntity.setCall_state(list.getCall_state());
@@ -121,7 +121,7 @@ public class MeetingListActivity extends AppCompatActivity {
                     integers.add(Integer.parseInt(list.getNumber()));
                 }
 
-                if (voipContactEntities.size() == 0 )return;
+                if (voipContactEntities.size() == 0) return;
                 Intent intent = new Intent(MeetingListActivity.this, MeetingGroupMemberActivity.class);
                 intent.putParcelableArrayListExtra("MettingGroupMember", voipContactEntities);
                 intent.putExtra("MettingThem", meetingSessionEntity.getTheme());
@@ -134,38 +134,56 @@ public class MeetingListActivity extends AppCompatActivity {
 
 
     private void initData() {
-        T01Helper.getInstance().getGroupEngine().getMeetingList(new MeetingEngine.MeetingCallBack() {
-            @Override
-            public void getMeetingLists(ArrayList<MeetingSessionEntity> arrayList) {
-                memberList.clear();
-                memberList.addAll(arrayList);
-                Log.i(TAG, arrayList + "");
-                if (arrayList.size() == 0) {
-                    ToastUtils.showShort("会议列表为空");
-                }
-                mMettingAdapter.setNewData(memberList);
-                pro.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onGetMeetingLoading() {
-                pro.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onCreateError(String s) {
-                ToastUtils.showShort(s);
-                pro.setVisibility(View.GONE);
-            }
-
-            @Override
-            public void onGetMettingSuccess(String id) {
-
-            }
-        });
+        T01Helper.getInstance().getMeetingEngine().getMeetingList(meetingCallBack);
     }
 
     @OnClick(R.id.edit_btn)
     public void onViewClicked() {
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (meetingCallBack != null)
+            meetingCallBack = null;
+    }
+
+    private MeetingEngine.MeetingCallBack meetingCallBack = new MeetingEngine.MeetingCallBack() {
+        @Override
+        public void getMeetingLists(ArrayList<MeetingSessionEntity> arrayList) {
+            memberList.clear();
+            memberList.addAll(arrayList);
+            Log.i(TAG, arrayList + "");
+            if (arrayList.size() == 0) {
+                ToastUtils.showShort("会议列表为空");
+            }
+            mMettingAdapter.setNewData(memberList);
+            pro.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onGetMeetingLoading() {
+            pro.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        public void onCreateError(String s) {
+            ToastUtils.showShort(s);
+            pro.setVisibility(View.GONE);
+        }
+
+        @Override
+        public void onGetMettingSuccess(String id) {
+
+        }
+
+    };
+
+
 }

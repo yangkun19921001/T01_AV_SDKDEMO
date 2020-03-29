@@ -84,6 +84,8 @@ dependencies {
     //由于项目报错，暂时先打开
     compile 'com.serenegiant:common:1.5.20'
 
+//    implementation 'me.jessyan:autosize:1.2.1'
+
 
 
     //适配器
