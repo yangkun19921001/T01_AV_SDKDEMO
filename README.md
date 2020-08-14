@@ -33,6 +33,14 @@
 
 ### 音视频 SDK
 
+- 支持语音通话、语音会议、视频通话
+- 320P、480P、720P、1080P 分辨率
+- 支持 txt、图片、短视频、文件发送
+- 支持 PTT 对讲功能
+- 支持视频硬编码
+
+
+
 | 版本    | 功能                                                         | 负责人     |
 | ------- | ------------------------------------------------------------ | ---------- |
 | ...     | ...                                                          |            |
@@ -57,6 +65,8 @@
 | 1.0.2.8 | 1. 增加会议启动成功返回了一个 会议 id 值(MeetingCallBack##onGetMettingSuccess(String id))。2. 增加了对语音会议(邀请入会，踢人，禁言)等接口。 | 刘扬，阳坤 |
 | 1.0.2.9 | 1. 修改了PTT本地录制 BUG,2. 修改了 pushYUV 为 pushH264 接口。 | 刘扬，阳坤 |
 | 1.0.3.0 | 1. 增加 PTT 回放时间段查询 PttEngine#getGroupAndTalkToPttPlaybackDataAsyn(int groupId, int talkId, String startTime,String stopTime,PttAudioHistoryDataDao.IFindCallback iFindCallback) | 刘扬，阳坤 |
+| 1.0.4.0 | 1. 修复隐藏 bug；2. 增加切换用户接口；3. 增加多路通话设置混音接口 | 刘扬，阳坤 |
+| 1.0.4.8 | 修复 bug                                                     | 刘扬，阳坤 |
 
 ### USBCamera SDK
 
@@ -137,13 +147,33 @@
 6. 初始化 SDK
 
    ```java
-   T01Helper.getInstance().initAppContext(mContext);
+   T01Helper.getInstance().initT01SDK(Context context);
+   
+   //推荐初始化
+   private void initT01SDK() {
+           //初始化 SDK
+           T01Helper.getInstance().initT01SDK(getApplicationContext());
+           //需要多路 true
+           T01Helper.getInstance().getCallEngine().setMultipleLines(true);
+           //交给Java硬编码
+           T01Helper.getInstance().getSetEngine().setJavaMediacodec(true);
+           //0:320P 1:480P 2:720P 3:1080P
+           T01Helper.getInstance().getSetEngine().setVideoCallInCallQuality(2);
+           if (T01Helper.getInstance().getCallEngine().isMultipleLines()) {
+               //设置多路全部禁言模式（true:不推音频流->对端听不见发送端的声音，false :推送音频流）
+               T01Helper.getInstance().getCallEngine().setMoreAudioMute(false);
+               //设置多路全部播放模式（true:播放->播放对端的声音，false :不播放对端声音）
+               T01Helper.getInstance().getCallEngine().setMoreAudioPlay(true);
+               //多路呼叫需要混音
+               T01Helper.getInstance().getSetEngine().setEnableMixer(true);
+           }
+       }
    ```
 
 7. 退出 SDK
 
    ```java
-   exitLyHelperSDK(final ILoginOutListener loginOutListener);
+   void exitT01SDK(ILoginOutListener loginOutListener)
    ```
 
 8. 在 module/build.gradle 或者 app/build.gradle 中配置 USB Camera SDK
@@ -1150,8 +1180,14 @@
     return T01Helper.getInstance().getSetEngine().onKeyDown(keyCode,event);
   }
   ```
+  
+- 多路通话是否混音
 
+  ```java
+  void setEnableMixer(boolean ismix)
+  ```
 
+  
 
 
 ## USBCamera SDK 使用

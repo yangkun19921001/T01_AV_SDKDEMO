@@ -36,11 +36,11 @@
         android:layout_marginBottom="80dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/circle_decorator"
         android:gravity="center">
 
         <!--android:background="@drawable/ic_keyboard_voice_black_24dp"-->
         <ImageView
+            android:src="@drawable/ptt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
              />

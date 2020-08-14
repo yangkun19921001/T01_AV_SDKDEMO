@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.text.format.Formatter;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -51,6 +52,11 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+
+import static android.view.KeyEvent.ACTION_DOWN;
+import static android.view.KeyEvent.ACTION_UP;
+import static android.view.KeyEvent.KEYCODE_VOLUME_DOWN;
+import static android.view.KeyEvent.KEYCODE_VOLUME_UP;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -140,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
         requestOnlineUser();
         //后台消息监听
         addMessageListener();
+
     }
 
 
@@ -526,4 +533,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        Log.e(TAG, "onKeyUp  keyCode:" + keyCode + "  " + event.toString());
+        if (keyCode ==  24) {
+            T01Helper.getInstance().getPttEngine().stopPttGroup();
+            return true;
+        }
+        {
+            return super.onKeyDown(keyCode, event);
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.e(TAG, "onKeyDown  keyCode:" + keyCode + "  " + event.toString());
+        if (keyCode ==  24) {
+            T01Helper.getInstance().getPttEngine().startPttGroup();
+            return true;
+        } else {
+            return super.onKeyDown(keyCode, event);
+
+        }
+    }
 }

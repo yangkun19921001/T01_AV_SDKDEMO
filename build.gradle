@@ -6,6 +6,8 @@ buildscript {
         google()
         mavenCentral()
 
+
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.0.0'
@@ -16,7 +18,6 @@ buildscript {
         classpath 'me.tatarka:gradle-retrolambda:3.6.0'
 
         classpath 'com.novoda:bintray-release:0.5.0'
-        //日历控件需要的
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
     }
 }
@@ -33,7 +34,7 @@ allprojects {
         maven { url "https://maven.google.com" }
         //适配 USB 需要用到
         maven { url 'http://raw.github.com/saki4510t/libcommon/master/repository/' }
-        google()
+
     }
 }
 

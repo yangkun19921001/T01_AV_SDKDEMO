@@ -10,8 +10,9 @@ import com.blankj.utilcode.util.Utils;
 import com.bnc.activity.PttApplication;
 import com.bnc.activity.T01Helper;
 import com.bnc.activity.service.module.log.CrashHandler;
-import com.jiangdg.usbcamera.USBCameraHelper;
 import com.tencent.bugly.crashreport.CrashReport;
+
+import org.doubango.ngn.media.mixer.MixerManager;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -34,6 +35,8 @@ public class TestApp extends PttApplication {
         initT01SDK();
 
         Utils.init(this);
+
+
     }
 
     private void initT01SDK() {
@@ -50,6 +53,8 @@ public class TestApp extends PttApplication {
             T01Helper.getInstance().getCallEngine().setMoreAudioMute(false);
             //设置多路全部播放模式（true:播放->播放对端的声音，false :不播放对端声音）
             T01Helper.getInstance().getCallEngine().setMoreAudioPlay(true);
+            //多路呼叫需要混音
+//            T01Helper.getInstance().getSetEngine().setEnableMixer(true);
         }
     }
 

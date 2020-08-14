@@ -205,7 +205,7 @@ public class IntercomFragment extends BaseFragment {
                             // Log.e(TAG, "talk button up");
                             isTalking = false;
                             T01Helper.getInstance().getPttEngine().stopPttGroup();
-                            ll_start_intercom.setBackground(getActivity().getDrawable(R.drawable.circle_decorator));
+                            ll_start_intercom.setBackground(null);
                         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
                             ALog.i(TAG, "onTouch MotionEvent.ACTION_MOVE");
 

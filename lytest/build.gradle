@@ -4,6 +4,11 @@ android {
     compileSdkVersion rootProject.ext.android["compileSdkVersion"]
     buildToolsVersion rootProject.ext.android["buildToolsVersion"]
 
+    // 这里是需要添加代码
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 
     defaultConfig {
         applicationId "com.lingyi.autiovideo.test"
@@ -59,55 +64,55 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.android.support:appcompat-v7:26.1.0'
-    compile 'com.android.support:design:26.1.0'
-    compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'com.android.support:support-vector-drawable:26.1.0'
-    compile 'com.blankj:utilcode:1.9.6'
-    compile 'com.blankj:alog:1.3.0'
-    compile 'com.jakewharton:butterknife:8.8.1'
-    compile 'com.jakewharton:butterknife-compiler:8.8.1'
 
+    //--------------------------------T01 SDK ----------------------------------------------------
+
+    //T01 音视频 SDK
+    compile(name: 'T01_AV3.25_Android_SDK_2020-07-30-10-36_v1.0.4.8_', ext: 'aar')
+//        implementation project(path: ':LY_AudioVideoHelp_SDK')
+    //USB 适配 需要用到
+    compile(name: 'T01_AV_USBCamera_2020-03-19-17-37_v1.3_', ext: 'aar')
+
+    //------------------------------------------------------------------------------------
+
+
+    implementation rootProject.ext.dependencies["appcompat-v7"]
+    implementation rootProject.ext.dependencies["support-v4"]
+    implementation rootProject.ext.dependencies["design"]
+    implementation rootProject.ext.dependencies["butterknife"]
+    implementation rootProject.ext.dependencies["butterknife-compiler"]
+    implementation rootProject.ext.dependencies["multidex"]
+    implementation rootProject.ext.dependencies["gson"]
+    androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.1', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
     annotationProcessor(rootProject.ext.dependencies["butterknife-compiler"]) {
         exclude module: 'support-annotations'
     }
 
     testImplementation rootProject.ext.dependencies["junit"]
-//    testCompile 'junit:junit:4.12'
-    androidTestCompile('com.android.support.test.espresso:espresso-core:3.0.1', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    //T01 音视频 SDK
-    compile(name: 'T01_AV3.25_Android_SDK_2020-04-20-11-56_v1.0.3.0_', ext: 'aar')
-    //USB 适配 需要用到
-    compile(name: 'T01_AV_USBCamera_2020-03-19-17-37_v1.3_', ext: 'aar')
+
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+//    compile 'com.android.support:support-vector-drawable:26.1.0'
+    compile 'com.blankj:utilcode:1.9.6'
+    compile 'com.blankj:alog:1.3.0'
+
+
     //由于项目报错，暂时先打开
-    compile 'com.serenegiant:common:1.5.20'
-
-//    implementation 'me.jessyan:autosize:1.2.1'
-
-
-
+//    compile 'com.serenegiant:common:1.5.20'
+    compile 'com.serenegiant:common:2.12.4'
     //适配器
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
 
-
-
-    implementation rootProject.ext.dependencies["multidex"]
-    implementation rootProject.ext.dependencies["gson"]
-
     //必须使用
-    compile 'com.lzy.net:okgo:3.0.4'
-
+    implementation 'com.lzy.net:okgo:3.0.4'
     //以下三个选择添加，okrx和okrx2不能同时使用
-    compile 'com.lzy.net:okrx2:2.0.2'
-    compile 'com.lzy.net:okserver:2.0.5'
+    implementation 'com.lzy.net:okrx2:2.0.2'
+    implementation 'com.lzy.net:okserver:2.0.5'
 
     //腾讯 bugly 捕获
-    compile 'com.tencent.bugly:crashreport:latest.release' //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
-    compile 'com.tencent.bugly:nativecrashreport:latest.release' //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
-
-
+    implementation 'com.tencent.bugly:crashreport:latest.release' //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
+    implementation 'com.tencent.bugly:nativecrashreport:latest.release' //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
 
 //    测试阶段 聊天框架  暂时不开放使用
 //    compile(name: 'chat_base_component-release', ext: 'aar')

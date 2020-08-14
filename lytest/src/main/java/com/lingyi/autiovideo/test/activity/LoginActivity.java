@@ -49,21 +49,16 @@ public class LoginActivity extends AppCompatActivity {
 
 
     /**
-     *
-     *  String APP_DOMAIN = "http://39.106.172.189:29014";
-     //    String APP_DOMAIN = "http://192.168.60.27:29014";
-     String host = "/androidApi/getPermissions.action";
-
-     int httpPort = 29014;
-
-     int TCP_PORT = 29005;
-
-     int UDP_PORT = 2801;
-     *
-     *
+     * String APP_DOMAIN = "http://39.106.172.189:29014";
+     * //    String APP_DOMAIN = "http://192.168.60.27:29014";
+     * String host = "/androidApi/getPermissions.action";
+     * <p>
+     * int httpPort = 29014;
+     * <p>
+     * int TCP_PORT = 29005;
+     * <p>
+     * int UDP_PORT = 2801;
      */
-
-
 
 
     @Override
@@ -79,13 +74,18 @@ public class LoginActivity extends AppCompatActivity {
 //        appRequest();
 
         initUser();
+
+//        onLogin("70001005",
+//                "1234",
+//                "39.100.127.206",
+//                "29014");
     }
 
     private void initUser() {
-        etUser.setText(PropertyUtil.getInstance(getApplicationContext()).getString("user",""));
-        pwd.setText(PropertyUtil.getInstance(getApplicationContext()).getString("pwd",""));
-        ip.setText(PropertyUtil.getInstance(getApplicationContext()).getString("ip",""));
-        port.setText(PropertyUtil.getInstance(getApplicationContext()).getString("port","29014"));
+        etUser.setText(PropertyUtil.getInstance(getApplicationContext()).getString("user", ""));
+        pwd.setText(PropertyUtil.getInstance(getApplicationContext()).getString("pwd", ""));
+        ip.setText(PropertyUtil.getInstance(getApplicationContext()).getString("ip", ""));
+        port.setText(PropertyUtil.getInstance(getApplicationContext()).getString("port", "29014"));
     }
 
 
@@ -99,19 +99,19 @@ public class LoginActivity extends AppCompatActivity {
 
     @OnClick(R.id.login)
     public void onViewClicked() {
-            if (TextUtils.isEmpty(etUser.getText().toString().trim()) ||
-                    TextUtils.isEmpty(pwd.getText().toString().trim()) ||
-                    TextUtils.isEmpty(port.getText().toString().trim()) ||
-                    TextUtils.isEmpty(ip.getText().toString().trim())
-            ) {
-                ToastUtils.showLong("检查用户名或密码是否填写？");
-            } else {
-                PropertyUtil.getInstance(getApplicationContext()).putString("user",etUser.getText().toString().trim());
-               PropertyUtil.getInstance(getApplicationContext()).putString("pwd",pwd.getText().toString().trim());
-               PropertyUtil.getInstance(getApplicationContext()).putString("ip",ip.getText().toString().trim());
-               PropertyUtil.getInstance(getApplicationContext()).putString("port",port.getText().toString().trim());
-               onLogin(etUser.getText().toString().trim(), pwd.getText().toString().trim(), ip.getText().toString().trim(), port.getText().toString().trim());
-            }
+        if (TextUtils.isEmpty(etUser.getText().toString().trim()) ||
+                TextUtils.isEmpty(pwd.getText().toString().trim()) ||
+                TextUtils.isEmpty(port.getText().toString().trim()) ||
+                TextUtils.isEmpty(ip.getText().toString().trim())
+        ) {
+            ToastUtils.showLong("检查用户名或密码是否填写？");
+        } else {
+            PropertyUtil.getInstance(getApplicationContext()).putString("user", etUser.getText().toString().trim());
+            PropertyUtil.getInstance(getApplicationContext()).putString("pwd", pwd.getText().toString().trim());
+            PropertyUtil.getInstance(getApplicationContext()).putString("ip", ip.getText().toString().trim());
+            PropertyUtil.getInstance(getApplicationContext()).putString("port", port.getText().toString().trim());
+            onLogin(etUser.getText().toString().trim(), pwd.getText().toString().trim(), ip.getText().toString().trim(), port.getText().toString().trim());
+        }
 
     }
 

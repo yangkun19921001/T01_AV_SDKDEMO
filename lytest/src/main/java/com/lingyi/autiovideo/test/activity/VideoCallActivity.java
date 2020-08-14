@@ -79,8 +79,9 @@ public class VideoCallActivity extends Activity {
         if (checkUSBCamera(getWindow().getDecorView())) {
 
         }
-//        T01Helper.getInstance().getCallEngine().startPreviewLocalVideo(mLocal, false);
-
+        if (T01Helper.getInstance().getSetEngine().isCameraFront()) {
+            T01Helper.getInstance().getCallEngine().changeCamera(isChangeCamera = false);
+        }
 
         //获取第一个线路
         mFirstSession = getFirstSession();
@@ -150,21 +151,19 @@ public class VideoCallActivity extends Activity {
     @Override
     public void onStart() {
         super.onStart();
-        T01Helper.getInstance().getCallEngine().onCallStart();
+//        T01Helper.getInstance().getCallEngine().onCallStart();
     }
 
 
     public void onResume() {
         super.onResume();
-        T01Helper.getInstance().getCallEngine().onResume();
+//        T01Helper.getInstance().getCallEngine().onResume();
 
 //        if (Constants.isShow) {
 //            showRemote();
 //        }
 
-        if (T01Helper.getInstance().getSetEngine().isCameraFront()) {
-            T01Helper.getInstance().getCallEngine().changeCamera(isChangeCamera = false);
-        }
+
     }
 
     boolean isShow = false;
@@ -179,12 +178,12 @@ public class VideoCallActivity extends Activity {
 
     public void onPause() {
         super.onPause();
-        T01Helper.getInstance().getCallEngine().onCallPause();
+//        T01Helper.getInstance().getCallEngine().onCallPause();
     }
 
     public void onStop() {
         super.onStop();
-        T01Helper.getInstance().getCallEngine().onCallStop();
+//        T01Helper.getInstance().getCallEngine().onCallStop();
     }
 
 
@@ -255,6 +254,7 @@ public class VideoCallActivity extends Activity {
                             if (Constants.mSessionLayoutMap.remove(sessionId) != null)
                                 Constants.mSessionLayoutMap.remove(sessionId);
                             if (Constants.mSessionLayoutMap.size() == 0) {
+                                onDestorys();
                                 finish();
                             }
                         }
@@ -315,10 +315,16 @@ public class VideoCallActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        USBCameraHelper.getInstance(this).onDestroy();
-        H264EncoderConsumer.getInstance().stopEncodeH264Sync();
-        if (iusbCameraConnectListener != null)
-            iusbCameraConnectListener = null;
+        try {
+            H264EncoderConsumer.getInstance().stopEncodeH264Sync();
+            if (iusbCameraConnectListener != null) {
+                iusbCameraConnectListener = null;
+            }
+            USBCameraHelper.getInstance(this).onDestroy();
+        }catch (Exception e){
+            Log.e(TAG,e.getMessage());
+        }
+
 
     }
 

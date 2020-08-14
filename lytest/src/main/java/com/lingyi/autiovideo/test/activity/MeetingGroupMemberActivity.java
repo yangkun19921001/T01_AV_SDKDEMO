@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bnc.activity.T01Helper;
 import com.bnc.activity.engine.MeetingEngine;
+import com.bnc.activity.entity.MeetingLaunchType;
 import com.bnc.activity.entity.MeetingSessionEntity;
 import com.lingyi.autiovideo.test.R;
 import com.lingyi.autiovideo.test.adapter.MeetingDetailAdapter;
@@ -116,8 +117,7 @@ public class MeetingGroupMemberActivity extends AppCompatActivity {
     @OnClick(R.id.tv_startMetting)
     public void onViewClicked() {
         if (mettingMember != null)
-//            LYHelper.getInstance().call("8858115", Constants.IVoipLaunchType.VOIP_LAUNCH_TYPE_TELECONFERENCE,"huiyi");
-        T01Helper.getInstance().getMeetingEngine().launchMeeting(0, mettingThem, mettingMember, new MeetingEngine.MeetingCallBack() {
+        T01Helper.getInstance().getMeetingEngine().launchMeeting(MeetingLaunchType.VOIP_LAUNCH_TYPE_AUDIO_MEETING, mettingThem, mettingMember, new MeetingEngine.MeetingCallBack() {
             @Override
             public void getMeetingLists(ArrayList<MeetingSessionEntity> arrayList) {
 
@@ -140,7 +140,6 @@ public class MeetingGroupMemberActivity extends AppCompatActivity {
 
 
         });
-//              LYHelper.getInstance().callPhone("c885893", NgnMediaType.Audio,CallActivity.class);
         else
             ToastUtils.showShort("没有获取到会议人员，请重新进行添加！");
     }
