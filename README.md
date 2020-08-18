@@ -206,6 +206,17 @@
    }
    ```
 
+9. 配置混淆规则
+
+   ```
+   -dontwarn com.bnc.activity.**
+   -dontwarn org.apache.http.**
+   -keep class com.bnc.activity.** { *; }
+   -keep class org.doubango.tinyWRAP.** { *; }
+   -keep class org.apache.http.** { *;}
+   
+   ```
+
    
 
 ## RegisterEngine

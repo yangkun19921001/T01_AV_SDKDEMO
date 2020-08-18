@@ -5,9 +5,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.blankj.ALog;
 import com.bnc.activity.PttApplication;
 import com.bnc.activity.entity.UserEntity;
+import com.bnc.activity.utils.LogHelper;
 import com.bnc.activity.utils.PropertyUtil;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -120,7 +120,7 @@ public class CurrentDepartmentAdapter extends BaseQuickAdapter<UserEntity, BaseV
                                 }
                             }
                         } else if (Constants.callState == Constants.CALL_STATE_PLAYING) {
-                            ALog.w(
+                            LogHelper.d(
                                     TAG,
                                     "getView() --> " + " callType - "
                                             + Constants.callType + " callUserId - "

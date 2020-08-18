@@ -19,12 +19,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.blankj.ALog;
 import com.blankj.utilcode.util.ToastUtils;
 import com.bnc.activity.T01Helper;
 import com.bnc.activity.engine.PttEngine;
 import com.bnc.activity.entity.GroupEntity;
 import com.bnc.activity.entity.UserEntity;
+import com.bnc.activity.utils.LogHelper;
 import com.lingyi.autiovideo.test.R;
 import com.lingyi.autiovideo.test.activity.CreateGroupActivity;
 import com.lingyi.autiovideo.test.activity.MeetingListActivity;
@@ -136,7 +136,7 @@ public class IntercomFragment extends BaseFragment {
                         mCurrentDepartmentAdapter.setNewData(userList);
                     mCurrentDepartmentAdapter.notifyDataSetChanged();
                 } catch (Exception e) {
-                    ALog.e(e.getMessage());
+                    LogHelper.e(TAG,e.getMessage());
                 }
             }
 
@@ -207,7 +207,7 @@ public class IntercomFragment extends BaseFragment {
                             T01Helper.getInstance().getPttEngine().stopPttGroup();
                             ll_start_intercom.setBackground(null);
                         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                            ALog.i(TAG, "onTouch MotionEvent.ACTION_MOVE");
+                           LogHelper.i(TAG, "onTouch MotionEvent.ACTION_MOVE");
 
                         }
                         return true;

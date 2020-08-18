@@ -48,13 +48,13 @@ android {
             buildConfigField "boolean", "LOG_DEBUG", "false"
             buildConfigField "boolean", "USE_CANARY", "false"
             signingConfig signingConfigs.release
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
             buildConfigField "boolean", "LOG_DEBUG", "true"
             buildConfigField "boolean", "USE_CANARY", "true"
-            minifyEnabled false
+            minifyEnabled true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -95,7 +95,6 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 //    compile 'com.android.support:support-vector-drawable:26.1.0'
     compile 'com.blankj:utilcode:1.9.6'
-    compile 'com.blankj:alog:1.3.0'
 
 
     //由于项目报错，暂时先打开

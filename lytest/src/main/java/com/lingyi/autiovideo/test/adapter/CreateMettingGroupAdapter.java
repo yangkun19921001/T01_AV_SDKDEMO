@@ -3,8 +3,8 @@ package com.lingyi.autiovideo.test.adapter;
 import android.view.View;
 import android.widget.CheckBox;
 
-import com.blankj.ALog;
 import com.bnc.activity.service.db.DataDao;
+import com.bnc.activity.utils.LogHelper;
 import com.bnc.activity.view.manager.UserListManager;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -153,7 +153,7 @@ public class CreateMettingGroupAdapter extends BaseMultiItemQuickAdapter<MultiIt
             UserListManager instance = UserListManager.getInstance();
             instance.setCallViewBack1(CreateMettingGroupAdapter.this);
         } catch (Exception e) {
-            ALog.e(e.getMessage());
+            LogHelper.e(TAG,e.getMessage());
         }
     }
 
