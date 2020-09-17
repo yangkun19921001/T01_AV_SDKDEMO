@@ -136,7 +136,7 @@ public class IntercomFragment extends BaseFragment {
                         mCurrentDepartmentAdapter.setNewData(userList);
                     mCurrentDepartmentAdapter.notifyDataSetChanged();
                 } catch (Exception e) {
-                    LogHelper.e(TAG,e.getMessage());
+                    LogHelper.e(TAG, e.getMessage());
                 }
             }
 
@@ -207,7 +207,7 @@ public class IntercomFragment extends BaseFragment {
                             T01Helper.getInstance().getPttEngine().stopPttGroup();
                             ll_start_intercom.setBackground(null);
                         } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                           LogHelper.i(TAG, "onTouch MotionEvent.ACTION_MOVE");
+                            LogHelper.i(TAG, "onTouch MotionEvent.ACTION_MOVE");
 
                         }
                         return true;
@@ -226,13 +226,15 @@ public class IntercomFragment extends BaseFragment {
     }
 
     /**
+     *
      * 获取所有对讲组
+     *
      */
     private void getAllGroup() {
         T01Helper.getInstance().getPttEngine().getAllPttGroupLists(new PttEngine.IAllPttGroupCallBack() {
             @Override
             public void getAllPttLists(ArrayList<GroupEntity> allGroup) {
-                Log.d(TAG, "getAllPttLists");
+                Log.d(TAG, "getAllPttLists" + allGroup.toString());
                 lists = allGroup;
                 menuItems.clear();
                 menuItems.add(new MenuItem("#创建临时组#"));
@@ -246,7 +248,6 @@ public class IntercomFragment extends BaseFragment {
                 }
             }
         });
-
     }
 
 
@@ -287,20 +288,4 @@ public class IntercomFragment extends BaseFragment {
             }
         });
     }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        unbinder = ButterKnife.bind(this, rootView);
-        return rootView;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
-    }
-
-
 }

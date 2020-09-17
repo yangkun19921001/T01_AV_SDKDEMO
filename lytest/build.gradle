@@ -6,8 +6,8 @@ android {
 
     // 这里是需要添加代码
     compileOptions {
-        sourceCompatibility 1.8
-        targetCompatibility 1.8
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
     }
 
     defaultConfig {
@@ -48,13 +48,13 @@ android {
             buildConfigField "boolean", "LOG_DEBUG", "false"
             buildConfigField "boolean", "USE_CANARY", "false"
             signingConfig signingConfigs.release
-            minifyEnabled true
+            minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         debug {
             buildConfigField "boolean", "LOG_DEBUG", "true"
             buildConfigField "boolean", "USE_CANARY", "true"
-            minifyEnabled true
+            minifyEnabled false
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -64,18 +64,13 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-
     //--------------------------------T01 SDK ----------------------------------------------------
-
     //T01 音视频 SDK
-    compile(name: 'T01_AV3.25_Android_SDK_2020-07-30-10-36_v1.0.4.8_', ext: 'aar')
-//        implementation project(path: ':LY_AudioVideoHelp_SDK')
+    compile(name: 'T01_AV3.25_Android_SDK_2020-09-17-10-54_v1.0.5.3_', ext: 'aar')
+    //        implementation project(path: ':LY_AudioVideoHelp_SDK')
     //USB 适配 需要用到
     compile(name: 'T01_AV_USBCamera_2020-03-19-17-37_v1.3_', ext: 'aar')
-
     //------------------------------------------------------------------------------------
-
-
     implementation rootProject.ext.dependencies["appcompat-v7"]
     implementation rootProject.ext.dependencies["support-v4"]
     implementation rootProject.ext.dependencies["design"]
@@ -89,32 +84,28 @@ dependencies {
     annotationProcessor(rootProject.ext.dependencies["butterknife-compiler"]) {
         exclude module: 'support-annotations'
     }
-
     testImplementation rootProject.ext.dependencies["junit"]
-
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-//    compile 'com.android.support:support-vector-drawable:26.1.0'
+    //    compile 'com.android.support:support-vector-drawable:26.1.0'
     compile 'com.blankj:utilcode:1.9.6'
-
-
     //由于项目报错，暂时先打开
-//    compile 'com.serenegiant:common:1.5.20'
+    //    compile 'com.serenegiant:common:1.5.20'
     compile 'com.serenegiant:common:2.12.4'
     //适配器
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.22'
-
     //必须使用
     implementation 'com.lzy.net:okgo:3.0.4'
     //以下三个选择添加，okrx和okrx2不能同时使用
     implementation 'com.lzy.net:okrx2:2.0.2'
     implementation 'com.lzy.net:okserver:2.0.5'
-
     //腾讯 bugly 捕获
-    implementation 'com.tencent.bugly:crashreport:latest.release' //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
-    implementation 'com.tencent.bugly:nativecrashreport:latest.release' //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
-
-//    测试阶段 聊天框架  暂时不开放使用
-//    compile(name: 'chat_base_component-release', ext: 'aar')
-//    compile(name: 'chatinput-release', ext: 'aar')
-//    compile(name: 'messagelist-release', ext: 'aar')
+    implementation 'com.tencent.bugly:crashreport:latest.release'
+    //其中latest.release指代最新Bugly SDK版本号，也可以指定明确的版本号，例如2.1.9
+    implementation 'com.tencent.bugly:nativecrashreport:latest.release'
+    //其中latest.release指代最新Bugly NDK版本号，也可以指定明确的版本号，例如3.0
+    //    测试阶段 聊天框架  暂时不开放使用
+    //    compile(name: 'chat_base_component-release', ext: 'aar')
+    //    compile(name: 'chatinput-release', ext: 'aar')
+    //    compile(name: 'messagelist-release', ext: 'aar')
+    implementation files('libs/pinyin4j-2.5.0.jar')
 }

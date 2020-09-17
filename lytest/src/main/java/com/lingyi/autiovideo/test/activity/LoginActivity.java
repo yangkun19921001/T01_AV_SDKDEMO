@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -16,6 +17,7 @@ import com.bnc.activity.T01Helper;
 import com.bnc.activity.callback.IIsLoginListener;
 import com.bnc.activity.callback.LoginCallBack;
 import com.bnc.activity.utils.LogHelper;
+import com.bnc.activity.utils.PinyinUtil;
 import com.bnc.activity.utils.PropertyUtil;
 import com.lingyi.autiovideo.test.R;
 import com.lzy.okgo.OkGo;
@@ -79,6 +81,9 @@ public class LoginActivity extends AppCompatActivity {
 //                "1234",
 //                "39.100.127.206",
 //                "29014");
+
+        //设置 sip 端口
+        T01Helper.getInstance().getSetEngine().setSipPort(5065);
     }
 
     private void initUser() {
@@ -86,6 +91,13 @@ public class LoginActivity extends AppCompatActivity {
         pwd.setText(PropertyUtil.getInstance(getApplicationContext()).getString("pwd", ""));
         ip.setText(PropertyUtil.getInstance(getApplicationContext()).getString("ip", ""));
         port.setText(PropertyUtil.getInstance(getApplicationContext()).getString("port", "29014"));
+
+
+        String ch = PinyinUtil.getFirstSpell("中国");
+         ch = PinyinUtil.getFirstSpell("中国");
+        LogHelper.e("--->",ch);
+        LogHelper.i("--->",ch);
+        Log.v("--->",ch);
     }
 
 
